@@ -1,2 +1,4 @@
-# java-console
-project template for Java CLI app
+# CarObka
+projekts ar DBuko
+
+Mašinu kolekcija
