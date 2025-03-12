@@ -2,12 +2,12 @@ package lv.rvt.tools;
 
 import java.util.Scanner;
 
-public class Login extends LoginRegister {
+public class Register extends LoginRegister {
     private String username;
     private String password;
     private Scanner scanner = new Scanner(System.in);
 
-    public Login(String username, String password) {
+    public Register(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -16,6 +16,10 @@ public class Login extends LoginRegister {
     public String getUsername() {
         System.out.print("Ievadiet username: ");
         this.username = scanner.nextLine();
+        while (this.username.equals("hacha")) {
+            System.out.println("User already exists - change username");
+            this.username = scanner.nextLine();
+        } 
         return this.username;
     }
 
@@ -23,12 +27,8 @@ public class Login extends LoginRegister {
     public String getPassword() {
         System.out.print("Ievadiet password: ");
         this.password = scanner.nextLine();
-        while (!this.password.equals("lupa")) {
-            System.out.println("Incorrect password");
-            this.password = scanner.nextLine();
-        }
         return this.password;
     }
 
-    // check if user exists
+    // saves in csv
 }
