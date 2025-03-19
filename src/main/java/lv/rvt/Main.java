@@ -1,5 +1,6 @@
 package lv.rvt;
 
+import lv.rvt.tools.*;
 import java.util.*;
 import java.io.*;
 
@@ -9,24 +10,27 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        // Загружаем пользователей из CSV
+        // Lietotāju ielāde no CSV
         loadUsers();
         
         if(users.isEmpty()){
-            System.out.println("Нет пользователей. Создайте первого пользователя (администратор).");
+            System.out.println("Lietotāju nav. Izveidojiet pirmo lietotāju (administratoru).");
         }
 
         int choice;
         do {
-            System.out.println("\nCarObka - коллекция автомобилей");
-            System.out.println("1 - Коллекция");
-            System.out.println("2 - Войти в профиль");
-            System.out.println("3 - Связаться с нами");
-            System.out.println("0 - Выход");
-            System.out.print("Введите номер выбора: ");
+            System.out.println("\nCarObka - automobiļu kolekcija");
+            System.out.println("1 - Kolekcijas apskate");
+            System.out.println("2 - Ieiet profilā vai reģistrēties");
+            System.out.println("3 - Sazināties ar mums");
+            System.out.println("0 - Iziet no programmas");
+            System.out.print("Ievadiet izvēli: ");
+            
 
             choice = scanner.nextInt();
-            scanner.nextLine(); // очищаем буфер
+            scanner.nextLine(); // Veidojam atstarpi
+            Loading loading = new Loading();
+            loading.LoadingScreen(); // Ielādēšanas ekrāns
 
             switch (choice) {
                 case 1:
@@ -39,98 +43,98 @@ public class Main {
                     contactUs(scanner);
                     break;
                 case 0:
-                    System.out.println("Спасибо, что воспользовались CarObka!");
+                    System.out.println("Paldies, ka izmantojāt CarObka!");
                     break;
                 default:
-                    System.out.println("Неверный ввод, попробуйте ещё раз.");
+                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 0);
     }
 
-    // Метод для отображения коллекции автомобилей
+    // Metode, lai parādītu kolekciju (PĀRVEIDOT - mašīnas būs ievietoti csv failā)
     private static void displayCollection() {
-        System.out.println("\nКоллекция автомобилей:");
-        System.out.println("1 - Автомобиль №1 (BMW, 2020)");
-        System.out.println("2 - Автомобиль №2 (Audi, 2019)");
-        System.out.println("3 - Автомобиль №3 (Mercedes, 2021)");
-        System.out.println("4 - Автомобиль №4 (Tesla, 2022)");
+        System.out.println("\nAutomobiļu kolekcija:");
+        System.out.println("1 - Auto №1 (BMW, 2020)");
+        System.out.println("2 - Auto №2 (Audi, 2019)");
+        System.out.println("3 - Auto №3 (Mercedes, 2021)");
+        System.out.println("4 - Auto №4 (Volkswagen, 2022)");
     }
 
-    // Метод для входа в профиль или регистрации
+    // Profila ieejas vai reģistrācijas metode
     private static void loginOrRegister(Scanner scanner) {
         int choice;
         do {
-            System.out.println("\nВойти в профиль");
-            System.out.println("1 - Войти как пользователь");
-            System.out.println("2 - Войти как администратор");
-            System.out.println("3 - Добавить профиль");
-            System.out.println("4 - Вернуться в главное меню");
-            System.out.print("Введите номер выбора: ");
+            System.out.println("\nIeiet profilā:");
+            System.out.println("1 - Ieiet kā lietotājs");
+            System.out.println("2 - Ieiet kā administrators");
+            System.out.println("3 - Pievienot jaunu profilu");
+            System.out.println("4 - Atgriezties galvenajā izvēlnē");
+            System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
 
             if (choice == 1) {
-                // Вход в пользовательский профиль
-                System.out.println("\nВход в профиль пользователя:");
-                System.out.print("Имя пользователя (или '0' для возврата): ");
+                // Lietotāja profila ieeja
+                System.out.println("\nIeiet kā lietotājs:");
+                System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
                 if (username.equals("0")) continue;
-                System.out.print("Пароль (или '0' для возврата): ");
+                System.out.print("Parole (vai '0' lai atgriezties): ");
                 String password = scanner.nextLine();
                 if (password.equals("0")) continue;
                 Person foundUser = findUser(username);
                 if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
-                    System.out.println("Добро пожаловать, " + username + "!");
+                    System.out.println("Laipni lūgti, " + username + "!");
                 } else {
-                    System.out.println("Неверное имя пользователя или пароль, либо профиль не является пользовательским.");
+                    System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
                 }
             } else if (choice == 2) {
-                // Вход в профиль администратора
-                System.out.println("\nВход в профиль администратора:");
-                System.out.print("Имя пользователя (или '0' для возврата): ");
+                // Administrātora profila ieeja
+                System.out.println("\nIeiet ka administators:");
+                System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
                 if (username.equals("0")) continue;
-                System.out.print("Пароль (или '0' для возврата): ");
+                System.out.print("Parole (vai '0' lai atgriezties): ");
                 String password = scanner.nextLine();
                 if (password.equals("0")) continue;
                 Person foundUser = findUser(username);
                 if (foundUser != null && foundUser.validatePassword(password) && foundUser.isAdmin()) {
-                    System.out.println("Добро пожаловать, администратор " + username + "!");
+                    System.out.println("Laipni lūgti, administrators " + username + "!");
                     adminMenu(scanner);
                 } else {
-                    System.out.println("Неверное имя пользователя или пароль, либо профиль не является администраторским.");
+                    System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
                 }
             } else if (choice == 3) {
-                // Добавление нового профиля
-                System.out.println("\nДобавить профиль:");
-                System.out.print("Имя пользователя (или '0' для возврата): ");
+                // Jauna profila pievienošana
+                System.out.println("\nPievienot jaunu profilu:");
+                System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String newUsername = scanner.nextLine();
                 if (newUsername.equals("0")) continue;
-                System.out.print("Пароль (или '0' для возврата): ");
+                System.out.print("Parole (vai '0' lai atgriezties): ");
                 String newPassword = scanner.nextLine();
                 if (newPassword.equals("0")) continue;
                 if (findUser(newUsername) == null) {
-                    // Первый пользователь становится администратором, все остальные — пользователями
+                    // Pirmais profils tiks izveidots kā administrators, citi - kā lietotāji
                     boolean isAdmin = users.isEmpty();
                     users.add(new Person(newUsername, newPassword, isAdmin));
                     saveUsers();
                     if(isAdmin){
-                        System.out.println("Первый профиль создан как администратор!");
+                        System.out.println("Pirmais profils izveidots kā administrators!");
                     } else {
-                        System.out.println("Профиль успешно добавлен!");
+                        System.out.println("Profils " + newUsername + " veiksmīgi izveidots.");
                     }
                 } else {
-                    System.out.println("Пользователь с таким именем уже существует!");
+                    System.out.println("Lietotājs ar šādu lietotājvārdu jau pastāv.");
                 }
             } else if (choice == 4) {
-                System.out.println("Возврат в главное меню...");
+                System.out.println("Atgriežamies galvenajā izvēlnē...");
             } else {
-                System.out.println("Неверный ввод, попробуйте ещё раз.");
+                System.out.println("Nederīga ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 4);
     }
 
-    // Административное меню для дополнительных действий (например, удаление профиля)
+    // Administratora izvēlnes metode (PĀRVEIDOT - pievienot funkcionalitāti)
     private static void adminMenu(Scanner scanner) {
         int adminChoice;
         do {
@@ -138,7 +142,7 @@ public class Main {
             System.out.println("1 - Удалить профиль");
             System.out.println("2 - Показать список профилей");
             System.out.println("0 - Выход из административного меню");
-            System.out.print("Введите номер выбора: ");
+            System.out.print("Ievadiet izvēli: ");
             adminChoice = scanner.nextInt();
             scanner.nextLine();
 
@@ -147,41 +151,45 @@ public class Main {
             } else if (adminChoice == 2) {
                 listUsers();
             } else if (adminChoice == 0) {
-                System.out.println("Выход из административного меню...");
+                System.out.println("Izeja no administratora izvēlnes...");
             } else {
-                System.out.println("Неверный ввод, попробуйте ещё раз.");
+                System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (adminChoice != 0);
     }
 
-    // Метод для удаления пользователя
+    // Lietotāja dzēšanas metode
     private static void deleteUser(Scanner scanner) {
-        System.out.print("Введите имя пользователя для удаления (или '0' для отмены): ");
+        System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0' lai atgrieztos): ");
         String usernameToDelete = scanner.nextLine();
         if (usernameToDelete.equals("0")) {
-            System.out.println("Отмена удаления.");
+            System.out.println("Atcelts.");
             return;
         }
         Person userToDelete = findUser(usernameToDelete);
         if (userToDelete != null) {
-            // Можно добавить дополнительную проверку, например, чтобы администратор не удалил свой собственный профиль.
+            // Var dzēst tikai lietotājus, kas nav administrators
+            if (userToDelete.isAdmin()) {
+                System.out.println("Administrators nevar tikt dzēsts.");
+                return;
+            }
             users.remove(userToDelete);
             saveUsers();
-            System.out.println("Профиль '" + usernameToDelete + "' успешно удалён.");
+            System.out.println("Profils " + usernameToDelete + " veiksmīgi dzēsts.");
         } else {
-            System.out.println("Пользователь с таким именем не найден.");
+            System.out.println("Lietotājs ar šādu lietotājvārdu nav atrasts.");
         }
     }
 
-    // Метод для отображения списка пользователей
+    // Lietotāju saraksts
     private static void listUsers() {
-        System.out.println("\nСписок профилей:");
+        System.out.println("\nLietotāju saraksts:");
         for (Person user : users) {
-            System.out.println("Пользователь: " + user.getUsername() + " (Админ: " + user.isAdmin() + ")");
+            System.out.println("Lietotājs: " + user.getUsername() + " (Administrators: " + user.isAdmin() + ")");
         }
     }
 
-    // Метод для поиска пользователя по имени
+    // Metode, lai atrastu lietotāju pēc lietotājvārda
     private static Person findUser(String username) {
         for (Person user : users) {
             if (user.getUsername().equals(username)) {
@@ -191,7 +199,7 @@ public class Main {
         return null;
     }
 
-    // Метод для загрузки пользователей из CSV-файла
+    // Lieotāju ielāde no CSV faila
     private static void loadUsers() {
         File file = new File(CSV_FILE);
         if (!file.exists()) {
@@ -209,65 +217,65 @@ public class Main {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Ошибка при загрузке пользователей: " + e.getMessage());
+            System.out.println("Lietotāju ievades kļūda " + e.getMessage());
         }
     }
 
-    // Метод для сохранения пользователей в CSV-файл
+    // Metode, lai saglabātu lietotājus CSV failā
     private static void saveUsers() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(CSV_FILE))) {
             for (Person user : users) {
                 pw.println(user.getUsername() + "," + user.getPassword() + "," + user.isAdmin());
             }
         } catch (IOException e) {
-            System.out.println("Ошибка при сохранении пользователей: " + e.getMessage());
+            System.out.println("Kļūda, saglabājot lietotājus: " + e.getMessage());
         }
     }
 
-    // Метод для раздела "Связаться с нами"
+    // Metode, lai sazinātos ar mums
     private static void contactUs(Scanner scanner) {
         int choice;
         do {
-            System.out.println("\nСвязь с нами:");
-            System.out.println("1 - Связаться");
-            System.out.println("2 - Вернуться в главное меню");
-            System.out.print("Введите номер выбора: ");
+            System.out.println("\nSazināties ar mums:");
+            System.out.println("1 - Sazināties");
+            System.out.println("2 - Atgriezties galvenajā izvēlnē");
+            System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
 
             if (choice == 1) {
                 int subChoice;
                 do {
-                    System.out.println("\nСвязь:");
-                    System.out.println("1 - Оставить отзыв");
-                    System.out.println("2 - Сообщить об ошибке");
-                    System.out.println("3 - Предложить идею для нового раздела");
-                    System.out.println("4 - Вернуться в главное меню");
-                    System.out.print("Введите номер выбора: ");
+                    System.out.println("\nSaziņa ar mums:");
+                    System.out.println("1 - Atstāt atsauksmi");
+                    System.out.println("2 - Paziņot par kļūdu");
+                    System.out.println("3 - Iedot savu ideju");
+                    System.out.println("4 - Atgriezties galvenajā izvēlnē");
+                    System.out.print("Ievadiet izvēli: ");
                     subChoice = scanner.nextInt();
                     scanner.nextLine();
 
                     if (subChoice == 1) {
-                        System.out.println("Пожалуйста, оставьте свой отзыв.");
+                        System.out.println("Lūdzu, atstājiet savu atsauksmi.");
                     } else if (subChoice == 2) {
-                        System.out.println("Пожалуйста, опишите ошибку.");
+                        System.out.println("Lūdzu, aprakstiet kļūdu.");
                     } else if (subChoice == 3) {
-                        System.out.println("Пожалуйста, предложите идею для нового раздела.");
+                        System.out.println("Lūdzu, aprakstiet savu ideju.");
                     } else if (subChoice == 4) {
-                        System.out.println("Возврат в главное меню...");
+                        System.out.println("Atgriežamies galvenajā izvēlnē...");
                     } else {
-                        System.out.println("Неверный ввод, попробуйте снова.");
+                        System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
                     }
                 } while (subChoice != 4);
             } else if (choice == 2) {
-                System.out.println("Возврат в главное меню...");
+                System.out.println("Atgriežamies galvenajā izvēlnē...");
             } else {
-                System.out.println("Неверный ввод, попробуйте снова.");
+                System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 2);
     }
 
-    // Класс Person для хранения данных пользователя
+    // Person klase
     static class Person {
         private String username;
         private String password;
