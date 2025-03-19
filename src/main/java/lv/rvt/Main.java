@@ -8,10 +8,16 @@ public class Main {
     private static ArrayList<Person> users = new ArrayList<>();
     private static final String CSV_FILE = "data/users.csv";
 
+    // Automobiļu kolekcijas mainīgās
+    private static ArrayList<Car> cars = new ArrayList<>();
+    private static final String CARS_FILE = "data/cars.csv";
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         // Lietotāju ielāde no CSV
         loadUsers();
+        // Ielādē automašīnu datus no CSV
+        loadCars();
         
         if(users.isEmpty()){
             System.out.println("Lietotāju nav. Izveidojiet pirmo lietotāju (administratoru).");
@@ -26,15 +32,14 @@ public class Main {
             System.out.println("0 - Iziet no programmas");
             System.out.print("Ievadiet izvēli: ");
             
-
             choice = scanner.nextInt();
-            scanner.nextLine(); // Veidojam atstarpi
+            scanner.nextLine(); // Atstarpe ievades lasīšanai
             Loading loading = new Loading();
             loading.LoadingScreen(); // Ielādēšanas ekrāns
 
             switch (choice) {
                 case 1:
-                    displayCollection();
+                    displayCarCollection(scanner);
                     break;
                 case 2:
                     loginOrRegister(scanner);
@@ -51,16 +56,116 @@ public class Main {
         } while (choice != 0);
     }
 
-    // Metode, lai parādītu kolekciju (PĀRVEIDOT - mašīnas būs ievietoti csv failā)
-    private static void displayCollection() {
-        System.out.println("\nAutomobiļu kolekcija:");
-        System.out.println("1 - Auto №1 (BMW, 2020)");
-        System.out.println("2 - Auto №2 (Audi, 2019)");
-        System.out.println("3 - Auto №3 (Mercedes, 2021)");
-        System.out.println("4 - Auto №4 (Volkswagen, 2022)");
+    // Kolekcijas apskate – pēc markas izvēles parādās tikai pamatdati un pēc tam iespēja redzēt papildinformāciju
+    private static void displayCarCollection(Scanner scanner) {
+        int brandChoice;
+        do {
+            System.out.println("\nKolekcija:");
+            System.out.println("1 - Audi");
+            System.out.println("2 - BMW");
+            System.out.println("3 - Mercedes-Benz");
+            System.out.println("4 - Porsche");
+            System.out.println("5 - Volkswagen");
+            System.out.println("6 - Atgriezties uz sākumu");
+            System.out.print("Ievadiet izvēli: ");
+            brandChoice = scanner.nextInt();
+            scanner.nextLine();
+            
+            String selectedBrand = null;
+            switch(brandChoice) {
+                case 1: selectedBrand = "Audi"; break;
+                case 2: selectedBrand = "BMW"; break;
+                case 3: selectedBrand = "Mercedes-Benz"; break;
+                case 4: selectedBrand = "Porsche"; break;
+                case 5: selectedBrand = "Volkswagen"; break;
+                case 6:
+                    System.out.println("Atgriežamies uz sākumu...");
+                    return;
+                default:
+                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+            }
+            
+            if (selectedBrand != null) {
+                displayCarsByBrand(selectedBrand, scanner);
+            }
+        } while(brandChoice != 6);
     }
 
-    // Profila ieejas vai reģistrācijas metode
+    // Parāda tabulu ar mašīnu pamatdatiem pēc izvēlētās markas un ļauj apskatīt detalizētu informāciju
+    private static void displayCarsByBrand(String brand, Scanner scanner) {
+        List<Car> brandCars = new ArrayList<>();
+        int index = 1;
+        System.out.println("\n" + brand + " modeļi:");
+        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s\n", "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Piedziņa");
+        System.out.println("----------------------------------------------------------------------");
+        for (Car car : cars) {
+            if (car.getBrand().equalsIgnoreCase(brand)) {
+                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s\n", index, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getDrive());
+                brandCars.add(car);
+                index++;
+            }
+        }
+        if (brandCars.isEmpty()) {
+            System.out.println("Nav atrasti modeļi šai markai.");
+            return;
+        }
+        System.out.print("\nIevadiet modeļa numuru, lai redzētu detalizētu informāciju (vai 0, lai atgrieztos): ");
+        int selection = scanner.nextInt();
+        scanner.nextLine();
+        if (selection > 0 && selection <= brandCars.size()) {
+            Car selectedCar = brandCars.get(selection - 1);
+            System.out.println("\nDetalizēta informācija par " + selectedCar.getBrand() + " " + selectedCar.getModel() + ":");
+            System.out.println("Izlaides gads: " + selectedCar.getYear());
+            System.out.println("Zirgspēki: " + selectedCar.getHorsepower());
+            System.out.println("Piedziņa: " + selectedCar.getDrive());
+            System.out.println("Paaudze: " + selectedCar.getGeneration());
+            System.out.println("Apraksts: " + selectedCar.getDescription());
+        } else if (selection != 0) {
+            System.out.println("Nepareiza izvēle.");
+        }
+    }
+
+    // Ielādē automašīnu datus no CSV faila
+    private static void loadCars() {
+        File file = new File(CARS_FILE);
+        if (!file.exists()) {
+            System.out.println("Cars data file (" + CARS_FILE + ") nav atrasts.");
+            return;
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // CSV formāts: marka,modelis,izlaides gads,zirgspēki,piedziņa,paaudze,apraksts
+                String[] parts = line.split(",", 7);
+                if (parts.length == 7) {
+                    String brand = parts[0].trim();
+                    String model = parts[1].trim();
+                    int year = Integer.parseInt(parts[2].trim());
+                    int horsepower = Integer.parseInt(parts[3].trim());
+                    String drive = parts[4].trim();
+                    String generation = parts[5].trim();
+                    String description = parts[6].trim();
+                    cars.add(new Car(brand, model, year, horsepower, drive, generation, description));
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Kļūda, ielādējot cars.csv: " + e.getMessage());
+        }
+    }
+
+    // Saglabā automašīnu datus CSV failā
+    private static void saveCars() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(CARS_FILE))) {
+            for (Car car : cars) {
+                pw.println(car.getBrand() + "," + car.getModel() + "," + car.getYear() + "," + car.getHorsepower() 
+                           + "," + car.getDrive() + "," + car.getGeneration() + "," + car.getDescription());
+            }
+        } catch (IOException e) {
+            System.out.println("Kļūda, saglabājot cars.csv: " + e.getMessage());
+        }
+    }
+
+    // Profila ieejas vai reģistrācijas metode (nemainīta)
     private static void loginOrRegister(Scanner scanner) {
         int choice;
         do {
@@ -74,7 +179,6 @@ public class Main {
             scanner.nextLine();
 
             if (choice == 1) {
-                // Lietotāja profila ieeja
                 System.out.println("\nIeiet kā lietotājs:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
@@ -89,8 +193,7 @@ public class Main {
                     System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
                 }
             } else if (choice == 2) {
-                // Administrātora profila ieeja
-                System.out.println("\nIeiet ka administators:");
+                System.out.println("\nIeiet kā administrators:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
                 if (username.equals("0")) continue;
@@ -105,7 +208,6 @@ public class Main {
                     System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
                 }
             } else if (choice == 3) {
-                // Jauna profila pievienošana
                 System.out.println("\nPievienot jaunu profilu:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String newUsername = scanner.nextLine();
@@ -114,7 +216,6 @@ public class Main {
                 String newPassword = scanner.nextLine();
                 if (newPassword.equals("0")) continue;
                 if (findUser(newUsername) == null) {
-                    // Pirmais profils tiks izveidots kā administrators, citi - kā lietotāji
                     boolean isAdmin = users.isEmpty();
                     users.add(new Person(newUsername, newPassword, isAdmin));
                     saveUsers();
@@ -129,19 +230,20 @@ public class Main {
             } else if (choice == 4) {
                 System.out.println("Atgriežamies galvenajā izvēlnē...");
             } else {
-                System.out.println("Nederīga ievade, mēģiniet vēlreiz.");
+                System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 4);
     }
 
-    // Administratora izvēlnes metode (PĀRVEIDOT - pievienot funkcionalitāti)
+    // Administratora izvēlne ar iespēju pārvaldīt lietotājus un pievienot jaunas mašīnas
     private static void adminMenu(Scanner scanner) {
         int adminChoice;
         do {
-            System.out.println("\nАдминистративное меню:");
-            System.out.println("1 - Удалить профиль");
-            System.out.println("2 - Показать список профилей");
-            System.out.println("0 - Выход из административного меню");
+            System.out.println("\nAdministrācijas izvēlne:");
+            System.out.println("1 - Dzēst profilu");
+            System.out.println("2 - Parādīt profilu sarakstu");
+            System.out.println("3 - Pievienot jaunu mašīnu (marku/modeli)");
+            System.out.println("0 - Iziet no administratora izvēlnes");
             System.out.print("Ievadiet izvēli: ");
             adminChoice = scanner.nextInt();
             scanner.nextLine();
@@ -150,6 +252,8 @@ public class Main {
                 deleteUser(scanner);
             } else if (adminChoice == 2) {
                 listUsers();
+            } else if (adminChoice == 3) {
+                addNewCar(scanner);
             } else if (adminChoice == 0) {
                 System.out.println("Izeja no administratora izvēlnes...");
             } else {
@@ -158,9 +262,45 @@ public class Main {
         } while (adminChoice != 0);
     }
 
-    // Lietotāja dzēšanas metode
+    // Administratora metode jaunas mašīnas (markas/modela) pievienošanai
+    private static void addNewCar(Scanner scanner) {
+        System.out.println("\nPievienot jaunu mašīnu");
+        System.out.print("Ievadiet marku: ");
+        String brand = scanner.nextLine().trim();
+        System.out.print("Ievadiet modeli: ");
+        String model = scanner.nextLine().trim();
+        System.out.print("Ievadiet izlaides gadu: ");
+        int year = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Ievadiet zirgspēkus: ");
+        int horsepower = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Ievadiet piedziņu (piem., FWD, AWD, RWD): ");
+        String drive = scanner.nextLine().trim();
+        System.out.print("Ievadiet paaudzi (piem., I, II, III): ");
+        String generation = scanner.nextLine().trim();
+        System.out.println("Ievadiet detalizētu aprakstu (2-3 teikumi): ");
+        String description = scanner.nextLine().trim();
+
+        Car newCar = new Car(brand, model, year, horsepower, drive, generation, description);
+
+        // Meklējam, vai jau ir kādi ieraksti ar šādu marku
+        int insertIndex = cars.size(); // noklusējuma gadījumā pievienot beigās
+        for (int i = 0; i < cars.size(); i++) {
+            // Ja atrodam ierakstu ar šādu marku, saglabājam pēdējo tā atrašanās vietu
+            if (cars.get(i).getBrand().equalsIgnoreCase(brand)) {
+                insertIndex = i + 1;
+            }
+        }
+        // Ja jau ir vairāki ieraksti ar šo marku, jauns ieraksts tiks ievietots pēc pēdējā
+        cars.add(insertIndex, newCar);
+        saveCars();
+        System.out.println("Jauna mašīna veiksmīgi pievienota!");
+    }
+
+    // Lietotāja dzēšanas metode (nemainīta)
     private static void deleteUser(Scanner scanner) {
-        System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0' lai atgrieztos): ");
+        System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
         String usernameToDelete = scanner.nextLine();
         if (usernameToDelete.equals("0")) {
             System.out.println("Atcelts.");
@@ -168,7 +308,6 @@ public class Main {
         }
         Person userToDelete = findUser(usernameToDelete);
         if (userToDelete != null) {
-            // Var dzēst tikai lietotājus, kas nav administrators
             if (userToDelete.isAdmin()) {
                 System.out.println("Administrators nevar tikt dzēsts.");
                 return;
@@ -181,7 +320,7 @@ public class Main {
         }
     }
 
-    // Lietotāju saraksts
+    // Lietotāju saraksta metode
     private static void listUsers() {
         System.out.println("\nLietotāju saraksts:");
         for (Person user : users) {
@@ -189,7 +328,7 @@ public class Main {
         }
     }
 
-    // Metode, lai atrastu lietotāju pēc lietotājvārda
+    // Meklē lietotāju pēc lietotājvārda
     private static Person findUser(String username) {
         for (Person user : users) {
             if (user.getUsername().equals(username)) {
@@ -199,7 +338,7 @@ public class Main {
         return null;
     }
 
-    // Lieotāju ielāde no CSV faila
+    // Lietotāju ielāde no CSV faila
     private static void loadUsers() {
         File file = new File(CSV_FILE);
         if (!file.exists()) {
@@ -221,7 +360,7 @@ public class Main {
         }
     }
 
-    // Metode, lai saglabātu lietotājus CSV failā
+    // Lietotāju saglabāšana CSV failā
     private static void saveUsers() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(CSV_FILE))) {
             for (Person user : users) {
@@ -232,7 +371,7 @@ public class Main {
         }
     }
 
-    // Metode, lai sazinātos ar mums
+    // Metode, lai sazinātos ar mums (nemainīta)
     private static void contactUs(Scanner scanner) {
         int choice;
         do {
@@ -301,6 +440,49 @@ public class Main {
 
         public boolean validatePassword(String password) {
             return this.password.equals(password);
+        }
+    }
+
+    // Car klase ar papildu lauku aprakstam
+    static class Car {
+        private String brand;
+        private String model;
+        private int year;
+        private int horsepower;
+        private String drive;
+        private String generation;
+        private String description;
+
+        public Car(String brand, String model, int year, int horsepower, String drive, String generation, String description) {
+            this.brand = brand;
+            this.model = model;
+            this.year = year;
+            this.horsepower = horsepower;
+            this.drive = drive;
+            this.generation = generation;
+            this.description = description;
+        }
+
+        public String getBrand() {
+            return brand;
+        }
+        public String getModel() {
+            return model;
+        }
+        public int getYear() {
+            return year;
+        }
+        public int getHorsepower() {
+            return horsepower;
+        }
+        public String getDrive() {
+            return drive;
+        }
+        public String getGeneration() {
+            return generation;
+        }
+        public String getDescription() {
+            return description;
         }
     }
 }
