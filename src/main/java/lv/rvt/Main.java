@@ -11,8 +11,9 @@ public class Main {
     // Automobiļu kolekcijas mainīgās
     private static ArrayList<Car> cars = new ArrayList<>();
     private static final String CARS_FILE = "data/cars.csv";
-
+    
     public static void main(String[] args) {
+        Loading loading = new Loading();
         Scanner scanner = new Scanner(System.in);
         // Lietotāju ielāde no CSV
         loadUsers();
@@ -34,7 +35,7 @@ public class Main {
             
             choice = scanner.nextInt();
             scanner.nextLine(); // Atstarpe ievades lasīšanai
-            Loading loading = new Loading();
+            
 
             switch (choice) {
                 case 1:
@@ -99,7 +100,6 @@ public class Main {
     // Kolekcijas apskate – pēc markas izvēles parādās tikai pamatdati un pēc tam iespēja redzēt papildinformāciju
     private static void displayCarCollection(Scanner scanner) {
         int brandChoice;
-        Loading loading = new Loading();
         do {
             System.out.println("\nKolekcija:");
             System.out.println("1 - Audi");
@@ -261,7 +261,6 @@ public class Main {
                     System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
                 }
             } else if (choice == 2) {
-                loading.LoadingScreen();
                 System.out.println("\nIeiet kā administrators:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
@@ -309,7 +308,6 @@ public class Main {
     // Administratora izvēlne ar iespēju pārvaldīt lietotājus, pievienot jaunas mašīnas un izmantot paplašinātās datu operācijas
     private static void adminMenu(Scanner scanner) {
         int adminChoice;
-        Loading loading = new Loading();
         do {
             System.out.println("\nAdministrācijas izvēlne:");
             System.out.println("1 - Dzēst profilu");
