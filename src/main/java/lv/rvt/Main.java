@@ -306,7 +306,7 @@ public class Main {
         } while (choice != 4);
     }
 
-    // Administratora izvēlne ar iespēju pārvaldīt lietotājus un pievienot jaunas mašīnas
+    // Administratora izvēlne ar iespēju pārvaldīt lietotājus, pievienot jaunas mašīnas un izmantot paplašinātās datu operācijas
     private static void adminMenu(Scanner scanner) {
         int adminChoice;
         Loading loading = new Loading();
@@ -315,6 +315,7 @@ public class Main {
             System.out.println("1 - Dzēst profilu");
             System.out.println("2 - Parādīt profilu sarakstu");
             System.out.println("3 - Pievienot jaunu mašīnu (marku/modeli)");
+            System.out.println("4 - Paplašinātās datu operācijas");
             System.out.println("0 - Iziet no administratora izvēlnes");
             System.out.print("Ievadiet izvēli: ");
             adminChoice = scanner.nextInt();
@@ -326,12 +327,227 @@ public class Main {
                 listUsers();
             } else if (adminChoice == 3) {
                 addNewCar(scanner);
+            } else if (adminChoice == 4) {
+                advancedDataOperationsMenu(scanner);
             } else if (adminChoice == 0) {
                 System.out.println("Izeja no administratora izvēlnes...");
             } else {
                 System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (adminChoice != 0);
+    }
+
+    // Paplašinātās datu operācijas izvēlne – ietver datu kārtošanu, filtrēšanu un apstrādi
+    private static void advancedDataOperationsMenu(Scanner scanner) {
+        int opChoice;
+        do {
+            System.out.println("\nPaplašinātās datu operācijas:");
+            System.out.println("1 - Kārtot automobiļus: pēc izlaides gada (augšup) un zirgspēkiem (dilstoši)");
+            System.out.println("2 - Kārtot automobiļus: pēc markas un modeļa (alfabētiski)");
+            System.out.println("3 - Atrast automobiļus pēc gada diapazona");
+            System.out.println("4 - Atrast automobiļus ar zirgspēkiem virs sliekšņa");
+            System.out.println("5 - Atrast automobiļus pēc degvielas tipa");
+            System.out.println("6 - Saskaitīt kopējos zirgspēkus izvēlētā gada diapazonā");
+            System.out.println("7 - Saskaitīt automobiļu skaitu izvēlētā gada diapazonā");
+            System.out.println("8 - Aprēķināt vidējos zirgspēkus visiem automobiļiem");
+            System.out.println("9 - Atrast maksimālos zirgspēkus izvēlētai markai");
+            System.out.println("0 - Atgriezties administratora izvēlnē");
+            System.out.print("Ievadiet izvēli: ");
+            opChoice = scanner.nextInt();
+            scanner.nextLine();
+            Loading loading = new Loading();
+            loading.LoadingScreen();
+
+            switch(opChoice) {
+                case 1:
+                    sortCarsByYearThenHorsepower();
+                    break;
+                case 2:
+                    sortCarsByBrandThenModel();
+                    break;
+                case 3:
+                    filterCarsByYearRange(scanner);
+                    break;
+                case 4:
+                    filterCarsByHorsepowerThreshold(scanner);
+                    break;
+                case 5:
+                    filterCarsByFuelType(scanner);
+                    break;
+                case 6:
+                    sumHorsepowerInYearRange(scanner);
+                    break;
+                case 7:
+                    countCarsInYearRange(scanner);
+                    break;
+                case 8:
+                    averageHorsepower(scanner);
+                    break;
+                case 9:
+                    maxHorsepowerForBrand(scanner);
+                    break;
+                case 0:
+                    System.out.println("Atgriežamies administratora izvēlnē...");
+                    break;
+                default:
+                    System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+            }
+            System.out.println(); // tukša rinda starp operācijām
+        } while(opChoice != 0);
+    }
+
+    // Metode – kārto automobiļus pēc izlaides gada augošā secībā un, ja gadi sakrīt, pēc zirgspēkiem dilstošā secībā
+    private static void sortCarsByYearThenHorsepower() {
+        List<Car> sortedCars = new ArrayList<>(cars);
+        Collections.sort(sortedCars, Comparator.comparingInt(Car::getYear)
+                .thenComparing(Comparator.comparingInt(Car::getHorsepower).reversed()));
+        System.out.println("Automobiļi sakārtoti pēc izlaides gada (augšup) un zirgspēkiem (dilstoši):");
+        System.out.format("%-15s %-15s %-10s %-15s\n", "Marka", "Modelis", "Izlaides gads", "Zirgspēki");
+        for (Car car : sortedCars) {
+            System.out.format("%-15s %-15s %-10d %-15d\n", car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower());
+        }
+    }
+
+    // Metode – kārto automobiļus pēc markas un modeļa alfabētiskā secībā
+    private static void sortCarsByBrandThenModel() {
+        List<Car> sortedCars = new ArrayList<>(cars);
+        Collections.sort(sortedCars, Comparator.comparing(Car::getBrand)
+                .thenComparing(Car::getModel));
+        System.out.println("Automobiļi sakārtoti pēc markas un modeļa (alfabētiski):");
+        System.out.format("%-15s %-15s %-10s %-15s\n", "Marka", "Modelis", "Izlaides gads", "Zirgspēki");
+        for (Car car : sortedCars) {
+            System.out.format("%-15s %-15s %-10d %-15d\n", car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower());
+        }
+    }
+
+    // Metode – filtrē automobiļus pēc gada diapazona
+    private static void filterCarsByYearRange(Scanner scanner) {
+        System.out.print("Ievadiet sākuma gadu: ");
+        int startYear = scanner.nextInt();
+        System.out.print("Ievadiet beigu gadu: ");
+        int endYear = scanner.nextInt();
+        scanner.nextLine();
+        List<Car> filtered = new ArrayList<>();
+        for (Car car : cars) {
+            if (car.getYear() >= startYear && car.getYear() <= endYear) {
+                filtered.add(car);
+            }
+        }
+        if (filtered.isEmpty()) {
+            System.out.println("Nav atrasti automobiļi gada diapazonā " + startYear + " - " + endYear + ".");
+        } else {
+            System.out.println("Atrasti automobiļi gada diapazonā " + startYear + " - " + endYear + ":");
+            System.out.format("%-15s %-15s %-10s\n", "Marka", "Modelis", "Izlaides gads");
+            for (Car car : filtered) {
+                System.out.format("%-15s %-15s %-10d\n", car.getBrand(), car.getModel(), car.getYear());
+            }
+        }
+    }
+
+    // Metode – filtrē automobiļus, kuriem zirgspēki ir virs norādītā sliekšņa
+    private static void filterCarsByHorsepowerThreshold(Scanner scanner) {
+        System.out.print("Ievadiet zirgspēku slieksni: ");
+        int threshold = scanner.nextInt();
+        scanner.nextLine();
+        List<Car> filtered = new ArrayList<>();
+        for (Car car : cars) {
+            if (car.getHorsepower() >= threshold) {
+                filtered.add(car);
+            }
+        }
+        if (filtered.isEmpty()) {
+            System.out.println("Nav atrasti automobiļi ar zirgspēkiem virs " + threshold + ".");
+        } else {
+            System.out.println("Atrasti automobiļi ar zirgspēkiem virs " + threshold + ":");
+            System.out.format("%-15s %-15s %-10s %-15s\n", "Marka", "Modelis", "Izlaides gads", "Zirgspēki");
+            for (Car car : filtered) {
+                System.out.format("%-15s %-15s %-10d %-15d\n", car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower());
+            }
+        }
+    }
+
+    // Metode – filtrē automobiļus pēc degvielas tipa
+    private static void filterCarsByFuelType(Scanner scanner) {
+        System.out.print("Ievadiet degvielas tipu: ");
+        String fuel = scanner.nextLine().trim();
+        List<Car> filtered = new ArrayList<>();
+        for (Car car : cars) {
+            if (car.getFuelType().equalsIgnoreCase(fuel)) {
+                filtered.add(car);
+            }
+        }
+        if (filtered.isEmpty()) {
+            System.out.println("Nav atrasti automobiļi ar degvielas tipu " + fuel + ".");
+        } else {
+            System.out.println("Atrasti automobiļi ar degvielas tipu " + fuel + ":");
+            System.out.format("%-15s %-15s %-10s %-15s\n", "Marka", "Modelis", "Izlaides gads", "Degviela");
+            for (Car car : filtered) {
+                System.out.format("%-15s %-15s %-10d %-15s\n", car.getBrand(), car.getModel(), car.getYear(), car.getFuelType());
+            }
+        }
+    }
+
+    // Aprēķins 1 – saskaita kopējos zirgspēkus automobiļiem izvēlētā gada diapazonā
+    private static void sumHorsepowerInYearRange(Scanner scanner) {
+        System.out.print("Ievadiet sākuma gadu: ");
+        int startYear = scanner.nextInt();
+        System.out.print("Ievadiet beigu gadu: ");
+        int endYear = scanner.nextInt();
+        scanner.nextLine();
+        int sum = 0;
+        for (Car car : cars) {
+            if (car.getYear() >= startYear && car.getYear() <= endYear) {
+                sum += car.getHorsepower();
+            }
+        }
+        System.out.println("Kopējie zirgspēki no " + startYear + " līdz " + endYear + ": " + sum);
+    }
+
+    // Aprēķins 2 – saskaita automobiļu skaitu izvēlētā gada diapazonā
+    private static void countCarsInYearRange(Scanner scanner) {
+        System.out.print("Ievadiet sākuma gadu: ");
+        int startYear = scanner.nextInt();
+        System.out.print("Ievadiet beigu gadu: ");
+        int endYear = scanner.nextInt();
+        scanner.nextLine();
+        int count = 0;
+        for (Car car : cars) {
+            if (car.getYear() >= startYear && car.getYear() <= endYear) {
+                count++;
+            }
+        }
+        System.out.println("Automobiļu skaits no " + startYear + " līdz " + endYear + ": " + count);
+    }
+
+    // Aprēķins 3 – aprēķina vidējos zirgspēkus visiem automobiļiem
+    private static void averageHorsepower(Scanner scanner) {
+        if (cars.isEmpty()) {
+            System.out.println("Nav pieejamu datu aprēķiniem.");
+            return;
+        }
+        int total = 0;
+        for (Car car : cars) {
+            total += car.getHorsepower();
+        }
+        double average = (double) total / cars.size();
+        System.out.println("Vidējie zirgspēki visiem automobiļiem: " + average);
+    }
+
+    // Aprēķins 4 – nosaka maksimālos zirgspēkus izvēlētai markai
+    private static void maxHorsepowerForBrand(Scanner scanner) {
+        System.out.print("Ievadiet marku: ");
+        String brand = scanner.nextLine().trim();
+        int maxHP = -1;
+        for (Car car : cars) {
+            if (car.getBrand().equalsIgnoreCase(brand) && car.getHorsepower() > maxHP) {
+                maxHP = car.getHorsepower();
+            }
+        }
+        if (maxHP == -1) {
+            System.out.println("Nav atrasts automobiļu ar marku: " + brand);
+        } else {
+            System.out.println("Maksimālie zirgspēki pie " + brand + ": " + maxHP);
+        }
     }
 
     // Administratora metode jaunas mašīnas (markas/modela) pievienošanai
@@ -523,7 +739,7 @@ public class Main {
         private String model;
         private int year;
         private int horsepower;
-        private String fuelType;   // Jaunais lauks
+        private String fuelType;
         private String drive;
         private String generation;
         private String description;
