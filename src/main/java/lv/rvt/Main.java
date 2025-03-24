@@ -42,12 +42,13 @@ public class Main {
                     displayCarCollection(scanner);
                     break;
                 case 2:
-                loading.LoadingScreen(); // Ielādēšanas ekrāns
+                    loading.LoadingScreen(); // Ielādēšanas ekrāns
                     loginOrRegister(scanner);
                     break;
                 case 3:
                     loading.LoadingScreen(); // Ielādēšanas ekrāns
-                    contactUs(scanner);
+                    System.out.println("Brīdinājums: Sazināties ar mums var tikai pēc profila ienākšanas. Lūdzu, ieejiet savā profilā.");
+                    loginOrRegister(scanner);
                     break;
                 case 0:
                     System.out.println("Paldies, ka izmantojāt CarObka!");
@@ -56,6 +57,43 @@ public class Main {
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 0);
+    }
+
+    // Jaunā lietotāja izvēlne, kas tiek attēlota pēc veiksmīgas pieslēgšanās (neadministratoram)
+    private static void userMenu(Scanner scanner, Person user) {
+        int choice;
+        do {
+            System.out.println("\nCarObka - automašīnu kolekcija");
+            System.out.println("1 - Kolekcija");
+            System.out.println("2 - Favorite mašīnas");
+            System.out.println("3 - Sazināties ar mums");
+            System.out.println("4 - Iziet no profila");
+            System.out.print("Ievadiet izvēli: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            Loading loading = new Loading();
+
+            switch (choice) {
+                case 1:
+                    loading.LoadingScreen();
+                    displayCarCollection(scanner);
+                    break;
+                case 2:
+                    loading.LoadingScreen();
+                    // Šeit var pievienot loģiku favorite mašīnām. Pagaidām demonstrācijas nolūkos tiek izvadīts paziņojums.
+                    System.out.println("Favorite mašīnas: (Funkcionalitāte nav implementēta.)");
+                    break;
+                case 3:
+                    loading.LoadingScreen();
+                    contactUs(scanner);
+                    break;
+                case 4:
+                    System.out.println("Iziet no profila...");
+                    break;
+                default:
+                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+            }
+        } while (choice != 4);
     }
 
     // Kolekcijas apskate – pēc markas izvēles parādās tikai pamatdati un pēc tam iespēja redzēt papildinformāciju
@@ -105,7 +143,6 @@ public class Main {
     }
 
     // Parāda tabulu ar mašīnu pamatdatiem pēc izvēlētās markas un ļauj apskatīt detalizētu informāciju
-    // Parāda tabulu ar mašīnu pamatdatiem pēc izvēlētās markas un ļauj apskatīt detalizētu informāciju
     private static void displayCarsByBrand(String brand, Scanner scanner) {
         Loading loading = new Loading();
         List<Car> brandCars = new ArrayList<>();
@@ -128,8 +165,8 @@ public class Main {
         System.out.print("\nIevadiet modeļa numuru, lai redzētu detalizētu informāciju (vai 0, lai atgrieztos): ");
         int selection = scanner.nextInt();
         scanner.nextLine();
-        loading.LoadingScreen();
         if (selection > 0 && selection <= brandCars.size()) {
+            loading.LoadingScreen();
             Car selectedCar = brandCars.get(selection - 1);
             int backChoice = 0;
             // Cikls, kas atkārtoti parāda detalizēto informāciju, kamēr nav ievadīts "1"
@@ -151,33 +188,33 @@ public class Main {
     }
 
     // Ielādē automašīnu datus no CSV faila
-private static void loadCars() {
-    File file = new File(CARS_FILE);
-    if (!file.exists()) {
-        System.out.println("Cars data file (" + CARS_FILE + ") nav atrasts.");
-        return;
-    }
-    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-        String line;
-        while ((line = br.readLine()) != null) {
-            // CSV formāts: marka,modelis,izlaides gads,zirgspēki,degviela,piedziņa,paaudze,apraksts
-            String[] parts = line.split(",", 8);
-            if (parts.length == 8) {
-                String brand = parts[0].trim();
-                String model = parts[1].trim();
-                int year = Integer.parseInt(parts[2].trim());
-                int horsepower = Integer.parseInt(parts[3].trim());
-                String fuelType = parts[4].trim();
-                String drive = parts[5].trim();
-                String generation = parts[6].trim();
-                String description = parts[7].trim();
-                cars.add(new Car(brand, model, year, horsepower, fuelType, drive, generation, description));
-            }
+    private static void loadCars() {
+        File file = new File(CARS_FILE);
+        if (!file.exists()) {
+            System.out.println("Cars data file (" + CARS_FILE + ") nav atrasts.");
+            return;
         }
-    } catch (IOException e) {
-        System.out.println("Kļūda, ielādējot cars.csv: " + e.getMessage());
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // CSV formāts: marka,modelis,izlaides gads,zirgspēki,degviela,piedziņa,paaudze,apraksts
+                String[] parts = line.split(",", 8);
+                if (parts.length == 8) {
+                    String brand = parts[0].trim();
+                    String model = parts[1].trim();
+                    int year = Integer.parseInt(parts[2].trim());
+                    int horsepower = Integer.parseInt(parts[3].trim());
+                    String fuelType = parts[4].trim();
+                    String drive = parts[5].trim();
+                    String generation = parts[6].trim();
+                    String description = parts[7].trim();
+                    cars.add(new Car(brand, model, year, horsepower, fuelType, drive, generation, description));
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Kļūda, ielādējot cars.csv: " + e.getMessage());
+        }
     }
-}
 
     // Saglabā automašīnu datus CSV failā
     private static void saveCars() {
@@ -192,8 +229,7 @@ private static void loadCars() {
         }
     }
 
-
-    // Profila ieejas vai reģistrācijas metode (nemainīta)
+    // Profila ieejas vai reģistrācijas metode
     private static void loginOrRegister(Scanner scanner) {
         int choice;
         Loading loading = new Loading();
@@ -219,6 +255,8 @@ private static void loadCars() {
                 loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
                     System.out.println("Laipni lūgti, " + username + "!");
+                    // Pēc veiksmīgas pieslēgšanās, izsaucam jauno lietotāja izvēlni
+                    userMenu(scanner, foundUser);
                 } else {
                     System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
                 }
@@ -334,8 +372,7 @@ private static void loadCars() {
         System.out.println("Jauna mašīna veiksmīgi pievienota!");
     }
 
-
-    // Lietotāja dzēšanas metode (nemainīta)
+    // Lietotāja dzēšanas metode
     private static void deleteUser(Scanner scanner) {
         System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
         String usernameToDelete = scanner.nextLine();
@@ -408,7 +445,7 @@ private static void loadCars() {
         }
     }
 
-    // Metode, lai sazinātos ar mums (nemainīta)
+    // Metode, lai sazinātos ar mums
     private static void contactUs(Scanner scanner) {
         int choice;
         do {
@@ -480,7 +517,6 @@ private static void loadCars() {
         }
     }
 
-    // Car klase ar papildu lauku aprakstam
     // Car klase ar papildu lauku degvielas tipam
     static class Car {
         private String brand;
@@ -515,7 +551,7 @@ private static void loadCars() {
         public int getHorsepower() {
             return horsepower;
         }
-        public String getFuelType() { // Getter jaunajam laukam
+        public String getFuelType() {
             return fuelType;
         }
         public String getDrive() {
