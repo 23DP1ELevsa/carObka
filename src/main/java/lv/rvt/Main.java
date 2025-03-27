@@ -66,14 +66,14 @@ public class Main {
         do {
             System.out.println("\nCarObka - automašīnu kolekcija");
             System.out.println("1 - Kolekcija");
-            System.out.println("2 - Favorite mašīnas");
+            System.out.println("2 - Iemīļotās mašīnas");
             System.out.println("3 - Sazināties ar mums");
             System.out.println("4 - Iziet no profila");
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
             Loading loading = new Loading();
-
+    
             switch (choice) {
                 case 1:
                     loading.LoadingScreen();
@@ -81,8 +81,7 @@ public class Main {
                     break;
                 case 2:
                     loading.LoadingScreen();
-                    // Šeit var pievienot loģiku favorite mašīnām. Pagaidām demonstrācijas nolūkos tiek izvadīts paziņojums.
-                    System.out.println("Favorite mašīnas: (Funkcionalitāte nav implementēta.)");
+                    manageFavorites(scanner, user);
                     break;
                 case 3:
                     loading.LoadingScreen();
@@ -144,16 +143,16 @@ public class Main {
 
     // Parāda tabulu ar mašīnu pamatdatiem pēc izvēlētās markas un ļauj apskatīt detalizētu informāciju
     private static void displayCarsByBrand(String brand, Scanner scanner) {
-        Loading loading = new Loading();
         List<Car> brandCars = new ArrayList<>();
         int index = 1;
-        loading.LoadingScreen();
         System.out.println("\n" + brand + " modeļi:");
-        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s\n", "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa");
-        System.out.println("-----------------------------------------------------------------------------------------------");
+        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
+            "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+        System.out.println("-".repeat(124));
         for (Car car : cars) {
             if (car.getBrand().equalsIgnoreCase(brand)) {
-                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s\n", index, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive());
+                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n", 
+                    index, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
                 brandCars.add(car);
                 index++;
             }
@@ -166,22 +165,16 @@ public class Main {
         int selection = scanner.nextInt();
         scanner.nextLine();
         if (selection > 0 && selection <= brandCars.size()) {
-            loading.LoadingScreen();
             Car selectedCar = brandCars.get(selection - 1);
-            int backChoice = 0;
-            // Cikls, kas atkārtoti parāda detalizēto informāciju, kamēr nav ievadīts "1"
-            do {
-                System.out.println("\nDetalizēta informācija par " + selectedCar.getBrand() + " " + selectedCar.getModel() + ":");
-                System.out.println("Izlaides gads: " + selectedCar.getYear());
-                System.out.println("Zirgspēki: " + selectedCar.getHorsepower());
-                System.out.println("Degviela: " + selectedCar.getFuelType());
-                System.out.println("Piedziņa: " + selectedCar.getDrive());
-                System.out.println("Paaudze: " + selectedCar.getGeneration());
-                System.out.println("Apraksts: " + selectedCar.getDescription());
-                System.out.println("\nIevadiet 1, lai atgrieztos:");
-                backChoice = scanner.nextInt();
-                scanner.nextLine();
-            } while (backChoice != 1);
+            System.out.println("\nDetalizēta informācija par " + selectedCar.getBrand() + " " + selectedCar.getModel() + ":");
+            System.out.println("Izlaides gads: " + selectedCar.getYear());
+            System.out.println("Zirgspēki: " + selectedCar.getHorsepower());
+            System.out.println("Degviela: " + selectedCar.getFuelType());
+            System.out.println("Piedziņa: " + selectedCar.getDrive());
+            System.out.println("Paaudze: " + selectedCar.getGeneration());
+            System.out.println("Vidējais degvielas patēriņš: " + selectedCar.getFuelConsumption() + " l/100km");
+            System.out.println("Cena: " + selectedCar.getPrice() + " EUR");
+            System.out.println("Apraksts: " + selectedCar.getDescription());
         } else if (selection != 0) {
             System.out.println("Nepareiza izvēle.");
         }
@@ -197,9 +190,9 @@ public class Main {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                // CSV formāts: marka,modelis,izlaides gads,zirgspēki,degviela,piedziņa,paaudze,apraksts
-                String[] parts = line.split(",", 8);
-                if (parts.length == 8) {
+                // CSV formāts: marka,modelis,izlaides gads,zirgspēki,degviela,piedziņa,paaudze,vidējais patēriņš,cena,apraksts
+                String[] parts = line.split(",", 10);
+                if (parts.length == 10) {
                     String brand = parts[0].trim();
                     String model = parts[1].trim();
                     int year = Integer.parseInt(parts[2].trim());
@@ -207,8 +200,10 @@ public class Main {
                     String fuelType = parts[4].trim();
                     String drive = parts[5].trim();
                     String generation = parts[6].trim();
-                    String description = parts[7].trim();
-                    cars.add(new Car(brand, model, year, horsepower, fuelType, drive, generation, description));
+                    double fuelConsumption = Double.parseDouble(parts[7].trim());
+                    int price = Integer.parseInt(parts[8].trim());
+                    String description = parts[9].trim();
+                    cars.add(new Car(brand, model, year, horsepower, fuelType, drive, generation, fuelConsumption, price, description));
                 }
             }
         } catch (IOException e) {
@@ -222,11 +217,93 @@ public class Main {
             for (Car car : cars) {
                 pw.println(car.getBrand() + "," + car.getModel() + "," + car.getYear() + "," +
                         car.getHorsepower() + "," + car.getFuelType() + "," + car.getDrive() + "," +
-                        car.getGeneration() + "," + car.getDescription());
+                        car.getGeneration() + "," + car.getFuelConsumption() + "," + car.getPrice() + "," +
+                        car.getDescription());
             }
         } catch (IOException e) {
             System.out.println("Kļūda, saglabājot cars.csv: " + e.getMessage());
         }
+    }
+
+    private static void displayFavorites(Person user) {
+        List<Car> favorites = user.getFavorites();
+        if (favorites.isEmpty()) {
+            System.out.println("Nav pievienotu iemīļoto mašīnu.");
+            return;
+        }
+        System.out.println("\nIemīļotās mašīnas:");
+        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s\n", 
+            "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Cena");
+        int index = 1;
+        for (Car car : favorites) {
+            System.out.format("%-5d %-15s %-15s %-15d %-15d %-15d\n", 
+                index++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getPrice());
+        }
+    }
+
+    private static void addFavoriteCar(Scanner scanner, Person user) {
+        System.out.println("\nPievienot mašīnu iemīļotajām:");
+        displayCarCollection(scanner); // Parāda kolekciju
+        System.out.print("Ievadiet mašīnas numuru, lai pievienotu iemīļotajām: ");
+        int carIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+        if (carIndex >= 0 && carIndex < cars.size()) {
+            Car selectedCar = cars.get(carIndex);
+            user.addFavorite(selectedCar);
+            System.out.println("Mašīna " + selectedCar.getBrand() + " " + selectedCar.getModel() + " pievienota iemīļotajām.");
+        } else {
+            System.out.println("Nepareiza izvēle.");
+        }
+    }
+
+    private static void removeFavoriteCar(Scanner scanner, Person user) {
+        List<Car> favorites = user.getFavorites();
+        if (favorites.isEmpty()) {
+            System.out.println("Nav pievienotu iemīļoto mašīnu.");
+            return;
+        }
+        displayFavorites(user);
+        System.out.print("Ievadiet mašīnas numuru, lai dzēstu no iemīļotajām: ");
+        int carIndex = scanner.nextInt() - 1;
+        scanner.nextLine();
+        if (carIndex >= 0 && carIndex < favorites.size()) {
+            Car removedCar = favorites.get(carIndex);
+            user.removeFavorite(removedCar);
+            System.out.println("Mašīna " + removedCar.getBrand() + " " + removedCar.getModel() + " dzēsta no iemīļotajām.");
+        } else {
+            System.out.println("Nepareiza izvēle.");
+        }
+    }
+
+    private static void manageFavorites(Scanner scanner, Person user) {
+        int choice;
+        do {
+            System.out.println("\nIemīļotās mašīnas:");
+            System.out.println("1 - Apskatīt iemīļotās mašīnas");
+            System.out.println("2 - Pievienot mašīnu iemīļotajām");
+            System.out.println("3 - Dzēst mašīnu no iemīļotajām");
+            System.out.println("4 - Atgriezties uz lietotāja izvēlni");
+            System.out.print("Ievadiet izvēli: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+    
+            switch (choice) {
+                case 1:
+                    displayFavorites(user);
+                    break;
+                case 2:
+                    addFavoriteCar(scanner, user);
+                    break;
+                case 3:
+                    removeFavoriteCar(scanner, user);
+                    break;
+                case 4:
+                    System.out.println("Atgriežamies uz lietotāja izvēlni...");
+                    break;
+                default:
+                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+            }
+        } while (choice != 4);
     }
 
     // Profila ieejas vai reģistrācijas metode
@@ -567,22 +644,21 @@ public class Main {
         String drive = scanner.nextLine().trim();
         System.out.print("Ievadiet paaudzi (piem., I, II, III): ");
         String generation = scanner.nextLine().trim();
+        System.out.print("Ievadiet vidējo degvielas patēriņu (litri uz 100 km): ");
+        double fuelConsumption = scanner.nextDouble();
+        scanner.nextLine();
+        System.out.print("Ievadiet cenu (eiro): ");
+        int price = scanner.nextInt();
+        scanner.nextLine();
         System.out.println("Ievadiet detalizētu aprakstu (2-3 teikumi): ");
         String description = scanner.nextLine().trim();
-
-        Car newCar = new Car(brand, model, year, horsepower, fuelType, drive, generation, description);
-
-        // Meklējam, vai jau ir kādi ieraksti ar šādu marku
-        int insertIndex = cars.size(); // noklusējuma gadījumā pievienot beigās
-        for (int i = 0; i < cars.size(); i++) {
-            // Ja atrodam ierakstu ar šādu marku, saglabājam pēdējo tā atrašanās vietu
-            if (cars.get(i).getBrand().equalsIgnoreCase(brand)) {
-                insertIndex = i + 1;
-            }
-        }
-        // Ja jau ir vairāki ieraksti ar šo marku, jauns ieraksts tiks ievietots pēc pēdējā
-        cars.add(insertIndex, newCar);
-        saveCars();
+    
+        // Izveido jaunu Car objektu ar visiem parametriem
+        Car newCar = new Car(brand, model, year, horsepower, fuelType, drive, generation, fuelConsumption, price, description);
+    
+        // Pievieno jauno automašīnu sarakstam
+        cars.add(newCar);
+        saveCars(); // Saglabā izmaiņas CSV failā
         System.out.println("Jauna mašīna veiksmīgi pievienota!");
     }
 
@@ -707,27 +783,45 @@ public class Main {
         private String username;
         private String password;
         private boolean admin;
-
+        private List<Car> favorites; // Saraksts iemīļotajām mašīnām
+    
         public Person(String username, String password, boolean admin) {
             this.username = username;
             this.password = password;
             this.admin = admin;
+            this.favorites = new ArrayList<>();
         }
-
+    
         public String getUsername() {
             return username;
         }
-        
+    
         public String getPassword() {
             return password;
         }
-
+    
         public boolean isAdmin() {
             return admin;
         }
-
+    
         public boolean validatePassword(String password) {
             return this.password.equals(password);
+        }
+    
+        public List<Car> getFavorites() {
+            return favorites;
+        }
+    
+        public void addFavorite(Car car) {
+            favorites.add(car);
+        }
+    
+        public void removeFavorite(Car car) {
+            favorites.remove(car);
+        }
+    
+        public int getFavoriteCount() {
+            return favorites.size();
         }
     }
 
@@ -740,9 +834,11 @@ public class Main {
         private String fuelType;
         private String drive;
         private String generation;
+        private double fuelConsumption; // Jauns lauks: vidējais degvielas patēriņš
+        private int price; // Jauns lauks: cena
         private String description;
-
-        public Car(String brand, String model, int year, int horsepower, String fuelType, String drive, String generation, String description) {
+    
+        public Car(String brand, String model, int year, int horsepower, String fuelType, String drive, String generation, double fuelConsumption, int price, String description) {
             this.brand = brand;
             this.model = model;
             this.year = year;
@@ -750,30 +846,47 @@ public class Main {
             this.fuelType = fuelType;
             this.drive = drive;
             this.generation = generation;
+            this.fuelConsumption = fuelConsumption;
+            this.price = price;
             this.description = description;
         }
-
+    
         public String getBrand() {
             return brand;
         }
+    
         public String getModel() {
             return model;
         }
+    
         public int getYear() {
             return year;
         }
+    
         public int getHorsepower() {
             return horsepower;
         }
+    
         public String getFuelType() {
             return fuelType;
         }
+    
         public String getDrive() {
             return drive;
         }
+    
         public String getGeneration() {
             return generation;
         }
+    
+        public double getFuelConsumption() {
+            return fuelConsumption;
+        }
+    
+        public int getPrice() {
+            return price;
+        }
+    
         public String getDescription() {
             return description;
         }
