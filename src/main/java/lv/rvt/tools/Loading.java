@@ -1,8 +1,6 @@
 package lv.rvt.tools;
 
 public class Loading {
-    private int i;
-
     public void LoadingScreen() { 
         // Clear the console before starting the loop
         System.out.print("\033[H\033[2J");

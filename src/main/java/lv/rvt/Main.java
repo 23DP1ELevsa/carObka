@@ -110,6 +110,8 @@ public class Main {
             System.out.print("Ievadiet izvēli: ");
             brandChoice = scanner.nextInt();
             scanner.nextLine();
+            Loading loading = new Loading();
+            loading.LoadingScreen();
             
             String selectedBrand = null;
             switch(brandChoice) {
@@ -130,9 +132,13 @@ public class Main {
                     break;
                 case 6:
                     System.out.println("Atgriežamies uz sākumu...");
+                    // Clear the console before starting the loop
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
                     return;
                 default:
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+                    continue;
             }
             
             if (selectedBrand != null) {
@@ -161,23 +167,53 @@ public class Main {
             System.out.println("Nav atrasti modeļi šai markai.");
             return;
         }
-        System.out.print("\nIevadiet modeļa numuru, lai redzētu detalizētu informāciju (vai 0, lai atgrieztos): ");
-        int selection = scanner.nextInt();
-        scanner.nextLine();
-        if (selection > 0 && selection <= brandCars.size()) {
-            Car selectedCar = brandCars.get(selection - 1);
-            System.out.println("\nDetalizēta informācija par " + selectedCar.getBrand() + " " + selectedCar.getModel() + ":");
-            System.out.println("Izlaides gads: " + selectedCar.getYear());
-            System.out.println("Zirgspēki: " + selectedCar.getHorsepower());
-            System.out.println("Degviela: " + selectedCar.getFuelType());
-            System.out.println("Piedziņa: " + selectedCar.getDrive());
-            System.out.println("Paaudze: " + selectedCar.getGeneration());
-            System.out.println("Vidējais degvielas patēriņš: " + selectedCar.getFuelConsumption() + " l/100km");
-            System.out.println("Cena: " + selectedCar.getPrice() + " EUR");
-            System.out.println("Apraksts: " + selectedCar.getDescription());
-        } else if (selection != 0) {
-            System.out.println("Nepareiza izvēle.");
-        }
+    
+        int selection;
+        do {
+            System.out.print("\nIevadiet modeļa numuru, lai redzētu detalizētu informāciju (vai 0, lai atgrieztos): ");
+            selection = scanner.nextInt();
+            Loading loading = new Loading();
+            loading.LoadingScreen();
+            scanner.nextLine(); // Atstarpe ievades lasīšanai
+    
+            if (selection > 0 && selection <= brandCars.size()) {
+                Car selectedCar = brandCars.get(selection - 1);
+                System.out.println("\nDetalizēta informācija par " + selectedCar.getBrand() + " " + selectedCar.getModel() + ":");
+                System.out.println("Izlaides gads: " + selectedCar.getYear());
+                System.out.println("Zirgspēki: " + selectedCar.getHorsepower());
+                System.out.println("Degviela: " + selectedCar.getFuelType());
+                System.out.println("Piedziņa: " + selectedCar.getDrive());
+                System.out.println("Paaudze: " + selectedCar.getGeneration());
+                System.out.println("Vidējais degvielas patēriņš: " + selectedCar.getFuelConsumption() + " l/100km");
+                System.out.println("Cena: " + selectedCar.getPrice() + " EUR");
+                System.out.println("Apraksts: " + selectedCar.getDescription());
+    
+                // Papildu izvēlne pēc detalizētas informācijas izvades
+                System.out.println("\nKo vēlaties darīt tālāk?");
+                System.out.println("1 - Atgriezties pie kolekcijas");
+                System.out.print("Ievadiet izvēli: ");
+                int nextChoice = scanner.nextInt();
+                scanner.nextLine(); // Atstarpe ievades lasīšanai
+                loading.LoadingScreen();
+    
+                if (nextChoice == 1) {
+                    return; // Atgriežas pie kolekcijas
+                } else {
+                    System.out.println("Nepareiza izvēle, atgriežamies pie kolekcijas.");
+                }
+            } else if (selection != 0) {
+                System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                System.out.println("\n" + brand + " modeļi:");
+                System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
+                    "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+                System.out.println("-".repeat(124));
+                int index1 = 1;
+                for (Car car : brandCars) {
+                    System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n", 
+                        index1++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
+                }
+            }
+        } while (selection != 0);
     }
 
     // Ielādē automašīnu datus no CSV faila
@@ -373,6 +409,7 @@ public class Main {
     private static void loginOrRegister(Scanner scanner) {
         int choice;
         Loading loading = new Loading();
+    
         do {
             System.out.println("\nIeiet profilā:");
             System.out.println("1 - Ieiet kā lietotājs");
@@ -382,20 +419,21 @@ public class Main {
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
-
+    
             if (choice == 1) {
                 System.out.println("\nIeiet kā lietotājs:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
                 if (username.equals("0")) continue;
-                System.out.print("Parole (vai '0' lai atgriezties): ");
-                String password = scanner.nextLine();
+    
+                String password = readPasswordWithMasking(); // Izmanto maskēto paroles ievadi
+    
                 if (password.equals("0")) continue;
+    
                 Person foundUser = findUser(username);
                 loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
                     System.out.println("Laipni lūgti, " + username + "!");
-                    // Pēc veiksmīgas pieslēgšanās, izsaucam jauno lietotāja izvēlni
                     userMenu(scanner, foundUser);
                 } else {
                     System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
@@ -405,9 +443,11 @@ public class Main {
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
                 if (username.equals("0")) continue;
-                System.out.print("Parole (vai '0' lai atgriezties): ");
-                String password = scanner.nextLine();
+    
+                String password = readPasswordWithMasking(); // Izmanto maskēto paroles ievadi
+    
                 if (password.equals("0")) continue;
+    
                 Person foundUser = findUser(username);
                 loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && foundUser.isAdmin()) {
@@ -421,15 +461,17 @@ public class Main {
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String newUsername = scanner.nextLine();
                 if (newUsername.equals("0")) continue;
-                System.out.print("Parole (vai '0' lai atgriezties): ");
-                String newPassword = scanner.nextLine();
+    
+                String newPassword = readPasswordWithMasking(); // Izmanto maskēto paroles ievadi
+    
                 if (newPassword.equals("0")) continue;
+    
                 loading.LoadingScreen();
                 if (findUser(newUsername) == null) {
                     boolean isAdmin = users.isEmpty();
                     users.add(new Person(newUsername, newPassword, isAdmin));
                     saveUsers();
-                    if(isAdmin){
+                    if (isAdmin) {
                         System.out.println("Pirmais profils izveidots kā administrators!");
                     } else {
                         System.out.println("Profils " + newUsername + " veiksmīgi izveidots.");
@@ -443,6 +485,38 @@ public class Main {
                 System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 4);
+    }
+
+    private static String readPasswordWithMasking() {
+        Console console = System.console();
+        if (console != null) {
+            // Ja ir pieejama konsoles ievade, izmanto readPassword
+            char[] passwordChars = console.readPassword("Parole: ");
+            return new String(passwordChars);
+        } else {
+            // Ja konsoles nav (piemēram, IDE), izmanto pielāgotu ievadi ar maskēšanu
+            System.out.print("Parole: ");
+            StringBuilder password = new StringBuilder();
+            try {
+                while (true) {
+                    int input = System.in.read();
+                    if (input == '\n' || input == '\r') {
+                        break; // Beidz ievadi, kad nospiests Enter
+                    } else if (input == '\b' && password.length() > 0) {
+                        // Apstrādā Backspace
+                        password.deleteCharAt(password.length() - 1);
+                        System.out.print("\b \b"); // Dzēš pēdējo zvaigznīti
+                    } else {
+                        password.append((char) input);
+                        System.out.print("*"); // Parāda zvaigznīti
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Kļūda, ievadot paroli: " + e.getMessage());
+            }
+            System.out.println(); // Pāriet uz jaunu rindu pēc ievades
+            return password.toString();
+        }
     }
 
     // Administratora izvēlne ar iespēju pārvaldīt lietotājus, pievienot jaunas mašīnas un izmantot paplašinātās datu operācijas
