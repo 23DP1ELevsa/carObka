@@ -100,51 +100,40 @@ public class Main {
     private static void displayCarCollection(Scanner scanner) {
         int brandChoice;
         do {
+            // Dinamiski ģenerē unikālu marku sarakstu no automašīnu datiem
+            Map<Integer, String> brandMap = new LinkedHashMap<>();
+            int index = 1;
+            for (Car car : cars) {
+                if (!brandMap.containsValue(car.getBrand())) {
+                    brandMap.put(index++, car.getBrand());
+                }
+            }
+    
+            // Parāda dinamisko kolekcijas izvēlni
             System.out.println("\nKolekcija:");
-            System.out.println("1 - Audi");
-            System.out.println("2 - BMW");
-            System.out.println("3 - Mercedes-Benz");
-            System.out.println("4 - Porsche");
-            System.out.println("5 - Volkswagen");
-            System.out.println("6 - Atgriezties uz sākumu");
+            for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
+                System.out.println(entry.getKey() + " - " + entry.getValue());
+            }
+            System.out.println(index + " - Atgriezties uz sākumu");
             System.out.print("Ievadiet izvēli: ");
             brandChoice = scanner.nextInt();
             scanner.nextLine();
             Loading loading = new Loading();
             loading.LoadingScreen();
-            
-            String selectedBrand = null;
-            switch (brandChoice) {
-                case 1: 
-                    selectedBrand = "Audi"; 
-                    break;
-                case 2: 
-                    selectedBrand = "BMW"; 
-                    break;
-                case 3: 
-                    selectedBrand = "Mercedes-Benz"; 
-                    break;
-                case 4: 
-                    selectedBrand = "Porsche"; 
-                    break;
-                case 5:   
-                    selectedBrand = "Volkswagen"; 
-                    break;
-                case 6:
-                    System.out.println("Atgriežamies uz sākumu...");
-                    // Clear the console before starting the loop
-                    System.out.print("\033[H\033[2J");
-                    System.out.flush();
-                    return;
-                default:
-                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
-                    continue;
+    
+            if (brandChoice == index) {
+                System.out.println("Atgriežamies uz sākumu...");
+                return;
             }
-            
+    
+            // Apstrādā izvēlēto marku
+            String selectedBrand = brandMap.get(brandChoice);
             if (selectedBrand != null) {
                 displayCarsByBrand(selectedBrand, scanner);
+            } else {
+                System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
-        } while(brandChoice != 6);
+        } while (true);
     }
 
     // Parāda tabulu ar mašīnu pamatdatiem pēc izvēlētās markas un ļauj apskatīt detalizētu informāciju
@@ -311,55 +300,45 @@ public class Main {
     private static void addFavoriteCar(Scanner scanner, Person user) {
         int brandChoice;
         do {
+            // Dinamiski ģenerē unikālu marku sarakstu no automašīnu datiem
+            Map<Integer, String> brandMap = new LinkedHashMap<>();
+            int index = 1;
+            for (Car car : cars) {
+                if (!brandMap.containsValue(car.getBrand())) {
+                    brandMap.put(index++, car.getBrand());
+                }
+            }
+    
+            // Parāda dinamisko kolekcijas izvēlni
             System.out.println("\nKolekcija:");
-            System.out.println("1 - Audi");
-            System.out.println("2 - BMW");
-            System.out.println("3 - Mercedes-Benz");
-            System.out.println("4 - Porsche");
-            System.out.println("5 - Volkswagen");
-            System.out.println("6 - Atgriezties uz lietotāja izvēlni");
+            for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
+                System.out.println(entry.getKey() + " - " + entry.getValue());
+            }
+            System.out.println(index + " - Atgriezties uz lietotāja izvēlni");
             System.out.print("Ievadiet izvēli: ");
             brandChoice = scanner.nextInt();
             scanner.nextLine();
             Loading loading = new Loading();
             loading.LoadingScreen();
     
-            String selectedBrand = null;
-            switch (brandChoice) {
-                case 1:
-                    selectedBrand = "Audi";
-                    break;
-                case 2:
-                    selectedBrand = "BMW";
-                    break;
-                case 3:
-                    selectedBrand = "Mercedes-Benz";
-                    break;
-                case 4:
-                    selectedBrand = "Porsche";
-                    break;
-                case 5:
-                    selectedBrand = "Volkswagen";
-                    break;
-                case 6:
-                    System.out.println("Atgriežamies uz lietotāja izvēlni...");
-                    return;
-                default:
-                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+            if (brandChoice == index) {
+                System.out.println("Atgriežamies uz lietotāja izvēlni...");
+                return;
             }
     
+            // Apstrādā izvēlēto marku
+            String selectedBrand = brandMap.get(brandChoice);
             if (selectedBrand != null) {
                 List<Car> brandCars = new ArrayList<>();
-                int index = 1;
+                int carIndex = 1;
                 System.out.println("\n" + selectedBrand + " modeļi:");
                 System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s\n",
                         "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Cena");
                 for (Car car : cars) {
                     if (car.getBrand().equalsIgnoreCase(selectedBrand)) {
                         System.out.format("%-5d %-15s %-15s %-15d %-15d %-15d\n",
-                                index, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getPrice());
+                                carIndex++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getPrice());
                         brandCars.add(car);
-                        index++;
                     }
                 }
     
@@ -383,45 +362,29 @@ public class Main {
                                 && car.getModel().equals(selectedCar.getModel())
                                 && car.getYear() == selectedCar.getYear())) {
                             System.out.println("Mašīna " + selectedCar.getBrand() + " " + selectedCar.getModel() + " jau ir iemīļoto sarakstā.");
-    
-                            // Parāda tabulu ar izvēlētās markas modeļiem
-                            System.out.println("\n" + selectedBrand + " modeļi:");
-                            System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s\n",
-                                    "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Cena");
-                            int index2 = 1;
-                            for (Car car : brandCars) {
-                                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15d\n",
-                                        index2++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getPrice());
-                            }
                         } else {
                             user.addFavorite(selectedCar);
                             saveUsers(); // Saglabā izmaiņas failā
                             System.out.println("Mašīna " + selectedCar.getBrand() + " " + selectedCar.getModel() + " pievienota iemīļotajām.");
-                            // Parāda tabulu ar izvēlētās markas modeļiem
-                            System.out.println("\n" + selectedBrand + " modeļi:");
-                            System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s\n",
-                                    "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Cena");
-                            int index2 = 1;
-                            for (Car car : brandCars) {
-                                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15d\n",
-                                        index2++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getPrice());
-                            }
+                        }
+    
+                        // Atkal parāda izvēlētās markas modeļu tabulu
+                        System.out.println("\n" + selectedBrand + " modeļi:");
+                        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s\n",
+                                "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Cena");
+                        int index2 = 1;
+                        for (Car car : brandCars) {
+                            System.out.format("%-5d %-15s %-15s %-15d %-15d %-15d\n",
+                                    index2++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getPrice());
                         }
                     } else if (carChoice != 0) {
                         System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
-                        // Parāda tabulu ar izvēlētās markas modeļiem
-                            System.out.println("\n" + selectedBrand + " modeļi:");
-                            System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s\n",
-                                    "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Cena");
-                            int index2 = 1;
-                            for (Car car : brandCars) {
-                                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15d\n", 
-                                        index2++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getPrice());
-                            }
                     }
                 } while (carChoice != 0);
+            } else {
+                System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
-        } while (brandChoice != 6);
+        } while (true);
     }
 
     private static void removeFavoriteCar(Scanner scanner, Person user) {
@@ -517,12 +480,18 @@ public class Main {
                 System.out.println("\nIeiet kā lietotājs:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
-                if (username.equals("0")) continue;
-    
+                if (username.equals("0")) {
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
+                    continue;
+                }
                 System.out.print("Parole (vai '0' lai atgriezties): ");
                 String password = scanner.nextLine();
-                if (password.equals("0")) continue;
-    
+                if (password.equals("0")) {
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
+                    continue;
+                }
                 Person foundUser = findUser(username);
                 loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
@@ -535,12 +504,19 @@ public class Main {
                 System.out.println("\nIeiet kā administrators:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
-                if (username.equals("0")) continue;
+                if (username.equals("0")) {
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
+                    continue;
+                }
     
                 System.out.print("Parole (vai '0' lai atgriezties): ");
                 String password = scanner.nextLine();
-                if (password.equals("0")) continue;
-    
+                if (password.equals("0")) {
+                    System.out.print("\033[H\033[2J");
+                    System.out.flush();
+                    continue;
+                }
                 Person foundUser = findUser(username);
                 loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && foundUser.isAdmin()) {
@@ -588,12 +564,13 @@ public class Main {
             System.out.println("1 - Dzēst profilu");
             System.out.println("2 - Parādīt profilu sarakstu");
             System.out.println("3 - Pievienot jaunu mašīnu (marku/modeli)");
-            System.out.println("4 - Paplašinātās datu operācijas");
+            System.out.println("4 - Dzēst mašīnu (marku/modeli)"); // Jaunā iespēja
+            System.out.println("5 - Paplašinātās datu operācijas");
             System.out.println("0 - Iziet no administratora izvēlnes");
             System.out.print("Ievadiet izvēli: ");
             adminChoice = scanner.nextInt();
             scanner.nextLine();
-
+    
             if (adminChoice == 1) {
                 deleteUser(scanner);
             } else if (adminChoice == 2) {
@@ -601,6 +578,8 @@ public class Main {
             } else if (adminChoice == 3) {
                 addNewCar(scanner);
             } else if (adminChoice == 4) {
+                deleteCar(scanner); // Izsauc jauno metodi
+            } else if (adminChoice == 5) {
                 advancedDataOperationsMenu(scanner);
             } else if (adminChoice == 0) {
                 System.out.println("Izeja no administratora izvēlnes...");
@@ -860,6 +839,86 @@ public class Main {
         System.out.println("Jauna mašīna veiksmīgi pievienota!");
     }
 
+    // Administratora metode automašīnas dzēšanai
+    private static void deleteCar(Scanner scanner) {
+        if (cars.isEmpty()) {
+            System.out.println("Nav pieejamu automašīnu, ko dzēst.");
+            return;
+        }
+    
+        // Dinamiski ģenerē unikālu marku sarakstu
+        Map<Integer, String> brandMap = new LinkedHashMap<>();
+        int index = 1;
+        for (Car car : cars) {
+            if (!brandMap.containsValue(car.getBrand())) {
+                brandMap.put(index++, car.getBrand());
+            }
+        }
+    
+        // Parāda marku izvēlni
+        System.out.println("\nPieejamās markas:");
+        for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
+            System.out.println(entry.getKey() + " - " + entry.getValue());
+        }
+        System.out.println(index + " - Atgriezties uz administratora izvēlni");
+        System.out.print("Ievadiet markas numuru, lai turpinātu: ");
+        int brandChoice = scanner.nextInt();
+        scanner.nextLine();
+    
+        if (brandChoice == index) {
+            System.out.println("Atgriežamies uz administratora izvēlni...");
+            return;
+        }
+    
+        String selectedBrand = brandMap.get(brandChoice);
+        if (selectedBrand == null) {
+            System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+            return;
+        }
+    
+        // Filtrē modeļus pēc izvēlētās markas
+        List<Car> brandCars = new ArrayList<>();
+        for (Car car : cars) {
+            if (car.getBrand().equalsIgnoreCase(selectedBrand)) {
+                brandCars.add(car);
+            }
+        }
+    
+        // Parāda modeļu izvēlni
+        System.out.println("\n" + selectedBrand + " modeļi:");
+        for (int i = 0; i < brandCars.size(); i++) {
+            Car car = brandCars.get(i);
+            System.out.println((i + 1) + " - " + car.getModel() + " (" + car.getYear() + ")");
+        }
+        System.out.println((brandCars.size() + 1) + " - Atgriezties uz marku izvēlni");
+        System.out.print("Ievadiet modeļa numuru, lai dzēstu: ");
+        int modelChoice = scanner.nextInt();
+        scanner.nextLine();
+    
+        if (modelChoice == brandCars.size() + 1) {
+            System.out.println("Atgriežamies uz marku izvēlni...");
+            return;
+        }
+    
+        if (modelChoice > 0 && modelChoice <= brandCars.size()) {
+            Car carToDelete = brandCars.get(modelChoice - 1);
+            cars.remove(carToDelete);
+    
+            // Noņem automašīnu no visiem lietotāju iemīļoto sarakstiem
+            for (Person user : users) {
+                user.getFavorites().removeIf(car -> car.getBrand().equals(carToDelete.getBrand())
+                        && car.getModel().equals(carToDelete.getModel())
+                        && car.getYear() == carToDelete.getYear());
+            }
+    
+            saveCars(); // Saglabā izmaiņas automašīnu sarakstā
+            saveUsers(); // Saglabā izmaiņas lietotāju datos
+            System.out.println("Automobilis " + carToDelete.getBrand() + " " + carToDelete.getModel() + " veiksmīgi dzēsts.");
+        } else {
+            System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+        }
+    }
+
     // Lietotāja dzēšanas metode
     private static void deleteUser(Scanner scanner) {
         System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
@@ -980,6 +1039,7 @@ public class Main {
     // Metode, lai sazinātos ar mums
     private static void contactUs(Scanner scanner) {
         int choice;
+        Loading loading = new Loading();
         do {
             System.out.println("\nSazināties ar mums:");
             System.out.println("1 - Sazināties");
@@ -987,6 +1047,7 @@ public class Main {
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
+            loading.LoadingScreen();
 
             if (choice == 1) {
                 int subChoice;
@@ -1007,13 +1068,17 @@ public class Main {
                     } else if (subChoice == 3) {
                         System.out.println("Lūdzu, aprakstiet savu ideju.");
                     } else if (subChoice == 4) {
-                        System.out.println("Atgriežamies galvenajā izvēlnē...");
+                        System.out.print("\033[H\033[2J");
+                        System.out.flush();
                     } else {
+                        System.out.print("\033[H\033[2J");
+                        System.out.flush();
                         System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
                     }
                 } while (subChoice != 4);
             } else if (choice == 2) {
-                System.out.println("Atgriežamies galvenajā izvēlnē...");
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
             } else {
                 System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
