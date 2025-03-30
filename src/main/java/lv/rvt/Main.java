@@ -16,6 +16,7 @@ public class Main {
     public static void main(String[] args) {
         Loading loading = new Loading();
         Scanner scanner = new Scanner(System.in);
+
         // Lietotāju ielāde no CSV
         loadUsers();
         // Ielādē automašīnu datus no CSV
@@ -27,11 +28,8 @@ public class Main {
 
         int choice;
         do {
-            System.out.println("\nCarObka - automobiļu kolekcija");
-            System.out.println("1 - Kolekcijas apskate");
-            System.out.println("2 - Ieiet profilā vai reģistrēties");
-            System.out.println("3 - Sazināties ar mums");
-            System.out.println("0 - Iziet no programmas");
+            Menu startMenu = new Menu();
+            startMenu.StartMenu();
             System.out.print("Ievadiet izvēli: ");
             
             choice = scanner.nextInt();
@@ -154,7 +152,8 @@ public class Main {
             }
         }
         if (brandCars.isEmpty()) {
-            System.out.println("Nav atrasti modeļi šai markai.");
+            Empty empty = new Empty();
+            empty.EmptyScreen();
             return;
         }
     
@@ -277,7 +276,8 @@ public class Main {
     private static void displayFavorites(Person user, Scanner scanner) {
         List<Car> favorites = user.getFavorites();
         if (favorites.isEmpty()) {
-            System.out.println("Nav pievienotu iemīļoto mašīnu.");
+            Empty empty = new Empty();
+            empty.EmptyScreen();
             return;
         }
     
@@ -349,7 +349,8 @@ public class Main {
                 }
     
                 if (brandCars.isEmpty()) {
-                    System.out.println("Nav atrasti modeļi šai markai.");
+                    Empty empty = new Empty();
+                    empty.EmptyScreen();
                     continue;
                 }
     
@@ -384,7 +385,8 @@ public class Main {
     private static void removeFavoriteCar(Scanner scanner, Person user) {
         List<Car> favorites = user.getFavorites();
         if (favorites.isEmpty()) {
-            System.out.println("Nav pievienotu iemīļoto mašīnu.");
+            Empty empty = new Empty();
+            empty.EmptyScreen();
             return;
         }
     
