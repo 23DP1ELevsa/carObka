@@ -4,6 +4,10 @@ import lv.rvt.tools.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.io.*;
+import javax.mail.PasswordAuthentication;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
 
 public class Main {
     private static ArrayList<Person> users = new ArrayList<>();
@@ -1230,53 +1234,80 @@ public class Main {
         }
     }
 
+    // Saziņas metode caur e-pastu
+    private static void sendEmail(String userName, String selectedOption, String errorDescription) {
+        final String fromEmail = "ets2.truckersmp.scs@gmail.com"; // Jūsu e-pasta adrese
+        final String password = "EuroTruck2";  // Jūsu e-pasta parole
+        final String toEmail = "carobka52@gmail.com";   // Saņēmēja e-pasta adrese
+
+        // SMTP servera iestatījumi
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        // Autentifikācija
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(fromEmail, password);
+            }
+        });
+
+        try {
+            // E-pasta ziņojuma sagatavošana
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(fromEmail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setSubject("CarObka Lietotāja Ziņojums");
+
+            // Ziņojuma saturs
+            String emailContent = "Lietotājs: " + userName + "\n" +
+                                  "Izvēlētais punkts: " + selectedOption + "\n" +
+                                  "Kļūdas apraksts: " + errorDescription;
+            message.setText(emailContent);
+
+            // Nosūtīt e-pastu
+            Transport.send(message);
+            System.out.println("Ziņojums veiksmīgi nosūtīts uz " + toEmail);
+        } catch (MessagingException e) {
+            System.out.println("Kļūda, nosūtot ziņojumu: " + e.getMessage());
+        }
+    }
+
     // Metode, lai sazinātos ar mums
     private static void contactUs(Scanner scanner) {
-        int choice;
-        Loading loading = new Loading();
-        do {
-            System.out.println("\nSazināties ar mums:");
-            System.out.println("1 - Sazināties");
-            System.out.println("2 - Atgriezties galvenajā izvēlnē");
-            System.out.print("Ievadiet izvēli: ");
-            choice = scanner.nextInt();
-            scanner.nextLine();
-            loading.LoadingScreen();
+        System.out.print("Ievadiet savu lietotājvārdu: ");
+        String userName = scanner.nextLine();
+        System.out.println("Izvēlieties saziņas iemeslu:");
+        System.out.println("1 - Atstāt atsauksmi");
+        System.out.println("2 - Paziņot par kļūdu");
+        System.out.println("3 - Iedot savu ideju");
+        System.out.print("Ievadiet izvēli: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Atstarpe ievades lasīšanai
 
-            if (choice == 1) {
-                int subChoice;
-                do {
-                    System.out.println("\nSaziņa ar mums:");
-                    System.out.println("1 - Atstāt atsauksmi");
-                    System.out.println("2 - Paziņot par kļūdu");
-                    System.out.println("3 - Iedot savu ideju");
-                    System.out.println("4 - Atgriezties galvenajā izvēlnē");
-                    System.out.print("Ievadiet izvēli: ");
-                    subChoice = scanner.nextInt();
-                    scanner.nextLine();
+        String selectedOption = "";
+        switch (choice) {
+            case 1:
+                selectedOption = "Atstāt atsauksmi";
+                break;
+            case 2:
+                selectedOption = "Paziņot par kļūdu";
+                break;
+            case 3:
+                selectedOption = "Iedot savu ideju";
+                break;
+            default:
+                System.out.println("Nepareiza izvēle.");
+                return;
+        }
 
-                    if (subChoice == 1) {
-                        System.out.println("Lūdzu, atstājiet savu atsauksmi.");
-                    } else if (subChoice == 2) {
-                        System.out.println("Lūdzu, aprakstiet kļūdu.");
-                    } else if (subChoice == 3) {
-                        System.out.println("Lūdzu, aprakstiet savu ideju.");
-                    } else if (subChoice == 4) {
-                        System.out.print("\033[H\033[2J");
-                        System.out.flush();
-                    } else {
-                        System.out.print("\033[H\033[2J");
-                        System.out.flush();
-                        System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
-                    }
-                } while (subChoice != 4);
-            } else if (choice == 2) {
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
-            } else {
-                System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
-            }
-        } while (choice != 2);
+        System.out.print("Lūdzu, ievadiet savu ziņojumu: ");
+        String errorDescription = scanner.nextLine();
+
+        // Nosūta e-pastu
+        sendEmail(userName, selectedOption, errorDescription);
     }
 
     // Person klase
