@@ -255,6 +255,8 @@ public class Main {
     private static void saveCars() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(CARS_FILE))) {
             for (Car car : cars) {
+                // Экранируем кавычки в описании
+                String description = car.getDescription().replace("\"", "\"\"");
                 String line = String.format("%s,%s,%d,%d,%s,%s,%s,%.1f,%d,\"%s\"",
                     car.getBrand(),
                     car.getModel(),
@@ -265,11 +267,11 @@ public class Main {
                     car.getGeneration(),
                     car.getFuelConsumption(),
                     car.getPrice(),
-                    car.getDescription());
+                    description);
                 pw.println(line);
             }
         } catch (IOException e) {
-            System.out.println("Kļūda saglabājot automašīnas: " + e.getMessage());
+            System.out.println("Ошибка при сохранении автомобилей: " + e.getMessage());
         }
     }
 
