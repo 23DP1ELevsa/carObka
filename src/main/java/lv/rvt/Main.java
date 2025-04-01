@@ -4,10 +4,6 @@ import lv.rvt.tools.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.io.*;
-import javax.mail.PasswordAuthentication;
-import javax.mail.*;
-import javax.mail.internet.*;
-import java.util.Properties;
 
 public class Main {
     private static ArrayList<Person> users = new ArrayList<>();
@@ -88,7 +84,7 @@ public class Main {
                     break;
                 case 3:
                     loading.LoadingScreen();
-                    contactUs(scanner);
+                    contactUs(scanner, user.getUsername());
                     break;
                 case 4:
                     System.out.println("Iziet no profila...");
@@ -558,19 +554,27 @@ public class Main {
 
     // Administratora izvēlne ar iespēju pārvaldīt lietotājus, pievienot jaunas mašīnas un izmantot paplašinātās datu operācijas
     private static void adminMenu(Scanner scanner) {
+        Loading loading = new Loading(); // Izveidojam Loading objektu
         int adminChoice;
         do {
+            // Konsoles attīrīšana
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+    
             System.out.println("\nAdministrācijas izvēlne:");
             System.out.println("1 - Dzēst profilu");
             System.out.println("2 - Parādīt profilu sarakstu");
             System.out.println("3 - Pievienot jaunu mašīnu (marku/modeli)");
             System.out.println("4 - Dzēst mašīnu (marku/modeli)");
-            System.out.println("5 - Rediģēt mašīnu (marku/modeli)"); // Jaunā iespēja
+            System.out.println("5 - Rediģēt mašīnu (marku/modeli)");
             System.out.println("6 - Paplašinātās datu operācijas");
+            System.out.println("7 - Apskatīt saziņas datus");
             System.out.println("0 - Iziet no administratora izvēlnes");
             System.out.print("Ievadiet izvēli: ");
             adminChoice = scanner.nextInt();
             scanner.nextLine();
+    
+            loading.LoadingScreen(); // Parādām ielādes ekrānu
     
             switch (adminChoice) {
                 case 1:
@@ -586,16 +590,25 @@ public class Main {
                     deleteCar(scanner);
                     break;
                 case 5:
-                    editCar(scanner); // Izsauc jauno metodi
+                    editCar(scanner);
                     break;
                 case 6:
                     advancedDataOperationsMenu(scanner);
+                    break;
+                case 7:
+                    viewContacts();
                     break;
                 case 0:
                     System.out.println("Izeja no administratora izvēlnes...");
                     break;
                 default:
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+            }
+    
+            // Pievienojam pauzi, lai lietotājs varētu apskatīt rezultātu pirms izvēlnes atkārtotas parādīšanas
+            if (adminChoice != 0) {
+                System.out.println("\nNospiediet Enter, lai turpinātu...");
+                scanner.nextLine();
             }
         } while (adminChoice != 0);
     }
@@ -1234,80 +1247,124 @@ public class Main {
         }
     }
 
-    // Saziņas metode caur e-pastu
-    private static void sendEmail(String userName, String selectedOption, String errorDescription) {
-        final String fromEmail = "ets2.truckersmp.scs@gmail.com"; // Jūsu e-pasta adrese
-        final String password = "EuroTruck2";  // Jūsu e-pasta parole
-        final String toEmail = "carobka52@gmail.com";   // Saņēmēja e-pasta adrese
-
-        // SMTP servera iestatījumi
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        // Autentifikācija
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(fromEmail, password);
+    // Metode, lai sazinātos ar mums
+    private static void contactUs(Scanner scanner, String username) {
+        Loading loading = new Loading(); // Izveidojam Loading objektu
+        int choice;
+        do {
+            // Konsoles attīrīšana
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+    
+            System.out.println("\nSazināties ar mums:");
+            System.out.println("1 - Atstāt atsauksmi");
+            System.out.println("2 - Paziņot par kļūdu");
+            System.out.println("3 - Iedot savu ideju");
+            System.out.println("4 - Atgriezties galvenajā izvēlnē");
+            System.out.print("Ievadiet izvēli: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+    
+            if (choice >= 1 && choice <= 3) {
+                loading.LoadingScreen(); // Parādām ielādes ekrānu
+                String contactType = switch (choice) {
+                    case 1 -> "Atsauksme";
+                    case 2 -> "Kļūda";
+                    case 3 -> "Ideja";
+                    default -> "";
+                };
+                System.out.println("Lūdzu, ievadiet savu ziņojumu:");
+                String message = scanner.nextLine();
+                // Konsoles attīrīšana pēc atgriešanās
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+                saveContact(username, contactType, message);
+                System.out.println("Paldies! Jūsu ziņojums ir saglabāts.");
+            } else if (choice != 4) {
+                System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
             }
-        });
+        } while (choice != 4);
+    
+        // Konsoles attīrīšana pēc atgriešanās
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 
-        try {
-            // E-pasta ziņojuma sagatavošana
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(fromEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("CarObka Lietotāja Ziņojums");
+    // Metode, lai saglabātu kontaktinformāciju CSV failā
+    private static final String CONTACT_FILE = "data/contact.csv";
 
-            // Ziņojuma saturs
-            String emailContent = "Lietotājs: " + userName + "\n" +
-                                  "Izvēlētais punkts: " + selectedOption + "\n" +
-                                  "Kļūdas apraksts: " + errorDescription;
-            message.setText(emailContent);
-
-            // Nosūtīt e-pastu
-            Transport.send(message);
-            System.out.println("Ziņojums veiksmīgi nosūtīts uz " + toEmail);
-        } catch (MessagingException e) {
-            System.out.println("Kļūda, nosūtot ziņojumu: " + e.getMessage());
+    private static void saveContact(String username, String contactType, String message) {
+        File file = new File(CONTACT_FILE);
+        try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
+            pw.println(username + "," + contactType + "," + message.replace(",", " "));
+        } catch (IOException e) {
+            System.out.println("Kļūda, saglabājot saziņu: " + e.getMessage());
         }
     }
 
-    // Metode, lai sazinātos ar mums
-    private static void contactUs(Scanner scanner) {
-        System.out.print("Ievadiet savu lietotājvārdu: ");
-        String userName = scanner.nextLine();
-        System.out.println("Izvēlieties saziņas iemeslu:");
-        System.out.println("1 - Atstāt atsauksmi");
-        System.out.println("2 - Paziņot par kļūdu");
-        System.out.println("3 - Iedot savu ideju");
-        System.out.print("Ievadiet izvēli: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Atstarpe ievades lasīšanai
-
-        String selectedOption = "";
-        switch (choice) {
-            case 1:
-                selectedOption = "Atstāt atsauksmi";
-                break;
-            case 2:
-                selectedOption = "Paziņot par kļūdu";
-                break;
-            case 3:
-                selectedOption = "Iedot savu ideju";
-                break;
-            default:
-                System.out.println("Nepareiza izvēle.");
-                return;
+    // Metode, lai apskatītu kontaktinformāciju
+    private static void viewContacts() {
+        File file = new File(CONTACT_FILE);
+        if (!file.exists() || file.length() == 0) {
+            System.out.println("Nav pieejamu saziņas datu.");
+            return;
         }
-
-        System.out.print("Lūdzu, ievadiet savu ziņojumu: ");
-        String errorDescription = scanner.nextLine();
-
-        // Nosūta e-pastu
-        sendEmail(userName, selectedOption, errorDescription);
+    
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            System.out.println("\nSaziņas dati:");
+            System.out.format("%-15s %-15s %-50s\n", "Lietotājs", "Veids", "Ziņojums");
+            System.out.println("-".repeat(80));
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",", 3);
+                if (parts.length == 3) {
+                    String username = parts[0];
+                    String contactType = parts[1];
+                    String message = parts[2];
+    
+                    // Izmantojam formatMessage, lai sadalītu garus ziņojumus
+                    List<String> formattedMessage = formatMessage(message, 50); // Maksimālais simbolu skaits rindā
+    
+                    // Izvadām pirmo rindu ar lietotāju un veidu
+                    System.out.format("%-15s %-15s %-50s\n", username, contactType, formattedMessage.get(0));
+    
+                    // Izvadām pārējās rindas tikai ar ziņojumu
+                    for (int i = 1; i < formattedMessage.size(); i++) {
+                        System.out.format("%-15s %-15s %-50s\n", "", "", formattedMessage.get(i));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Kļūda, lasot saziņas datus: " + e.getMessage());
+        }
+    }
+    
+    // Palīgmetode, lai sadalītu ziņojumu vairākās rindās
+    private static List<String> formatMessage(String message, int maxLineLength) {
+        List<String> lines = new ArrayList<>();
+        StringBuilder currentLine = new StringBuilder();
+    
+        for (String word : message.split(" ")) {
+            if (currentLine.length() + word.length() + 1 > maxLineLength) {
+                // Pārbaudām, vai rinda beidzas ar teikuma beigām (piemēram, ".")
+                if (currentLine.length() > 0 && currentLine.charAt(currentLine.length() - 1) == '.') {
+                    lines.add(currentLine.toString().trim());
+                    currentLine.setLength(0);
+                } else {
+                    // Ja nav teikuma beigas, pievienojam rindu un sākam jaunu
+                    lines.add(currentLine.toString().trim());
+                    currentLine.setLength(0);
+                }
+            }
+            currentLine.append(word).append(" ");
+        }
+    
+        // Pievienojam pēdējo rindu, ja tā nav tukša
+        if (currentLine.length() > 0) {
+            lines.add(currentLine.toString().trim());
+        }
+    
+        return lines;
     }
 
     // Person klase
