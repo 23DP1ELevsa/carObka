@@ -1,10 +1,9 @@
 package lv.rvt.tools;
 
 public class Loading {
-    public void LoadingScreen() { 
+    public static void LoadingScreen() { 
         // Clear the console before starting the loop
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        ClearConsole.clearConsole();
 
         for (int i = 0; i < 8; i++) { // Loop 5 times for demonstration
             String dots = ".".repeat(i % 4);
@@ -22,8 +21,7 @@ public class Loading {
                 System.out.println("Loading interrupted");
             }
             // Clear the console
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            ClearConsole.clearConsole();
         }
     }
 }

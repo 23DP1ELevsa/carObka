@@ -14,7 +14,6 @@ public class Main {
     private static final String CARS_FILE = "data/cars.csv";
     
     public static void main(String[] args) {
-        Loading loading = new Loading();
         Scanner scanner = new Scanner(System.in);
 
         // Lietotāju ielāde no CSV
@@ -28,8 +27,7 @@ public class Main {
 
         int choice;
         do {
-            Menu startMenu = new Menu();
-            startMenu.StartMenu();
+            Menu.StartMenu();
             System.out.print("Ievadiet izvēli: ");
             
             choice = scanner.nextInt();
@@ -38,15 +36,15 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    loading.LoadingScreen(); // Ielādēšanas ekrāns
+                    Loading.LoadingScreen(); // Ielādēšanas ekrāns
                     displayCarCollection(scanner);
                     break;
                 case 2:
-                    loading.LoadingScreen(); // Ielādēšanas ekrāns
+                    Loading.LoadingScreen(); // Ielādēšanas ekrāns
                     loginOrRegister(scanner);
                     break;
                 case 3:
-                    loading.LoadingScreen(); // Ielādēšanas ekrāns
+                    Loading.LoadingScreen(); // Ielādēšanas ekrāns
                     System.out.println("Brīdinājums: Sazināties ar mums var tikai pēc profila ienākšanas. Lūdzu, ieejiet savā profilā.");
                     loginOrRegister(scanner);
                     break;
@@ -63,27 +61,20 @@ public class Main {
     private static void userMenu(Scanner scanner, Person user) {
         int choice;
         do {
-            System.out.println("\nCarObka - automašīnu kolekcija");
-            System.out.println("1 - Kolekcija");
-            System.out.println("2 - Iemīļotās mašīnas");
-            System.out.println("3 - Sazināties ar mums");
-            System.out.println("4 - Iziet no profila");
+            // Lietotāja izvēlne
+            Menu.userMenu();
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
-            Loading loading = new Loading();
     
             switch (choice) {
                 case 1:
-                    loading.LoadingScreen();
                     displayCarCollection(scanner);
                     break;
                 case 2:
-                    loading.LoadingScreen();
                     manageFavorites(scanner, user);
                     break;
                 case 3:
-                    loading.LoadingScreen();
                     contactUs(scanner, user.getUsername());
                     break;
                 case 4:
@@ -117,8 +108,8 @@ public class Main {
             System.out.print("Ievadiet izvēli: ");
             brandChoice = scanner.nextInt();
             scanner.nextLine();
-            Loading loading = new Loading();
-            loading.LoadingScreen();
+
+            Loading.LoadingScreen();
     
             if (brandChoice == index) {
                 System.out.println("Atgriežamies uz sākumu...");
@@ -161,8 +152,8 @@ public class Main {
         do {
             System.out.print("\nIevadiet modeļa numuru, lai redzētu detalizētu informāciju (vai 0, lai atgrieztos): ");
             selection = scanner.nextInt();
-            Loading loading = new Loading();
-            loading.LoadingScreen();
+
+            Loading.LoadingScreen();
             scanner.nextLine(); // Atstarpe ievades lasīšanai
     
             if (selection > 0 && selection <= brandCars.size()) {
@@ -184,7 +175,7 @@ public class Main {
                     System.out.println("2 - Parādīt izvēlētās markas modeļus");
                     System.out.print("Ievadiet izvēli: ");
                     int nextChoice = scanner.nextInt();
-                    loading.LoadingScreen();
+                    Loading.LoadingScreen();
                     scanner.nextLine(); // Atstarpe ievades lasīšanai
     
                     if (nextChoice == 1) {
@@ -425,7 +416,6 @@ public class Main {
 
     private static void manageFavorites(Scanner scanner, Person user) {
         int choice;
-        Loading loading = new Loading();
         do {
             System.out.println("\nIemīļotās mašīnas:");
             System.out.println("1 - Apskatīt iemīļotās mašīnas");
@@ -434,7 +424,7 @@ public class Main {
             System.out.println("4 - Atgriezties uz lietotāja izvēlni");
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
-            loading.LoadingScreen();
+            Loading.LoadingScreen();
             scanner.nextLine();
     
             switch (choice) {
@@ -458,8 +448,6 @@ public class Main {
     // Profila ieejas vai reģistrācijas metode
     private static void loginOrRegister(Scanner scanner) {
         int choice;
-        Loading loading = new Loading();
-    
         do {
             System.out.println("\nIeiet profilā:");
             System.out.println("1 - Ieiet kā lietotājs");
@@ -468,8 +456,7 @@ public class Main {
             System.out.println("4 - Atgriezties galvenajā izvēlnē");
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            ClearConsole.clearConsole();
             scanner.nextLine();
     
             if (choice == 1) {
@@ -477,19 +464,17 @@ public class Main {
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
                 if (username.equals("0")) {
-                    System.out.print("\033[H\033[2J");
-                    System.out.flush();
+                    ClearConsole.clearConsole();
                     continue;
                 }
                 System.out.print("Parole (vai '0' lai atgriezties): ");
                 String password = scanner.nextLine();
                 if (password.equals("0")) {
-                    System.out.print("\033[H\033[2J");
-                    System.out.flush();
+                    ClearConsole.clearConsole();
                     continue;
                 }
                 Person foundUser = findUser(username);
-                loading.LoadingScreen();
+                Loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
                     System.out.println("Laipni lūgti, " + username + "!");
                     userMenu(scanner, foundUser);
@@ -501,20 +486,18 @@ public class Main {
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String username = scanner.nextLine();
                 if (username.equals("0")) {
-                    System.out.print("\033[H\033[2J");
-                    System.out.flush();
+                    ClearConsole.clearConsole();
                     continue;
                 }
     
                 System.out.print("Parole (vai '0' lai atgriezties): ");
                 String password = scanner.nextLine();
                 if (password.equals("0")) {
-                    System.out.print("\033[H\033[2J");
-                    System.out.flush();
+                    ClearConsole.clearConsole();
                     continue;
                 }
                 Person foundUser = findUser(username);
-                loading.LoadingScreen();
+                Loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && foundUser.isAdmin()) {
                     System.out.println("Laipni lūgti, administrators " + username + "!");
                     adminMenu(scanner);
@@ -531,7 +514,7 @@ public class Main {
                 String newPassword = scanner.nextLine();
                 if (newPassword.equals("0")) continue;
     
-                loading.LoadingScreen();
+                Loading.LoadingScreen();
                 if (findUser(newUsername) == null) {
                     boolean isAdmin = users.isEmpty();
                     users.add(new Person(newUsername, newPassword, isAdmin));
@@ -554,27 +537,16 @@ public class Main {
 
     // Administratora izvēlne ar iespēju pārvaldīt lietotājus, pievienot jaunas mašīnas un izmantot paplašinātās datu operācijas
     private static void adminMenu(Scanner scanner) {
-        Loading loading = new Loading(); // Izveidojam Loading objektu
         int adminChoice;
         do {
-            // Konsoles attīrīšana
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
-    
-            System.out.println("\nAdministrācijas izvēlne:");
-            System.out.println("1 - Dzēst profilu");
-            System.out.println("2 - Parādīt profilu sarakstu");
-            System.out.println("3 - Pievienot jaunu mašīnu (marku/modeli)");
-            System.out.println("4 - Dzēst mašīnu (marku/modeli)");
-            System.out.println("5 - Rediģēt mašīnu (marku/modeli)");
-            System.out.println("6 - Paplašinātās datu operācijas");
-            System.out.println("7 - Apskatīt saziņas datus");
-            System.out.println("0 - Iziet no administratora izvēlnes");
+            ClearConsole.clearConsole();
+            // Administratora izvēlne
+            Menu.adminMenu();
             System.out.print("Ievadiet izvēli: ");
             adminChoice = scanner.nextInt();
             scanner.nextLine();
     
-            loading.LoadingScreen(); // Parādām ielādes ekrānu
+            Loading.LoadingScreen();
     
             switch (adminChoice) {
                 case 1:
@@ -605,10 +577,17 @@ public class Main {
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
     
-            // Pievienojam pauzi, lai lietotājs varētu apskatīt rezultātu pirms izvēlnes atkārtotas parādīšanas
             if (adminChoice != 0) {
-                System.out.println("\nNospiediet Enter, lai turpinātu...");
-                scanner.nextLine();
+                int choice;
+                do {
+                    System.out.println("\n1 - Atgriezties atpakaļ");
+                    System.out.print("Ievadiet izvēli: ");
+                    choice = scanner.nextInt();
+                    scanner.nextLine();
+                    if (choice != 1) {
+                        System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                    }
+                } while (choice != 1);
             }
         } while (adminChoice != 0);
     }
@@ -631,10 +610,10 @@ public class Main {
             System.out.print("Ievadiet izvēli: ");
             opChoice = scanner.nextInt();
             scanner.nextLine();
-            Loading loading = new Loading();
-            loading.LoadingScreen();
-
-            switch(opChoice) {
+    
+            Loading.LoadingScreen();
+    
+            switch (opChoice) {
                 case 1:
                     sortCarsByYearThenHorsepower();
                     break;
@@ -668,8 +647,20 @@ public class Main {
                 default:
                     System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
             }
-            System.out.println(); // tukša rinda starp operācijām
-        } while(opChoice != 0);
+    
+            if (opChoice != 0) {
+                int choice;
+                do {
+                    System.out.println("\n1 - Atgriezties atpakaļ");
+                    System.out.print("Ievadiet izvēli: ");
+                    choice = scanner.nextInt();
+                    scanner.nextLine();
+                    if (choice != 1) {
+                        System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                    }
+                } while (choice != 1);
+            }
+        } while (opChoice != 0);
     }
 
     // Metode – kārto automobiļus pēc izlaides gada augošā secībā un, ja gadi sakrīt, pēc zirgspēkiem dilstošā secībā
@@ -1248,13 +1239,11 @@ public class Main {
     }
 
     // Metode, lai sazinātos ar mums
-    private static void contactUs(Scanner scanner, String username) {
-        Loading loading = new Loading(); // Izveidojam Loading objektu
+    private static void contactUs(Scanner scanner, String username) { // Izveidojam Loading objektu
         int choice;
         do {
             // Konsoles attīrīšana
-            System.out.print("\033[H\033[2J");
-            System.out.flush();
+            ClearConsole.clearConsole();
     
             System.out.println("\nSazināties ar mums:");
             System.out.println("1 - Atstāt atsauksmi");
@@ -1266,7 +1255,7 @@ public class Main {
             scanner.nextLine();
     
             if (choice >= 1 && choice <= 3) {
-                loading.LoadingScreen(); // Parādām ielādes ekrānu
+                Loading.LoadingScreen(); // Parādām ielādes ekrānu
                 String contactType = switch (choice) {
                     case 1 -> "Atsauksme";
                     case 2 -> "Kļūda";
@@ -1276,8 +1265,7 @@ public class Main {
                 System.out.println("Lūdzu, ievadiet savu ziņojumu:");
                 String message = scanner.nextLine();
                 // Konsoles attīrīšana pēc atgriešanās
-                System.out.print("\033[H\033[2J");
-                System.out.flush();
+                ClearConsole.clearConsole();
                 saveContact(username, contactType, message);
                 System.out.println("Paldies! Jūsu ziņojums ir saglabāts.");
             } else if (choice != 4) {
@@ -1286,8 +1274,7 @@ public class Main {
         } while (choice != 4);
     
         // Konsoles attīrīšana pēc atgriešanās
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        ClearConsole.clearConsole();
     }
 
     // Metode, lai saglabātu kontaktinformāciju CSV failā
