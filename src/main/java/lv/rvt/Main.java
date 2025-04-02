@@ -143,8 +143,7 @@ public class Main {
             }
         }
         if (brandCars.isEmpty()) {
-            Empty empty = new Empty();
-            empty.EmptyScreen();
+            Empty.EmptyScreen();
             return;
         }
     
@@ -269,8 +268,7 @@ public class Main {
     private static void displayFavorites(Person user, Scanner scanner) {
         List<Car> favorites = user.getFavorites();
         if (favorites.isEmpty()) {
-            Empty empty = new Empty();
-            empty.EmptyScreen();
+            Empty.EmptyScreen();
             return;
         }
     
@@ -342,8 +340,8 @@ public class Main {
                 }
     
                 if (brandCars.isEmpty()) {
-                    Empty empty = new Empty();
-                    empty.EmptyScreen();
+    
+                    Empty.EmptyScreen();
                     continue;
                 }
     
@@ -378,8 +376,7 @@ public class Main {
     private static void removeFavoriteCar(Scanner scanner, Person user) {
         List<Car> favorites = user.getFavorites();
         if (favorites.isEmpty()) {
-            Empty empty = new Empty();
-            empty.EmptyScreen();
+            Empty.EmptyScreen();
             return;
         }
     
@@ -1283,7 +1280,7 @@ public class Main {
     private static void saveContact(String username, String contactType, String message) {
         File file = new File(CONTACT_FILE);
         try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
-            pw.println(username + "," + contactType + "," + message.replace(",", " "));
+            pw.println(username + "," + contactType + "," + message.replace(",", " ") + ",unread");
         } catch (IOException e) {
             System.out.println("Kļūda, saglabājot saziņu: " + e.getMessage());
         }
@@ -1293,36 +1290,51 @@ public class Main {
     private static void viewContacts() {
         File file = new File(CONTACT_FILE);
         if (!file.exists() || file.length() == 0) {
-            System.out.println("Nav pieejamu saziņas datu.");
+            Empty.EmptyScreen();
             return;
         }
     
+        List<String> updatedLines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             System.out.println("\nSaziņas dati:");
-            System.out.format("%-15s %-15s %-50s\n", "Lietotājs", "Veids", "Ziņojums");
-            System.out.println("-".repeat(80));
+            System.out.format("%-15s %-15s %-50s %-10s\n", "Lietotājs", "Veids", "Ziņojums", "Statuss");
+            System.out.println("-".repeat(95));
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",", 3);
-                if (parts.length == 3) {
+                String[] parts = line.split(",", 4);
+                if (parts.length == 4) {
                     String username = parts[0];
                     String contactType = parts[1];
                     String message = parts[2];
+                    String status = parts[3];
     
                     // Izmantojam formatMessage, lai sadalītu garus ziņojumus
-                    List<String> formattedMessage = formatMessage(message, 50); // Maksimālais simbolu skaits rindā
+                    List<String> formattedMessage = formatMessage(message, 50);
     
-                    // Izvadām pirmo rindu ar lietotāju un veidu
-                    System.out.format("%-15s %-15s %-50s\n", username, contactType, formattedMessage.get(0));
+                    // Izvadām pirmo rindu ar lietotāju, veidu un statusu
+                    System.out.format("%-15s %-15s %-50s %-10s\n", username, contactType, formattedMessage.get(0), status);
     
                     // Izvadām pārējās rindas tikai ar ziņojumu
                     for (int i = 1; i < formattedMessage.size(); i++) {
-                        System.out.format("%-15s %-15s %-50s\n", "", "", formattedMessage.get(i));
+                        System.out.format("%-15s %-15s %-50s %-10s\n", "", "", formattedMessage.get(i), "");
                     }
+    
+                    // Atjauninām statusu uz "read"
+                    updatedLines.add(username + "," + contactType + "," + message.replace(",", " ") + ",read");
                 }
             }
         } catch (IOException e) {
             System.out.println("Kļūda, lasot saziņas datus: " + e.getMessage());
+            return;
+        }
+    
+        // Pārrakstām failu ar atjauninātajiem statusiem
+        try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
+            for (String updatedLine : updatedLines) {
+                pw.println(updatedLine);
+            }
+        } catch (IOException e) {
+            System.out.println("Kļūda, saglabājot atjauninātos saziņas datus: " + e.getMessage());
         }
     }
     

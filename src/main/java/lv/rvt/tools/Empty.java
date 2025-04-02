@@ -1,7 +1,7 @@
 package lv.rvt.tools;
 
 public class Empty {
-    public void EmptyScreen() {
+    public static void EmptyScreen() {
         System.out.println(ConsoleColors.BLACK + "        ⠀⠀⠀⠀⠀⢀⣀⣀⣀⠀");
         System.out.println(ConsoleColors.BLACK + "        ⠀⠀⠀⠰⡿⠿⠛⠛⠻⠿⣷⠀");
         System.out.println(ConsoleColors.BLACK + "        ⠀⠀⠀⠀⠀⠀⣀⣄⡀⠀⠀⠀⠀⢀⣀⣀⣤⣄⣀⡀⠀");
