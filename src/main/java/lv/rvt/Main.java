@@ -8,7 +8,7 @@ import java.io.*;
 public class Main {
     private static ArrayList<Person> users = new ArrayList<>();
     private static final String CSV_FILE = "data/users.csv";
-
+    
     // Automobiļu kolekcijas mainīgās
     private static ArrayList<Car> cars = new ArrayList<>();
     private static final String CARS_FILE = "data/cars.csv";
@@ -52,6 +52,7 @@ public class Main {
                     System.out.println("Paldies, ka izmantojāt CarObka!");
                     break;
                 default:
+                    ClearConsole.clearConsole();
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 0);
@@ -104,16 +105,14 @@ public class Main {
             for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
                 System.out.println(entry.getKey() + " - " + entry.getValue());
             }
-            System.out.println(index + " - Atgriezties uz sākumu");
+            System.out.println("0 - Atgriezties uz sākumu");
             System.out.print("Ievadiet izvēli: ");
             brandChoice = scanner.nextInt();
             scanner.nextLine();
+            Loading.LoadingScreen(); // Ielādēšanas ekrāns
 
-            Loading.LoadingScreen();
-    
-            if (brandChoice == index) {
-                System.out.println("Atgriežamies uz sākumu...");
-                return;
+            if (brandChoice == 0) {
+                return; // Atgriežas uz sākumu
             }
     
             // Apstrādā izvēlēto marku
@@ -171,7 +170,6 @@ public class Main {
                     // Papildu izvēlne pēc detalizētas informācijas izvades
                     System.out.println("\nKo vēlaties darīt tālāk?");
                     System.out.println("1 - Atgriezties pie kolekcijas");
-                    System.out.println("2 - Parādīt izvēlētās markas modeļus");
                     System.out.print("Ievadiet izvēli: ");
                     int nextChoice = scanner.nextInt();
                     Loading.LoadingScreen();
@@ -179,17 +177,6 @@ public class Main {
     
                     if (nextChoice == 1) {
                         return; // Atgriežas pie kolekcijas
-                    } else if (nextChoice == 2) {
-                        // Parāda izvēlētās markas modeļus tabulas veidā
-                        System.out.println("\n" + brand + " modeļi:");
-                        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
-                            "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
-                        System.out.println("-".repeat(124));
-                        int index2 = 1;
-                        for (Car car : brandCars) {
-                            System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n", 
-                                index2++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
-                        }
                     } else {
                         System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
                     }
@@ -418,10 +405,9 @@ public class Main {
             System.out.println("1 - Apskatīt iemīļotās mašīnas");
             System.out.println("2 - Pievienot mašīnu iemīļotajām");
             System.out.println("3 - Dzēst mašīnu no iemīļotajām");
-            System.out.println("4 - Atgriezties uz lietotāja izvēlni");
+            System.out.println("0 - Atgriezties uz lietotāja izvēlni");
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
-            Loading.LoadingScreen();
             scanner.nextLine();
     
             switch (choice) {
@@ -434,19 +420,19 @@ public class Main {
                 case 3:
                     removeFavoriteCar(scanner, user);
                     break;
-                case 4:
-                    return;
+                case 0:
+                    return; // Atgriežas uz lietotāja izvēlni
                 default:
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
-        } while (choice != 4);
+        } while (true);
     }
 
     // Profila ieejas vai reģistrācijas metode
     private static void loginOrRegister(Scanner scanner) {
         int choice;
         do {
-            System.out.println("\nIeiet profilā:");
+            System.out.println(ConsoleColors.GREEN+"\nIeiet profilā:");
             System.out.println("1 - Ieiet kā lietotājs");
             System.out.println("2 - Ieiet kā administrators");
             System.out.println("3 - Pievienot jaunu profilu");
@@ -473,7 +459,7 @@ public class Main {
                 Person foundUser = findUser(username);
                 Loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
-                    System.out.println("Laipni lūgti, " + username + "!");
+                    System.out.println(ConsoleColors.CYAN+"Laipni lūgti, " + username + "!");
                     userMenu(scanner, foundUser);
                 } else {
                     System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
@@ -568,7 +554,7 @@ public class Main {
                     viewContacts();
                     break;
                 case 0:
-                    System.out.println("Izeja no administratora izvēlnes...");
+                    System.out.println(ConsoleColors.GREEN+"Izeja no administratora izvēlnes...");
                     break;
                 default:
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");

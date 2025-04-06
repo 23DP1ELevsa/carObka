@@ -1,7 +1,5 @@
 package lv.rvt.tools;
 
-import java.io.Console;
-
 public class Menu {
     public static void StartMenu() {
         // Izvada ASCII ART mašīnu
