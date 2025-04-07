@@ -42,7 +42,6 @@ public class Menu {
         System.out.println("3 - Pievienot jaunu mašīnu (marku/modeli)");
         System.out.println("4 - Dzēst mašīnu (marku/modeli)");
         System.out.println("5 - Rediģēt mašīnu (marku/modeli)");
-        System.out.println("6 - Paplašinātās datu operācijas");
         // Skaita nelasīto ziņu skaitu no contact.csv
         int unreadMessages = 0;
         try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("data/contact.csv"))) {
@@ -57,10 +56,10 @@ public class Menu {
             System.out.println("Kļūda lasot failu: " + e.getMessage());
         }
         if (unreadMessages > 0) {
-            System.out.println("7 - Apskatīt saziņas datus "+ConsoleColors.RED_BOLD+"(" + unreadMessages + (unreadMessages == 1 ? " new message)" : " new messages)"+ConsoleColors.RESET));
+            System.out.println("]6 - Apskatīt saziņas datus "+ConsoleColors.RED_BOLD+"(" + unreadMessages + (unreadMessages == 1 ? " new message)" : " new messages)"+ConsoleColors.RESET));
         }
         else {
-            System.out.println("7 - Apskatīt saziņas datus");
+            System.out.println("6 - Apskatīt saziņas datus");
         }
         System.out.println(ConsoleColors.RED+"0 - Iziet no administratora izvēlnes");
     }
