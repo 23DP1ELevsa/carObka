@@ -186,6 +186,7 @@ public class Main {
                     // Papildu izvēlne pēc detalizētas informācijas izvades
                     System.out.println("\nKo vēlaties darīt tālāk?");
                     System.out.println("1 - Atgriezties pie kolekcijas");
+                    System.out.println("2 - Aprēķināt degvielas patēriņu");
                     System.out.print("Ievadiet izvēli: ");
                     int nextChoice = scanner.nextInt();
                     Loading.LoadingScreen();
@@ -193,6 +194,22 @@ public class Main {
     
                     if (nextChoice == 1) {
                         return; // Atgriežas pie kolekcijas
+                    } else if (nextChoice == 2) {
+                        double distance = 0;
+                        boolean validInput = false;
+                        while (!validInput) {
+                            System.out.print("Ievadiet attālumu kilometros: ");
+                            if (scanner.hasNextDouble()) {
+                                distance = scanner.nextDouble();
+                                validInput = true;
+                            } else {
+                                System.out.println("Nepareiza ievade. Lūdzu, ievadiet derīgu skaitli.");
+                                scanner.next(); // Clear the invalid input
+                            }
+                        }
+                        scanner.nextLine(); // Atstarpe ievades lasīšanai
+                        double fuelNeeded = (selectedCar.getFuelConsumption() * distance) / 100;
+                        System.out.printf("Lai nobrauktu %.2f km, būs nepieciešami %.2f litri degvielas.\n", distance, fuelNeeded);
                     } else {
                         System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
                     }
