@@ -5,6 +5,11 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 
 public class Main {
     private static ArrayList<Person> users = new ArrayList<>();
@@ -81,9 +86,10 @@ public class Main {
                     contactUs(scanner, user.getUsername());
                     break;
                 case 4:
-                    System.out.println("Iziet no profila...");
+                    System.out.println(ConsoleColors.GREEN+"Iziet no profila...");
                     break;
                 default:
+                    ClearConsole.clearConsole();
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 4);
@@ -103,6 +109,7 @@ public class Main {
             }
     
             // Parāda dinamisko kolekcijas izvēlni
+            ClearConsole.clearConsole();
             System.out.println("\nKolekcija:");
             for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
                 System.out.println(entry.getKey() + " - " + entry.getValue());
@@ -127,6 +134,7 @@ public class Main {
                 if (selectedBrand != null) {
                     displayCarsByBrand(selectedBrand, scanner);
                 } else {
+                    ClearConsole.clearConsole();
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
                 }
             }
@@ -277,10 +285,11 @@ public class Main {
             Empty.EmptyScreen();
             return;
         }
-    
+        
+        ClearConsole.clearConsole();
         System.out.println("\nIemīļotās mašīnas:");
-        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
-            "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
+        "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
         System.out.println("-".repeat(124));
         int index = 1;
         for (Car car : favorites) {
@@ -295,7 +304,9 @@ public class Main {
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
+            ClearConsole.clearConsole();
             if (choice != 1) {
+                ClearConsole.clearConsole();
                 System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
             }
         } while (choice != 1);
@@ -324,7 +335,7 @@ public class Main {
             scanner.nextLine();
     
             if (brandChoice == index) {
-                System.out.println("Atgriežamies uz lietotāja izvēlni...");
+                ClearConsole.clearConsole();
                 return;
             }
     
@@ -373,6 +384,7 @@ public class Main {
                     }
                 } while (carChoice != 0);
             } else {
+                ClearConsole.clearConsole();
                 System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (true);
@@ -389,6 +401,7 @@ public class Main {
         int carIndex;
         do {
             // Parāda iemīļoto mašīnu sarakstu
+            ClearConsole.clearConsole();
             System.out.println("\nIemīļotās mašīnas:");
             System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
                     "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
@@ -403,6 +416,7 @@ public class Main {
             System.out.print("\nIevadiet mašīnas numuru, lai dzēstu no iemīļotajām (vai 0, lai atgrieztos): ");
             carIndex = scanner.nextInt() - 1;
             scanner.nextLine();
+            ClearConsole.clearConsole();
     
             if (carIndex >= 0 && carIndex < favorites.size()) {
                 Car removedCar = favorites.get(carIndex);
@@ -419,6 +433,7 @@ public class Main {
 
     private static void manageFavorites(Scanner scanner, Person user) {
         int choice;
+        ClearConsole.clearConsole();
         do {
             System.out.println("\nIemīļotās mašīnas:");
             System.out.println("1 - Apskatīt iemīļotās mašīnas");
@@ -431,17 +446,22 @@ public class Main {
     
             switch (choice) {
                 case 1:
+                    Loading.LoadingScreen();
                     displayFavorites(user, scanner);
                     break;
                 case 2:
+                    Loading.LoadingScreen();
                     addFavoriteCar(scanner, user);
                     break;
                 case 3:
+                    Loading.LoadingScreen();
                     removeFavoriteCar(scanner, user);
                     break;
                 case 0:
+                    ClearConsole.clearConsole();
                     return; // Atgriežas uz lietotāja izvēlni
                 default:
+                    ClearConsole.clearConsole();
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (true);
@@ -532,6 +552,7 @@ public class Main {
             } else if (choice == 4) {
                 System.out.println("Atgriežamies galvenajā izvēlnē...");
             } else {
+                ClearConsole.clearConsole();
                 System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 4);
@@ -573,6 +594,7 @@ public class Main {
                     System.out.println(ConsoleColors.GREEN+"Izeja no administratora izvēlnes...");
                     break;
                 default:
+                    ClearConsole.clearConsole();
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
     
@@ -600,11 +622,9 @@ public class Main {
             System.out.println("2 - Kārtot pēc modeļa");
             System.out.println("3 - Kārtot pēc izlaides gada");
             System.out.println("4 - Kārtot pēc zirgspēkiem");
-            System.out.println("5 - Kārtot pēc degvielas tipa");
-            System.out.println("6 - Kārtot pēc piedziņas");
-            System.out.println("7 - Kārtot pēc paaudzes");
-            System.out.println("8 - Kārtot pēc vidējā degvielas patēriņa");
-            System.out.println("9 - Kārtot pēc cenas");
+            System.out.println("5 - Kārtot pēc paaudzes");
+            System.out.println("6 - Kārtot pēc vidējā degvielas patēriņa");
+            System.out.println("7 - Kārtot pēc cenas");
             System.out.println("0 - Atgriezties uz kolekciju");
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
@@ -613,12 +633,13 @@ public class Main {
             if (choice == 0) {
                 return; // Atgriežas uz kolekciju
             }
-    
-            System.out.println("1 - Augošā secībā");
+
+            System.out.println("\n1 - Augošā secībā");
             System.out.println("2 - Dilstošā secībā");
             System.out.print("Izvēlieties kārtošanas secību: ");
             int order = scanner.nextInt();
             scanner.nextLine();
+            Loading.LoadingScreen();
     
             List<Car> sortedCars = new ArrayList<>(cars);
     
@@ -636,18 +657,12 @@ public class Main {
                     sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getHorsepower) : Comparator.comparingInt(Car::getHorsepower).reversed());
                     break;
                 case 5:
-                    sortedCars.sort(order == 1 ? Comparator.comparing(Car::getFuelType) : Comparator.comparing(Car::getFuelType).reversed());
-                    break;
-                case 6:
-                    sortedCars.sort(order == 1 ? Comparator.comparing(Car::getDrive) : Comparator.comparing(Car::getDrive).reversed());
-                    break;
-                case 7:
                     sortedCars.sort(order == 1 ? Comparator.comparing(Car::getGeneration) : Comparator.comparing(Car::getGeneration).reversed());
                     break;
-                case 8:
+                case 6:
                     sortedCars.sort(order == 1 ? Comparator.comparingDouble(Car::getFuelConsumption) : Comparator.comparingDouble(Car::getFuelConsumption).reversed());
                     break;
-                case 9:
+                case 7:
                     sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getPrice) : Comparator.comparingInt(Car::getPrice).reversed());
                     break;
                 default:
@@ -655,7 +670,7 @@ public class Main {
                     continue;
             }
     
-            System.out.println("\nAutomobiļi sakārtoti:");
+            System.out.println("\nAutomobiļi sakārtoti:\n");
             displayCarList(sortedCars);
         } while (true);
     }
@@ -692,6 +707,7 @@ public class Main {
                 filteredCars = cars.stream()
                     .filter(car -> car.getBrand().equalsIgnoreCase(brand))
                     .collect(Collectors.toList());
+                    Loading.LoadingScreen();
                 break;
             case 2:
                 System.out.print("Ievadiet modeli: ");
@@ -699,6 +715,7 @@ public class Main {
                 filteredCars = cars.stream()
                     .filter(car -> car.getModel().equalsIgnoreCase(model))
                     .collect(Collectors.toList());
+                    Loading.LoadingScreen();
                 break;
             case 3:
                 System.out.print("Ievadiet sākuma gadu: ");
@@ -709,6 +726,7 @@ public class Main {
                 filteredCars = cars.stream()
                     .filter(car -> car.getYear() >= startYear && car.getYear() <= endYear)
                     .collect(Collectors.toList());
+                    Loading.LoadingScreen();
                 break;
             case 4:
                 System.out.print("Ievadiet minimālo zirgspēku skaitu: ");
@@ -719,6 +737,7 @@ public class Main {
                 filteredCars = cars.stream()
                     .filter(car -> car.getHorsepower() >= minHorsepower && car.getHorsepower() <= maxHorsepower)
                     .collect(Collectors.toList());
+                    Loading.LoadingScreen();
                 break;
             case 5:
                 filteredCars = filterByDynamicOption(scanner, "degvielas tipu", Car::getFuelType);
@@ -738,6 +757,7 @@ public class Main {
                 filteredCars = cars.stream()
                     .filter(car -> car.getFuelConsumption() >= minConsumption && car.getFuelConsumption() <= maxConsumption)
                     .collect(Collectors.toList());
+                    Loading.LoadingScreen();
                 break;
             case 9:
                 System.out.print("Ievadiet minimālo cenu: ");
@@ -748,16 +768,19 @@ public class Main {
                 filteredCars = cars.stream()
                     .filter(car -> car.getPrice() >= minPrice && car.getPrice() <= maxPrice)
                     .collect(Collectors.toList());
+                    Loading.LoadingScreen();
                 break;
             default:
+                ClearConsole.clearConsole();
                 System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
                 continue;
         }
 
+        ClearConsole.clearConsole();
         if (filteredCars.isEmpty()) {
             System.out.println("Nav atrasti automobiļi ar norādītajiem kritērijiem.");
         } else {
-            System.out.println("\nFiltrētie automobiļi:");
+            System.out.println("\nFiltrētie automobiļi:\n");
             displayCarList(filteredCars);
         }
     } while (true);
@@ -781,11 +804,13 @@ public class Main {
         System.out.print("Ievadiet izvēli: ");
         int optionChoice = scanner.nextInt();
         scanner.nextLine();
+        Loading.LoadingScreen();
 
         if (optionChoice == 0) {
             return Collections.emptyList(); // Atgriežas uz filtrēšanas izvēlni
         }
 
+        ClearConsole.clearConsole();
         String selectedOption = optionMap.get(optionChoice);
         if (selectedOption == null) {
             System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
@@ -1223,8 +1248,6 @@ public class Main {
     private static void contactUs(Scanner scanner, String username) { // Izveidojam Loading objektu
         int choice;
         do {
-            // Konsoles attīrīšana
-            ClearConsole.clearConsole();
     
             System.out.println("\nSazināties ar mums:");
             System.out.println("1 - Atstāt atsauksmi");
@@ -1245,11 +1268,11 @@ public class Main {
                 };
                 System.out.println("Lūdzu, ievadiet savu ziņojumu:");
                 String message = scanner.nextLine();
-                // Konsoles attīrīšana pēc atgriešanās
-                ClearConsole.clearConsole();
                 saveContact(username, contactType, message);
+                ClearConsole.clearConsole();
                 System.out.println("Paldies! Jūsu ziņojums ir saglabāts.");
             } else if (choice != 4) {
+                ClearConsole.clearConsole();
                 System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
             }
         } while (choice != 4);
@@ -1264,7 +1287,8 @@ public class Main {
     private static void saveContact(String username, String contactType, String message) {
         File file = new File(CONTACT_FILE);
         try (PrintWriter pw = new PrintWriter(new FileWriter(file, true))) {
-            pw.println(username + "," + contactType + "," + message.replace(",", " ") + ",unread");
+            String timestamp = LocalDateTime.now().toString(); // Ziņojuma nosūtīšanas laiks
+            pw.println(username + "," + contactType + "," + message.replace(",", " ") + ",unread," + timestamp + ",,"); // Lasīšanas laiks un dzēšanas datums sākotnēji tukši
         } catch (IOException e) {
             System.out.println("Kļūda, saglabājot saziņu: " + e.getMessage());
         }
@@ -1274,45 +1298,93 @@ public class Main {
     private static void viewContacts() {
         File file = new File(CONTACT_FILE);
         if (!file.exists() || file.length() == 0) {
-            Empty.EmptyScreen();
+            System.out.println("Nav pieejamu saziņas datu.");
             return;
         }
-    
+
         List<String> updatedLines = new ArrayList<>();
+        // Formatēšanas formāts izvadē (Rīgas laiks)
+        DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        // Parsēšanai: viens formāts ISO ar "T" starp datumu un laiku…
+        DateTimeFormatter isoFormatterT = new DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE)
+            .appendLiteral('T')
+            .append(DateTimeFormatter.ISO_LOCAL_TIME)
+            .toFormatter();
+        // …un otrs, ja starpā ir atstarpe.
+        DateTimeFormatter spaceFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             System.out.println("\nSaziņas dati:");
-            System.out.format("%-15s %-15s %-50s %-10s\n", "Lietotājs", "Veids", "Ziņojums", "Statuss");
-            System.out.println("-".repeat(95));
+            System.out.format("%-15s %-15s %-50s %-10s %-25s %-25s %-25s\n",
+                "Lietotājs", "Veids", "Ziņojums", "Statuss", "Nosūtīts", "Izlasīts", "Dzēšanas datums");
+            System.out.println("-".repeat(170));
+
             while ((line = br.readLine()) != null) {
-                String[] parts = line.split(",", 4);
-                if (parts.length == 4) {
-                    String username = parts[0];
+                String[] parts = line.split(",", 7);
+                if (parts.length >= 5) {
+                    String username    = parts[0];
                     String contactType = parts[1];
-                    String message = parts[2];
-                    String status = parts[3];
-    
-                    // Izmantojam formatMessage, lai sadalītu garus ziņojumus
+                    String message     = parts[2];
+                    String status      = parts[3];
+                    String sentTime    = parts[4];
+                    String readTime    = parts.length > 5 ? parts[5] : "";
+                    String deleteTime  = parts.length > 6 ? parts[6] : "";
+
+                    // Ja ziņojums ir "unread", ģenerējam "read" laiku un dzēšanas laiku kā UTC (tālāk konvertēsim uz Rīgas laiku)
+                    if ("unread".equalsIgnoreCase(status.trim())) {
+                        LocalDateTime nowUTC = LocalDateTime.now(ZoneId.of("UTC"));
+                        // Saglabājam jaunus laikus ISO formātā ar "T"
+                        readTime   = nowUTC.format(isoFormatterT);
+                        deleteTime = nowUTC.plusHours(24).format(isoFormatterT);
+                        status     = "read";
+                    }
+
+                    // Konvertējam visus laiku laukus no UTC uz Rīgas laiku izvadē.
+                    String displayedSentTime   = convertToRigaTime(sentTime, isoFormatterT, spaceFormatter, targetFormatter);
+                    String displayedReadTime   = readTime.isEmpty() ? "" : convertToRigaTime(readTime, isoFormatterT, spaceFormatter, targetFormatter);
+                    String displayedDeleteTime = deleteTime.isEmpty() ? "" : convertToRigaTime(deleteTime, isoFormatterT, spaceFormatter, targetFormatter);
+
+                    // Formatējam ziņojumu, lai tas tiktu sadalīts vairākās rindās
                     List<String> formattedMessage = formatMessage(message, 50);
-    
-                    // Izvadām pirmo rindu ar lietotāju, veidu un statusu
-                    System.out.format("%-15s %-15s %-50s %-10s\n", username, contactType, formattedMessage.get(0), status);
-    
+
+                    // Izvadām pirmo rindu ar lietotāju un veidu
+                    System.out.format(
+                        "%-15s %-15s %-50s %-10s %-25s %-25s %-25s\n",
+                        username,
+                        contactType,
+                        formattedMessage.get(0),
+                        status,
+                        displayedSentTime,
+                        displayedReadTime,
+                        displayedDeleteTime
+                    );
+
                     // Izvadām pārējās rindas tikai ar ziņojumu
                     for (int i = 1; i < formattedMessage.size(); i++) {
-                        System.out.format("%-15s %-15s %-50s %-10s\n", "", "", formattedMessage.get(i), "");
+                        System.out.format("%-15s %-15s %-50s\n", "", "", formattedMessage.get(i));
                     }
-    
-                    // Atjauninām statusu uz "read"
-                    updatedLines.add(username + "," + contactType + "," + message.replace(",", " ") + ",read");
+
+                    // Atjauninām ierakstu failā (laiki tiek saglabāti nemainīti – UTC formātā)
+                    updatedLines.add(
+                        username + "," +
+                        contactType + "," +
+                        message.replace(",", " ") + "," +
+                        status + "," +
+                        sentTime + "," +
+                        readTime + "," +
+                        deleteTime
+                    );
                 }
             }
         } catch (IOException e) {
             System.out.println("Kļūda, lasot saziņas datus: " + e.getMessage());
             return;
         }
-    
-        // Pārrakstām failu ar atjauninātajiem statusiem
+
+        // Pārrakstām failu ar atjauninātajiem datiem
         try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
             for (String updatedLine : updatedLines) {
                 pw.println(updatedLine);
@@ -1321,7 +1393,35 @@ public class Main {
             System.out.println("Kļūda, saglabājot atjauninātos saziņas datus: " + e.getMessage());
         }
     }
-    
+
+    /**
+     * Konvertē laika virkni, kas saglabāta UTC, uz Rīgas laiku izvadē.
+     * Ja laika virknē ir "T", tiek izmantots isoFormatterT, citādi – spaceFormatter.
+     */
+    private static String convertToRigaTime(String timeStr,
+                                            DateTimeFormatter isoFormatterT,
+                                            DateTimeFormatter spaceFormatter,
+                                            DateTimeFormatter targetFormatter) {
+        if (timeStr == null || timeStr.isBlank()) {
+            return "";
+        }
+        try {
+            LocalDateTime ldt;
+            // Izvēlamies pareizo parsēšanas formātu
+            if (timeStr.contains("T")) {
+                ldt = LocalDateTime.parse(timeStr, isoFormatterT);
+            } else {
+                ldt = LocalDateTime.parse(timeStr, spaceFormatter);
+            }
+            // Pieņemam, ka saglabātais laiks ir UTC, un konvertējam uz Rīgas laiku (Europe/Riga)
+            ZonedDateTime utcZdt = ldt.atZone(ZoneId.of("UTC"));
+            ZonedDateTime rigaZdt = utcZdt.withZoneSameInstant(ZoneId.of("Europe/Riga"));
+            return rigaZdt.format(targetFormatter);
+        } catch (Exception e) {
+            return timeStr;
+        }
+    }
+
     // Palīgmetode, lai sadalītu ziņojumu vairākās rindās
     private static List<String> formatMessage(String message, int maxLineLength) {
         List<String> lines = new ArrayList<>();

@@ -56,7 +56,7 @@ public class Menu {
             System.out.println("Kļūda lasot failu: " + e.getMessage());
         }
         if (unreadMessages > 0) {
-            System.out.println("]6 - Apskatīt saziņas datus "+ConsoleColors.RED_BOLD+"(" + unreadMessages + (unreadMessages == 1 ? " new message)" : " new messages)"+ConsoleColors.RESET));
+            System.out.println("6 - Apskatīt saziņas datus "+ConsoleColors.RED_BOLD+"(" + unreadMessages + (unreadMessages == 1 ? " new message)" : " new messages)"+ConsoleColors.RESET));
         }
         else {
             System.out.println("6 - Apskatīt saziņas datus");
