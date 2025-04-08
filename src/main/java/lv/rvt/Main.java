@@ -186,7 +186,8 @@ public class Main {
                     // Papildu izvēlne pēc detalizētas informācijas izvades
                     System.out.println("\nKo vēlaties darīt tālāk?");
                     System.out.println("1 - Atgriezties pie kolekcijas");
-                    System.out.println("2 - Aprēķināt degvielas patēriņu");
+                    System.out.println("2 - Aprēķināt, cik litrus vajag lai nobrauktu noteikto attālumu:");
+                    System.out.println("3 - Aprēķināt, cik kilometrus var nobraukt ar noteikto degvielas litru skaitu:");
                     System.out.print("Ievadiet izvēli: ");
                     int nextChoice = scanner.nextInt();
                     Loading.LoadingScreen();
@@ -210,6 +211,22 @@ public class Main {
                         scanner.nextLine(); // Atstarpe ievades lasīšanai
                         double fuelNeeded = (selectedCar.getFuelConsumption() * distance) / 100;
                         System.out.printf("Lai nobrauktu %.2f km, būs nepieciešami %.2f litri degvielas.\n", distance, fuelNeeded);
+                    } else if (nextChoice == 3) {
+                        double fuelAmount = 0;
+                        boolean validInput = false;
+                        while (!validInput) {
+                            System.out.print("Ievadiet degvielas daudzumu litros: ");
+                            if (scanner.hasNextDouble()) {
+                                fuelAmount = scanner.nextDouble();
+                                validInput = true;
+                            } else {
+                                System.out.println("Nepareiza ievade. Lūdzu, ievadiet derīgu skaitli.");
+                                scanner.next(); // Clear the invalid input
+                            }
+                        }
+                        scanner.nextLine(); // Atstarpe ievades lasīšanai
+                        double distancePossible = (fuelAmount * 100) / selectedCar.getFuelConsumption();
+                        System.out.printf("Ar %.2f litriem degvielas var nobraukt aptuveni %.2f kilometrus.\n", fuelAmount, distancePossible);
                     } else {
                         System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
                     }
