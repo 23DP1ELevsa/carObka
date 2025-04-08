@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Car {
-    // Automobiļu kolekcijas mainīgās
-    public static ArrayList<Car> cars = new ArrayList<>();
+    static ArrayList<Car> cars = new ArrayList<>();
+    public static final String CARS_FILE = "/workspaces/carObka/data/cars.csv";
     
     // Car klase ar papildu lauku degvielas tipam
     private String brand;

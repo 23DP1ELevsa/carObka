@@ -20,9 +20,7 @@ import java.util.stream.Collectors;
 
 
 public class CarService {
-    // Automobiļu kolekcijas mainīgās
-    static ArrayList<Car> cars = new ArrayList<>();
-    public static final String CARS_FILE = "/workspaces/carObka/data/cars.csv";
+    
     // Kārto automobiļus pēc izvēlētās īpašības un secības
     public static void sortCars(Scanner scanner) {
         int choice;
@@ -51,7 +49,7 @@ public class CarService {
             scanner.nextLine();
             Loading.LoadingScreen();
     
-            List<Car> sortedCars = new ArrayList<>(cars);
+            List<Car> sortedCars = new ArrayList<>(Car.cars);
     
             switch (choice) {
                 case 1:
@@ -114,7 +112,7 @@ public class CarService {
             case 1:
                 System.out.print("Ievadiet marku: ");
                 String brand = scanner.nextLine().trim();
-                filteredCars = cars.stream()
+                filteredCars = Car.cars.stream()
                     .filter(car -> car.getBrand().equalsIgnoreCase(brand))
                     .collect(Collectors.toList());
                     Loading.LoadingScreen();
@@ -122,7 +120,7 @@ public class CarService {
             case 2:
                 System.out.print("Ievadiet modeli: ");
                 String model = scanner.nextLine().trim();
-                filteredCars = cars.stream()
+                filteredCars = Car.cars.stream()
                     .filter(car -> car.getModel().equalsIgnoreCase(model))
                     .collect(Collectors.toList());
                     Loading.LoadingScreen();
@@ -133,7 +131,7 @@ public class CarService {
                 System.out.print("Ievadiet beigu gadu: ");
                 int endYear = scanner.nextInt();
                 scanner.nextLine();
-                filteredCars = cars.stream()
+                filteredCars = Car.cars.stream()
                     .filter(car -> car.getYear() >= startYear && car.getYear() <= endYear)
                     .collect(Collectors.toList());
                     Loading.LoadingScreen();
@@ -144,7 +142,7 @@ public class CarService {
                 System.out.print("Ievadiet maksimālo zirgspēku skaitu: ");
                 int maxHorsepower = scanner.nextInt();
                 scanner.nextLine();
-                filteredCars = cars.stream()
+                filteredCars = Car.cars.stream()
                     .filter(car -> car.getHorsepower() >= minHorsepower && car.getHorsepower() <= maxHorsepower)
                     .collect(Collectors.toList());
                     Loading.LoadingScreen();
@@ -164,7 +162,7 @@ public class CarService {
                 System.out.print("Ievadiet maksimālo patēriņu: ");
                 double maxConsumption = scanner.nextDouble();
                 scanner.nextLine();
-                filteredCars = cars.stream()
+                filteredCars = Car.cars.stream()
                     .filter(car -> car.getFuelConsumption() >= minConsumption && car.getFuelConsumption() <= maxConsumption)
                     .collect(Collectors.toList());
                     Loading.LoadingScreen();
@@ -175,7 +173,7 @@ public class CarService {
                 System.out.print("Ievadiet maksimālo cenu: ");
                 int maxPrice = scanner.nextInt();
                 scanner.nextLine();
-                filteredCars = cars.stream()
+                filteredCars = Car.cars.stream()
                     .filter(car -> car.getPrice() >= minPrice && car.getPrice() <= maxPrice)
                     .collect(Collectors.toList());
                     Loading.LoadingScreen();
@@ -188,6 +186,7 @@ public class CarService {
 
         ClearConsole.clearConsole();
         if (filteredCars.isEmpty()) {
+            Empty.EmptyScreen();
             System.out.println("Nav atrasti automobiļi ar norādītajiem kritērijiem.");
         } else {
             System.out.println("\nFiltrētie automobiļi:\n");
@@ -198,7 +197,7 @@ public class CarService {
 
     public static List<Car> filterByDynamicOption(Scanner scanner, String optionName, Function<Car, String> getter) {
         // Dinamiski ģenerē unikālu vērtību sarakstu no automašīnu datiem
-        Set<String> options = cars.stream()
+        Set<String> options = Car.cars.stream()
             .map(getter)
             .collect(Collectors.toCollection(TreeSet::new)); // TreeSet nodrošina kārtotu sarakstu
 
@@ -228,7 +227,7 @@ public class CarService {
         }
 
         // Filtrē automašīnas pēc izvēlētās vērtības
-        return cars.stream()
+        return Car.cars.stream()
             .filter(car -> getter.apply(car).equalsIgnoreCase(selectedOption))
             .collect(Collectors.toList());
     }
@@ -265,7 +264,7 @@ public class CarService {
         Car newCar = new Car(brand, model, year, horsepower, fuelType, drive, generation, fuelConsumption, price, description);
     
         // Pievieno jauno automašīnu sarakstam
-        cars.add(newCar);
+        Car.cars.add(newCar);
         saveCars(); // Saglabā izmaiņas CSV failā
         System.out.println("Jauna mašīna veiksmīgi pievienota!");
     
@@ -275,7 +274,8 @@ public class CarService {
 
     // Administratora metode automašīnas dzēšanai
     public static void deleteCar(Scanner scanner) {
-        if (cars.isEmpty()) {
+        if (Car.cars.isEmpty()) {
+            Empty.EmptyScreen();
             System.out.println("Nav pieejamu automašīnu, ko dzēst.");
             return;
         }
@@ -283,7 +283,7 @@ public class CarService {
         // Dinamiski ģenerē unikālu marku sarakstu
         Map<Integer, String> brandMap = new LinkedHashMap<>();
         int index = 1;
-        for (Car car : cars) {
+        for (Car car : Car.cars) {
             if (!brandMap.containsValue(car.getBrand())) {
                 brandMap.put(index++, car.getBrand());
             }
@@ -312,7 +312,7 @@ public class CarService {
     
         // Filtrē modeļus pēc izvēlētās markas
         List<Car> brandCars = new ArrayList<>();
-        for (Car car : cars) {
+        for (Car car : Car.cars) {
             if (car.getBrand().equalsIgnoreCase(selectedBrand)) {
                 brandCars.add(car);
             }
@@ -336,7 +336,7 @@ public class CarService {
     
         if (modelChoice > 0 && modelChoice <= brandCars.size()) {
             Car carToDelete = brandCars.get(modelChoice - 1);
-            cars.remove(carToDelete);
+            Car.cars.remove(carToDelete);
     
             // Noņem automašīnu no visiem lietotāju iemīļoto sarakstiem
             for (Person user : UserService.users) {
@@ -358,7 +358,8 @@ public class CarService {
 
     // Administratora metode automašīnas rediģēšanai
     public static void editCar(Scanner scanner) {
-        if (cars.isEmpty()) {
+        if (Car.cars.isEmpty()) {
+            Empty.EmptyScreen();
             System.out.println("Nav pieejamu automašīnu, ko rediģēt.");
             return;
         }
@@ -366,7 +367,7 @@ public class CarService {
         // Dinamiski ģenerē unikālu marku sarakstu
         Map<Integer, String> brandMap = new LinkedHashMap<>();
         int index = 1;
-        for (Car car : cars) {
+        for (Car car : Car.cars) {
             if (!brandMap.containsValue(car.getBrand())) {
                 brandMap.put(index++, car.getBrand());
             }
@@ -387,7 +388,7 @@ public class CarService {
             return;
         }
     
-        List<Car> brandCars = cars.stream()
+        List<Car> brandCars = Car.cars.stream()
             .filter(c -> c.getBrand().equalsIgnoreCase(selectedBrand))
             .collect(Collectors.toList());
     
@@ -407,7 +408,7 @@ public class CarService {
         }
     
         Car originalCar = brandCars.get(modelChoice - 1);
-        int carIndex = cars.indexOf(originalCar);
+        int carIndex = Car.cars.indexOf(originalCar);
     
         Car updatedCar = originalCar;
     
@@ -513,7 +514,7 @@ public class CarService {
         } while (editChoice != 11);
     
         // Aizstāj veco automašīnas objektu ar jauno kolekcijā
-        cars.set(carIndex, updatedCar);
+        Car.cars.set(carIndex, updatedCar);
     
         // Atjaunina automašīnas informāciju visos lietotāju iemīļotajos sarakstos
         updateCarInFavorites(originalCar, updatedCar);
@@ -549,9 +550,9 @@ public class CarService {
 
     // Ielādē automašīnu datus no CSV faila
     public static void loadCars() {
-        File file = new File(CARS_FILE);
+        File file = new File(Car.CARS_FILE);
         if (!file.exists()) {
-            System.out.println("Cars data file (" + CARS_FILE + ") nav atrasts.");
+            System.out.println("Cars data file (" + Car.CARS_FILE + ") nav atrasts.");
             return;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -570,7 +571,7 @@ public class CarService {
                     double fuelConsumption = Double.parseDouble(parts[7].trim());
                     int price = Integer.parseInt(parts[8].trim());
                     String description = parts[9].trim();
-                    cars.add(new Car(brand, model, year, horsepower, fuelType, drive, generation, fuelConsumption, price, description));
+                    Car.cars.add(new Car(brand, model, year, horsepower, fuelType, drive, generation, fuelConsumption, price, description));
                 }
             }
         } catch (IOException e) {
@@ -580,8 +581,8 @@ public class CarService {
 
     // Saglabā automašīnu datus CSV failā
     public static void saveCars() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(CARS_FILE))) {
-            for (Car car : cars) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(Car.CARS_FILE))) {
+            for (Car car : Car.cars) {
                 // Экранируем кавычки в описании
                 String description = car.getDescription().replace("\"", "\"\"");
                 String line = String.format("%s,%s,%d,%d,%s,%s,%s,%.1f,%d,\"%s\"",
@@ -641,7 +642,7 @@ public class CarService {
             // Dinamiski ģenerē unikālu marku sarakstu no automašīnu datiem
             Map<Integer, String> brandMap = new LinkedHashMap<>();
             int index = 1;
-            for (Car car : cars) {
+            for (Car car : Car.cars) {
                 if (!brandMap.containsValue(car.getBrand())) {
                     brandMap.put(index++, car.getBrand());
                 }
@@ -670,7 +671,7 @@ public class CarService {
                 System.out.println("\n" + selectedBrand + " modeļi:");
                 System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
                         "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
-                for (Car car : cars) {
+                for (Car car : Car.cars) {
                     if (car.getBrand().equalsIgnoreCase(selectedBrand)) {
                         System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n",
                                 carIndex++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(),
