@@ -4,11 +4,9 @@ import lv.rvt.tools.*;
 import java.util.*;
 
 public class Main {
-    
-    
-    
-    
+
     public static void main(String[] args) {
+        ClearConsole.clearConsole();
         Scanner scanner = new Scanner(System.in);
 
         // Lietotāju ielāde no CSV

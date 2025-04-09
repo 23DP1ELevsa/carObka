@@ -11,7 +11,7 @@ public class Loading {
             System.out.println(ConsoleColors.YELLOW +"                .      ..");
             System.out.println("        __..---/______//-----. ");
             System.out.println("      .\".--.```|    - /.--.  =:");
-            System.out.println("     (.: {} :__L______: {} :__; "+ ConsoleColors.RESET +"  Loading"+ dots);
+            System.out.println("     (.: {} :__L______: {} :__; "+ ConsoleColors.YELLOW_BOLD +"  Loading"+ dots);
             System.out.println(ConsoleColors.YELLOW + "        *--*           *--*   " + ConsoleColors.RESET);
 
             try {
