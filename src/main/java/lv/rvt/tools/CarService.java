@@ -550,6 +550,7 @@ public class CarService {
 
     // Ielādē automašīnu datus no CSV faila
     public static void loadCars() {
+        
         File file = new File(Car.CARS_FILE);
         if (!file.exists()) {
             System.out.println("Cars data file (" + Car.CARS_FILE + ") nav atrasts.");
@@ -594,11 +595,11 @@ public class CarService {
                     car.getGeneration(),
                     car.getFuelConsumption(),
                     car.getPrice(),
-                    car.getDescription());
+                    description);
                 pw.println(line);
             }
         } catch (IOException e) {
-            System.out.println("Ошибка при сохранении автомобилей: " + e.getMessage());
+            System.out.println("Kļūda, saglabājot automašīnas: " + e.getMessage());
         }
     }
 

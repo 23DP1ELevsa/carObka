@@ -20,8 +20,7 @@ public class Menu {
         System.out.println(" "+ConsoleColors.BLACK_BACKGROUND_BRIGHT+ "`--'"+ConsoleColors.RESET+"                   "+ConsoleColors.BLACK_BACKGROUND_BRIGHT+"`--'"+ConsoleColors.RESET+" ");
 
         // Izvada izvēlni
-
-        System.out.println(ConsoleColors.GREEN+"\nCarObka - automobiļu kolekcija");
+        System.out.println(ConsoleColors.GREEN +"\nCarObka - automobiļu kolekcija");
         System.out.println("1 - Kolekcijas apskate");
         System.out.println("2 - Ieiet profilā vai reģistrēties");
         System.out.println("3 - Sazināties ar mums");
@@ -36,7 +35,8 @@ public class Menu {
         do {
             // Lietotāja izvēlne
             // Izvada izvēlni
-            System.out.println(ConsoleColors.CYAN+"\nCarObka - automašīnu kolekcija");
+            user.setColor();
+            System.out.println(user.getColor() +"\nCarObka - automašīnu kolekcija");
             System.out.println("1 - Kolekcija");
             System.out.println("2 - Iemīļotās mašīnas");
             System.out.println("3 - Sazināties ar mums");
@@ -54,7 +54,7 @@ public class Menu {
                     CarService.manageFavorites(scanner, user);
                     break;
                 case 3:
-                    contactUs(scanner, user.getUsername());
+                    contactUs(scanner, user);
                     break;
                 case 4:
                     System.out.println(ConsoleColors.GREEN+"Iziet no profila...");
@@ -67,13 +67,14 @@ public class Menu {
     }
     }
 
-    public static void adminMenu(Scanner scanner) {
+    public static void adminMenu(Scanner scanner, Person user) {
         int adminChoice;
         do {
             ClearConsole.clearConsole();
             // Administratora izvēlne
             // Izvada izvēlni
-            System.out.println(ConsoleColors.RED+"\nAdministrācijas izvēlne:");
+            user.setColor();
+            System.out.println(user.getColor() +"\nAdministrācijas izvēlne:");
             System.out.println("1 - Dzēst profilu");
             System.out.println("2 - Parādīt profilu sarakstu");
             System.out.println("3 - Pievienot jaunu mašīnu (marku/modeli)");
@@ -148,10 +149,10 @@ public class Menu {
         
     }
     // Metode, lai sazinātos ar mums
-    public static void contactUs(Scanner scanner, String username) { // Izveidojam Loading objektu
+    public static void contactUs(Scanner scanner, Person user) { // Izveidojam Loading objektu
         int choice;
         do {
-    
+            user.getColor();
             System.out.println("\nSazināties ar mums:");
             System.out.println("1 - Atstāt atsauksmi");
             System.out.println("2 - Paziņot par kļūdu");
@@ -160,7 +161,6 @@ public class Menu {
             System.out.print("Ievadiet izvēli: ");
             choice = scanner.nextInt();
             scanner.nextLine();
-    
             if (choice >= 1 && choice <= 3) {
                 Loading.LoadingScreen(); // Parādām ielādes ekrānu
                 String contactType = switch (choice) {
@@ -171,7 +171,7 @@ public class Menu {
                 };
                 System.out.println("Lūdzu, ievadiet savu ziņojumu:");
                 String message = scanner.nextLine();
-                ContactService.saveContact(username, contactType, message);
+                ContactService.saveContact(user.getUsername(), contactType, message);
                 ClearConsole.clearConsole();
                 System.out.println("Paldies! Jūsu ziņojums ir saglabāts.");
             } else if (choice != 4) {

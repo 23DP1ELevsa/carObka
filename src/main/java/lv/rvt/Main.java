@@ -8,7 +8,6 @@ public class Main {
     public static void main(String[] args) {
         ClearConsole.clearConsole();
         Scanner scanner = new Scanner(System.in);
-
         // Lietotāju ielāde no CSV
         UserService.loadUsers();
         // Ielādē automašīnu datus no CSV
@@ -105,7 +104,7 @@ public class Main {
                 Loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && foundUser.isAdmin()) {
                     System.out.println("Laipni lūgti, administrators " + username + "!");
-                    Menu.adminMenu(scanner);
+                    Menu.adminMenu(scanner, foundUser);
                 } else {
                     System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
                 }
