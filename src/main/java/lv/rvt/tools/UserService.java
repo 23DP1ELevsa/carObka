@@ -15,6 +15,9 @@ public class UserService {
 
     // Lietotāja dzēšanas metode
     public static void deleteUser(Scanner scanner) {
+        // Izvadīt lietotāju sarakstu
+        listUsers();
+
         System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
         String usernameToDelete = scanner.nextLine();
         if (usernameToDelete.equals("0")) {

@@ -648,6 +648,7 @@ public class CarService {
             }
     
             // Parāda dinamisko kolekcijas izvēlni
+            ClearConsole.clearConsole();
             System.out.println("\nKolekcija:");
             for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
                 System.out.println(entry.getKey() + " - " + entry.getValue());
@@ -656,6 +657,7 @@ public class CarService {
             System.out.print("Ievadiet izvēli: ");
             brandChoice = scanner.nextInt();
             scanner.nextLine();
+            Loading.LoadingScreen();
     
             if (brandChoice == index) {
                 ClearConsole.clearConsole();
