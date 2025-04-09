@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ContactService {
     // Metode, lai saglabātu kontaktinformāciju CSV failā
-    private static final String CONTACT_FILE = "./data/contact.csv";
+    private static final String CONTACT_FILE = "/workspaces/carObka/data/contact.csv";
 
     public static void saveContact(String username, String contactType, String message) {
         File file = new File(CONTACT_FILE);
@@ -74,6 +74,18 @@ public class ContactService {
                         readTime   = nowUTC.format(isoFormatterT);
                         deleteTime = nowUTC.plusHours(24).format(isoFormatterT);
                         status     = "read";
+                    }
+
+                    // Pārbaudām, vai deleteTime ir pagājis, un, ja jā, izlaid šo ziņojumu (dzēšam to)
+                    if (!deleteTime.isEmpty()) {
+                        try {
+                            LocalDateTime deleteDateTime = LocalDateTime.parse(deleteTime, isoFormatterT);
+                            if (deleteDateTime.isBefore(LocalDateTime.now(ZoneId.of("UTC")))) {
+                                continue; // Izlaižam šo ziņojumu, jo deleteTime ir pagājis
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Kļūda, parsējot deleteTime: " + e.getMessage());
+                        }
                     }
 
                     // Konvertējam visus laiku laukus no UTC uz Rīgas laiku izvadē.

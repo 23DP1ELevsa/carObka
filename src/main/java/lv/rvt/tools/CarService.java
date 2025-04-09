@@ -85,115 +85,115 @@ public class CarService {
 
     // Filtrē automobiļus pēc izvēlētās īpašības un secības
     public static void filterCars(Scanner scanner) {
-    int choice;
-    do {
-        System.out.println("\nFiltrēšanas izvēlne:");
-        System.out.println("1 - Filtrēt pēc markas");
-        System.out.println("2 - Filtrēt pēc modeļa");
-        System.out.println("3 - Filtrēt pēc izlaides gada diapazona");
-        System.out.println("4 - Filtrēt pēc zirgspēku diapazona");
-        System.out.println("5 - Filtrēt pēc degvielas tipa");
-        System.out.println("6 - Filtrēt pēc piedziņas");
-        System.out.println("7 - Filtrēt pēc paaudzes");
-        System.out.println("8 - Filtrēt pēc vidējā degvielas patēriņa diapazona");
-        System.out.println("9 - Filtrēt pēc cenas diapazona");
-        System.out.println("0 - Atgriezties uz kolekciju");
-        System.out.print("Ievadiet izvēli: ");
-        choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice;
+        do {
+            System.out.println("\nFiltrēšanas izvēlne:");
+            System.out.println("1 - Filtrēt pēc markas");
+            System.out.println("2 - Filtrēt pēc modeļa");
+            System.out.println("3 - Filtrēt pēc izlaides gada diapazona");
+            System.out.println("4 - Filtrēt pēc zirgspēku diapazona");
+            System.out.println("5 - Filtrēt pēc degvielas tipa");
+            System.out.println("6 - Filtrēt pēc piedziņas");
+            System.out.println("7 - Filtrēt pēc paaudzes");
+            System.out.println("8 - Filtrēt pēc vidējā degvielas patēriņa diapazona");
+            System.out.println("9 - Filtrēt pēc cenas diapazona");
+            System.out.println("0 - Atgriezties uz kolekciju");
+            System.out.print("Ievadiet izvēli: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
 
-        if (choice == 0) {
-            return; // Atgriežas uz kolekciju
-        }
+            if (choice == 0) {
+                return; // Atgriežas uz kolekciju
+            }
 
-        List<Car> filteredCars = new ArrayList<>();
+            List<Car> filteredCars = new ArrayList<>();
 
-        switch (choice) {
-            case 1:
-                System.out.print("Ievadiet marku: ");
-                String brand = scanner.nextLine().trim();
-                filteredCars = Car.cars.stream()
-                    .filter(car -> car.getBrand().equalsIgnoreCase(brand))
-                    .collect(Collectors.toList());
-                    Loading.LoadingScreen();
-                break;
-            case 2:
-                System.out.print("Ievadiet modeli: ");
-                String model = scanner.nextLine().trim();
-                filteredCars = Car.cars.stream()
-                    .filter(car -> car.getModel().equalsIgnoreCase(model))
-                    .collect(Collectors.toList());
-                    Loading.LoadingScreen();
-                break;
-            case 3:
-                System.out.print("Ievadiet sākuma gadu: ");
-                int startYear = scanner.nextInt();
-                System.out.print("Ievadiet beigu gadu: ");
-                int endYear = scanner.nextInt();
-                scanner.nextLine();
-                filteredCars = Car.cars.stream()
-                    .filter(car -> car.getYear() >= startYear && car.getYear() <= endYear)
-                    .collect(Collectors.toList());
-                    Loading.LoadingScreen();
-                break;
-            case 4:
-                System.out.print("Ievadiet minimālo zirgspēku skaitu: ");
-                int minHorsepower = scanner.nextInt();
-                System.out.print("Ievadiet maksimālo zirgspēku skaitu: ");
-                int maxHorsepower = scanner.nextInt();
-                scanner.nextLine();
-                filteredCars = Car.cars.stream()
-                    .filter(car -> car.getHorsepower() >= minHorsepower && car.getHorsepower() <= maxHorsepower)
-                    .collect(Collectors.toList());
-                    Loading.LoadingScreen();
-                break;
-            case 5:
-                filteredCars = filterByDynamicOption(scanner, "degvielas tipu", Car::getFuelType);
-                break;
-            case 6:
-                filteredCars = filterByDynamicOption(scanner, "piedziņu", Car::getDrive);
-                break;
-            case 7:
-                filteredCars = filterByDynamicOption(scanner, "paaudzi", Car::getGeneration);
-                break;
-            case 8:
-                System.out.print("Ievadiet minimālo patēriņu: ");
-                double minConsumption = scanner.nextDouble();
-                System.out.print("Ievadiet maksimālo patēriņu: ");
-                double maxConsumption = scanner.nextDouble();
-                scanner.nextLine();
-                filteredCars = Car.cars.stream()
-                    .filter(car -> car.getFuelConsumption() >= minConsumption && car.getFuelConsumption() <= maxConsumption)
-                    .collect(Collectors.toList());
-                    Loading.LoadingScreen();
-                break;
-            case 9:
-                System.out.print("Ievadiet minimālo cenu: ");
-                int minPrice = scanner.nextInt();
-                System.out.print("Ievadiet maksimālo cenu: ");
-                int maxPrice = scanner.nextInt();
-                scanner.nextLine();
-                filteredCars = Car.cars.stream()
-                    .filter(car -> car.getPrice() >= minPrice && car.getPrice() <= maxPrice)
-                    .collect(Collectors.toList());
-                    Loading.LoadingScreen();
-                break;
-            default:
-                ClearConsole.clearConsole();
-                System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
-                continue;
-        }
+            switch (choice) {
+                case 1:
+                    System.out.print("Ievadiet marku: ");
+                    String brand = scanner.nextLine().trim();
+                    filteredCars = Car.cars.stream()
+                        .filter(car -> car.getBrand().equalsIgnoreCase(brand))
+                        .collect(Collectors.toList());
+                        Loading.LoadingScreen();
+                    break;
+                case 2:
+                    System.out.print("Ievadiet modeli: ");
+                    String model = scanner.nextLine().trim();
+                    filteredCars = Car.cars.stream()
+                        .filter(car -> car.getModel().equalsIgnoreCase(model))
+                        .collect(Collectors.toList());
+                        Loading.LoadingScreen();
+                    break;
+                case 3:
+                    System.out.print("Ievadiet sākuma gadu: ");
+                    int startYear = scanner.nextInt();
+                    System.out.print("Ievadiet beigu gadu: ");
+                    int endYear = scanner.nextInt();
+                    scanner.nextLine();
+                    filteredCars = Car.cars.stream()
+                        .filter(car -> car.getYear() >= startYear && car.getYear() <= endYear)
+                        .collect(Collectors.toList());
+                        Loading.LoadingScreen();
+                    break;
+                case 4:
+                    System.out.print("Ievadiet minimālo zirgspēku skaitu: ");
+                    int minHorsepower = scanner.nextInt();
+                    System.out.print("Ievadiet maksimālo zirgspēku skaitu: ");
+                    int maxHorsepower = scanner.nextInt();
+                    scanner.nextLine();
+                    filteredCars = Car.cars.stream()
+                        .filter(car -> car.getHorsepower() >= minHorsepower && car.getHorsepower() <= maxHorsepower)
+                        .collect(Collectors.toList());
+                        Loading.LoadingScreen();
+                    break;
+                case 5:
+                    filteredCars = filterByDynamicOption(scanner, "degvielas tipu", Car::getFuelType);
+                    break;
+                case 6:
+                    filteredCars = filterByDynamicOption(scanner, "piedziņu", Car::getDrive);
+                    break;
+                case 7:
+                    filteredCars = filterByDynamicOption(scanner, "paaudzi", Car::getGeneration);
+                    break;
+                case 8:
+                    System.out.print("Ievadiet minimālo patēriņu: ");
+                    double minConsumption = scanner.nextDouble();
+                    System.out.print("Ievadiet maksimālo patēriņu: ");
+                    double maxConsumption = scanner.nextDouble();
+                    scanner.nextLine();
+                    filteredCars = Car.cars.stream()
+                        .filter(car -> car.getFuelConsumption() >= minConsumption && car.getFuelConsumption() <= maxConsumption)
+                        .collect(Collectors.toList());
+                        Loading.LoadingScreen();
+                    break;
+                case 9:
+                    System.out.print("Ievadiet minimālo cenu: ");
+                    int minPrice = scanner.nextInt();
+                    System.out.print("Ievadiet maksimālo cenu: ");
+                    int maxPrice = scanner.nextInt();
+                    scanner.nextLine();
+                    filteredCars = Car.cars.stream()
+                        .filter(car -> car.getPrice() >= minPrice && car.getPrice() <= maxPrice)
+                        .collect(Collectors.toList());
+                        Loading.LoadingScreen();
+                    break;
+                default:
+                    ClearConsole.clearConsole();
+                    System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                    continue;
+            }
 
-        ClearConsole.clearConsole();
-        if (filteredCars.isEmpty()) {
-            Empty.EmptyScreen();
-            System.out.println("Nav atrasti automobiļi ar norādītajiem kritērijiem.");
-        } else {
-            System.out.println("\nFiltrētie automobiļi:\n");
-            displayCarList(filteredCars);
-        }
-    } while (true);
-}
+            ClearConsole.clearConsole();
+            if (filteredCars.isEmpty()) {
+                Empty.EmptyScreen();
+                System.out.println("Nav atrasti automobiļi ar norādītajiem kritērijiem.");
+            } else {
+                System.out.println("\nFiltrētie automobiļi:\n");
+                displayCarList(filteredCars);
+            }
+        } while (true);
+    }
 
     public static List<Car> filterByDynamicOption(Scanner scanner, String optionName, Function<Car, String> getter) {
         // Dinamiski ģenerē unikālu vērtību sarakstu no automašīnu datiem
@@ -233,7 +233,7 @@ public class CarService {
     }
 
     // Administratora metode jaunas mašīnas (markas/modela) pievienošanai
-    public static void addNewCar(Scanner scanner) {
+    protected static void addNewCar(Scanner scanner) {
         System.out.println("\nPievienot jaunu mašīnu");
         System.out.print("Ievadiet marku: ");
         String brand = scanner.nextLine().trim();
@@ -273,7 +273,7 @@ public class CarService {
     }
 
     // Administratora metode automašīnas dzēšanai
-    public static void deleteCar(Scanner scanner) {
+    protected static void deleteCar(Scanner scanner) {
         if (Car.cars.isEmpty()) {
             Empty.EmptyScreen();
             System.out.println("Nav pieejamu automašīnu, ko dzēst.");
@@ -357,7 +357,7 @@ public class CarService {
     }
 
     // Administratora metode automašīnas rediģēšanai
-    public static void editCar(Scanner scanner) {
+    protected static void editCar(Scanner scanner) {
         if (Car.cars.isEmpty()) {
             Empty.EmptyScreen();
             System.out.println("Nav pieejamu automašīnu, ko rediģēt.");
@@ -583,8 +583,7 @@ public class CarService {
     public static void saveCars() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(Car.CARS_FILE))) {
             for (Car car : Car.cars) {
-                // Экранируем кавычки в описании
-                String description = car.getDescription().replace("\"", "\"\"");
+                String description = car.getDescription().replace("\"", ""); // Escape double quotes
                 String line = String.format("%s,%s,%d,%d,%s,%s,%s,%.1f,%d,\"%s\"",
                     car.getBrand(),
                     car.getModel(),
@@ -595,7 +594,7 @@ public class CarService {
                     car.getGeneration(),
                     car.getFuelConsumption(),
                     car.getPrice(),
-                    description);
+                    car.getDescription());
                 pw.println(line);
             }
         } catch (IOException e) {
