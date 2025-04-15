@@ -24,21 +24,21 @@ public class Main {
             
             choice = scanner.nextInt();
             scanner.nextLine(); // Atstarpe ievades lasīšanai
-            
+            Person user = new Person();
 
             switch (choice) {
                 case 1:
                     Loading.LoadingScreen(); // Ielādēšanas ekrāns
-                    CarService.displayCarCollection(scanner);
+                    CarService.displayCarCollection(scanner, user);
                     break;
                 case 2:
                     Loading.LoadingScreen(); // Ielādēšanas ekrāns
-                    loginOrRegister(scanner);
+                    loginOrRegister(scanner, user);
                     break;
                 case 3:
                     Loading.LoadingScreen(); // Ielādēšanas ekrāns
-                    System.out.println("Brīdinājums: Sazināties ar mums var tikai pēc profila ienākšanas. Lūdzu, ieejiet savā profilā.");
-                    loginOrRegister(scanner);
+                    System.out.println(user.getColor()+"Brīdinājums: Sazināties ar mums var tikai pēc profila ienākšanas. Lūdzu, ieejiet savā profilā.");
+                    loginOrRegister(scanner, user);
                     break;
                 case 0:
                     System.out.println("Paldies, ka izmantojāt CarObka!");
@@ -50,7 +50,7 @@ public class Main {
         } while (choice != 0);
     }
     // Profila ieejas vai reģistrācijas metode
-    public static void loginOrRegister(Scanner scanner) {
+    public static void loginOrRegister(Scanner scanner, Person user) {
         int choice;
         do {
             System.out.println(ConsoleColors.GREEN+"\nIeiet profilā:");

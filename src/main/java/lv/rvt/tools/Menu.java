@@ -35,7 +35,6 @@ public class Menu {
         do {
             // Lietotāja izvēlne
             // Izvada izvēlni
-            user.setColor();
             System.out.println(user.getColor() +"\nCarObka - automašīnu kolekcija");
             System.out.println("1 - Kolekcija");
             System.out.println("2 - Iemīļotās mašīnas");
@@ -48,7 +47,7 @@ public class Menu {
     
             switch (choice) {
                 case 1:
-                    CarService.displayCarCollection(scanner);
+                    CarService.displayCarCollection(scanner, user);
                     break;
                 case 2:
                     CarService.manageFavorites(scanner, user);
@@ -73,7 +72,6 @@ public class Menu {
             ClearConsole.clearConsole();
             // Administratora izvēlne
             // Izvada izvēlni
-            user.setColor();
             System.out.println(user.getColor() +"\nAdministrācijas izvēlne:");
             System.out.println("1 - Dzēst profilu");
             System.out.println("2 - Parādīt profilu sarakstu");
@@ -108,22 +106,22 @@ public class Menu {
     
             switch (adminChoice) {
                 case 1:
-                    UserService.deleteUser(scanner);
+                    UserService.deleteUser(scanner, user);
                     break;
                 case 2:
                     UserService.listUsers();
                     break;
                 case 3:
-                    CarService.addNewCar(scanner);
+                    CarService.addNewCar(scanner, user);
                     break;
                 case 4:
-                    CarService.deleteCar(scanner);
+                    CarService.deleteCar(scanner, user);
                     break;
                 case 5:
-                    CarService.editCar(scanner);
+                    CarService.editCar(scanner, user);
                     break;
                 case 6:
-                    ContactService.viewContacts();
+                    ContactService.viewContacts(user);
                     break;
                 case 0:
                     System.out.println(ConsoleColors.GREEN+"Izeja no administratora izvēlnes...");

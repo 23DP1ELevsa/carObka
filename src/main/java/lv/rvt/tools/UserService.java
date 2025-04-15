@@ -12,12 +12,12 @@ import java.util.Scanner;
 public class UserService {
     public static ArrayList<Person> users = new ArrayList<>();
     public static final String CSV_FILE = "/workspaces/carObka/data/users.csv";
-
+    
     // Lietotāja dzēšanas metode
-    public static void deleteUser(Scanner scanner) {
+    public static void deleteUser(Scanner scanner, Person user) {
         // Izvadīt lietotāju sarakstu
         listUsers();
-
+        user.getColor();
         System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
         String usernameToDelete = scanner.nextLine();
         if (usernameToDelete.equals("0")) {

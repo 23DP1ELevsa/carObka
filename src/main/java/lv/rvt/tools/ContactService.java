@@ -29,7 +29,7 @@ public class ContactService {
     }
 
     // Metode, lai apskatītu kontaktinformāciju
-    public static void viewContacts() {
+    public static void viewContacts(Person user) {
         File file = new File(CONTACT_FILE);
         if (!file.exists() || file.length() == 0) {
             System.out.println("Nav pieejamu saziņas datu.");
@@ -51,7 +51,7 @@ public class ContactService {
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            System.out.println("\nSaziņas dati:");
+            System.out.println(user.getColor()+"\nSaziņas dati:");
             System.out.format("%-15s %-15s %-50s %-10s %-25s %-25s %-25s\n",
                 "Lietotājs", "Veids", "Ziņojums", "Statuss", "Nosūtīts", "Izlasīts", "Dzēšanas datums");
             System.out.println("-".repeat(170));
@@ -94,7 +94,7 @@ public class ContactService {
                     String displayedDeleteTime = deleteTime.isEmpty() ? "" : convertToRigaTime(deleteTime, isoFormatterT, spaceFormatter, targetFormatter);
 
                     // Formatējam ziņojumu, lai tas tiktu sadalīts vairākās rindās
-                    List<String> formattedMessage = formatMessage(message, 50);
+                    List<String> formattedMessage = formatMessage(message, 50, user);
 
                     // Izvadām pirmo rindu ar lietotāju un veidu
                     System.out.format(
@@ -169,10 +169,10 @@ public class ContactService {
     }
 
     // Palīgmetode, lai sadalītu ziņojumu vairākās rindās
-    public static List<String> formatMessage(String message, int maxLineLength) {
+    public static List<String> formatMessage(String message, int maxLineLength, Person user) {
         List<String> lines = new ArrayList<>();
         StringBuilder currentLine = new StringBuilder();
-    
+        System.out.println(user.getColor()+"");
         for (String word : message.split(" ")) {
             if (currentLine.length() + word.length() + 1 > maxLineLength) {
                 // Pārbaudām, vai rinda beidzas ar teikuma beigām (piemēram, ".")
