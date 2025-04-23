@@ -23,10 +23,9 @@ public class CarService {
     
     // Kārto automobiļus pēc izvēlētās īpašības un secības
     public static void sortCars(Scanner scanner, Person user) {
-        
         int choice;
         do {
-            System.out.println(user.getColor()+"\nKārtošanas izvēlne:");
+            System.out.println(user.getColor() + "\nKārtošanas izvēlne:");
             System.out.println("1 - Kārtot pēc markas");
             System.out.println("2 - Kārtot pēc modeļa");
             System.out.println("3 - Kārtot pēc izlaides gada");
@@ -42,12 +41,32 @@ public class CarService {
             if (choice == 0) {
                 return; // Atgriežas uz kolekciju
             }
-
-            System.out.println("\n1 - Augošā secībā");
-            System.out.println("2 - Dilstošā secībā");
-            System.out.print("Izvēlieties kārtošanas secību: ");
-            int order = scanner.nextInt();
-            scanner.nextLine();
+    
+            if (choice < 0 || choice > 7) {
+                ClearConsole.clearConsole();
+                System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.");
+                continue;
+            }
+    
+            int order = 0;
+            do {
+                System.out.println("\n1 - Augošā secībā");
+                System.out.println("2 - Dilstošā secībā");
+                System.out.print("Izvēlieties kārtošanas secību: ");
+                if (scanner.hasNextInt()) {
+                    order = scanner.nextInt();
+                    scanner.nextLine();
+                    if (order == 1 || order == 2) {
+                        break;
+                    } else {
+                        System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                    }
+                } else {
+                    System.out.println("Nepareiza ievade, lūdzu ievadiet skaitli.");
+                    scanner.nextLine(); // Notīra nederīgo ievadi
+                }
+            } while (true);
+    
             Loading.LoadingScreen();
     
             List<Car> sortedCars = new ArrayList<>(Car.cars);
@@ -75,11 +94,11 @@ public class CarService {
                     sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getPrice) : Comparator.comparingInt(Car::getPrice).reversed());
                     break;
                 default:
-                    System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                    System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.");
                     continue;
             }
     
-            System.out.println(user.getColor()+"\nAutomobiļi sakārtoti:\n");
+            System.out.println(user.getColor() + "\nAutomobiļi sakārtoti:\n");
             displayCarList(sortedCars);
         } while (true);
     }
@@ -847,10 +866,10 @@ public class CarService {
         } while (true);
     }
 
-    public static void displayCarDetailsAsTable(Car car) {
+    public static void displayCarDetailsAsTable(Car car, Person user) {
         int colWidth = 60;
     
-        System.out.format(" %-20s  %-"+colWidth+"s \n", "Atribūts", "Vērtība");
+        System.out.format(user.getColor()+" %-20s  %-"+colWidth+"s \n", "Atribūts", "Vērtība");
         System.out.println("-".repeat(23) + "-".repeat(colWidth + 1));
     
         System.out.format(" %-20s  %-"+colWidth+"s \n", "Marka", car.getBrand());
@@ -903,7 +922,7 @@ public class CarService {
     
             if (selection > 0 && selection <= brandCars.size()) {
                 Car selectedCar = brandCars.get(selection - 1);
-                displayCarDetailsAsTable(selectedCar);
+                displayCarDetailsAsTable(selectedCar, user);
     
                 while (true) {
                     System.out.println("\nKo vēlaties darīt tālāk?");
@@ -915,7 +934,10 @@ public class CarService {
                     scanner.nextLine();
                     Loading.LoadingScreen();
     
-                    if (nextChoice == 1) break;
+                    if (nextChoice == 1) {
+                        displayCarsByBrand(brand, scanner, user);
+                        return;
+                    }
                     else if (nextChoice == 2) {
                         double distance = readDoubleInput(scanner, user.getColor() + "Ievadiet attālumu kilometros: ");
                         double fuelNeeded = (selectedCar.getFuelConsumption() * distance) / 100;
@@ -930,6 +952,7 @@ public class CarService {
                 }
             } else if (selection != 0) {
                 System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.");
+                return;
             }
         } while (selection != 0);
     }

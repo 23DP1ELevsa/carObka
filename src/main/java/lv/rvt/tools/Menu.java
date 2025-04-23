@@ -60,7 +60,7 @@ public class Menu {
                     break;
                 default:
                     ClearConsole.clearConsole();
-                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+                    System.out.println(user.getColor()+"Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (choice != 4);
     }
