@@ -83,7 +83,7 @@ public class Main {
                     System.out.println(ConsoleColors.CYAN+"Laipni lūgti, " + username + "!");
                     Menu.userMenu(scanner, foundUser);
                 } else {
-                    System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
+                    System.out.println(user.getColor()+"Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
                 }
             } else if (choice == 2) {
                 System.out.println("\nIeiet kā administrators:");

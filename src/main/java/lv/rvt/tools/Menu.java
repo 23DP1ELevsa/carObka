@@ -151,7 +151,7 @@ public class Menu {
         int choice;
         do {
             user.getColor();
-            System.out.println("\nSazināties ar mums:");
+            System.out.println(user.getColor()+"\nSazināties ar mums:");
             System.out.println("1 - Atstāt atsauksmi");
             System.out.println("2 - Paziņot par kļūdu");
             System.out.println("3 - Iedot savu ideju");
@@ -167,7 +167,7 @@ public class Menu {
                     case 3 -> "Ideja";
                     default -> "";
                 };
-                System.out.println("Lūdzu, ievadiet savu ziņojumu:");
+                System.out.println(user.getColor()+"Lūdzu, ievadiet savu ziņojumu:");
                 String message = scanner.nextLine();
                 ContactService.saveContact(user.getUsername(), contactType, message);
                 ClearConsole.clearConsole();

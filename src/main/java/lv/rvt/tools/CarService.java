@@ -635,8 +635,7 @@ public class CarService {
             return;
         }
         
-        ClearConsole.clearConsole();
-        System.out.println("\nIemīļotās mašīnas:");
+        System.out.println(user.getColor()+"\nIemīļotās mašīnas:");
         System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
         "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
         System.out.println("-".repeat(124));
@@ -655,8 +654,9 @@ public class CarService {
             scanner.nextLine();
             ClearConsole.clearConsole();
             if (choice != 1) {
-                ClearConsole.clearConsole();
                 System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                displayFavorites(user, scanner);
+                break;
             }
         } while (choice != 1);
     }
@@ -675,7 +675,7 @@ public class CarService {
     
             // Parāda dinamisko kolekcijas izvēlni
             ClearConsole.clearConsole();
-            System.out.println("\nKolekcija:");
+            System.out.println(user.getColor()+"\nKolekcija:");
             for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
                 System.out.println(entry.getKey() + " - " + entry.getValue());
             }
@@ -752,8 +752,7 @@ public class CarService {
         int carIndex;
         do {
             // Parāda iemīļoto mašīnu sarakstu
-            ClearConsole.clearConsole();
-            System.out.println(user.getColor()+"\nIemīļotās mašīnas:");
+            System.out.println(user.getColor() + "\nIemīļotās mašīnas:");
             System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
                     "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
             int index = 1;
@@ -768,16 +767,19 @@ public class CarService {
             carIndex = scanner.nextInt() - 1;
             scanner.nextLine();
             ClearConsole.clearConsole();
-    
+
             if (carIndex >= 0 && carIndex < favorites.size()) {
                 Car removedCar = favorites.get(carIndex);
                 user.removeFavorite(removedCar);
                 UserService.saveUsers(); // Saglabā izmaiņas failā
-                System.out.println(user.getColor()+"Mašīna " + removedCar.getBrand() + " " + removedCar.getModel() + " dzēsta no iemīļotajām.");
+                System.out.println(user.getColor() + "Mašīna " + removedCar.getBrand() + " " + removedCar.getModel() + " dzēsta no iemīļotajām.");
             } else if (carIndex == -1) {
-                return;
+                return; // Atgriežas uz iepriekšējo izvēlni
             } else {
+                ClearConsole.clearConsole();
                 System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                removeFavoriteCar(scanner, user);
+                break;
             }
         } while (carIndex != -1);
     }
@@ -917,7 +919,7 @@ public class CarService {
         do {
             System.out.print("\nIevadiet modeļa numuru, lai redzētu detalizētu informāciju (vai 0, lai atgrieztos): ");
             selection = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Atstarpe ievades lasīšanai
             Loading.LoadingScreen();
     
             if (selection > 0 && selection <= brandCars.size()) {
@@ -937,8 +939,7 @@ public class CarService {
                     if (nextChoice == 1) {
                         displayCarsByBrand(brand, scanner, user);
                         return;
-                    }
-                    else if (nextChoice == 2) {
+                    } else if (nextChoice == 2) {
                         double distance = readDoubleInput(scanner, user.getColor() + "Ievadiet attālumu kilometros: ");
                         double fuelNeeded = (selectedCar.getFuelConsumption() * distance) / 100;
                         System.out.printf(user.getColor() + "Lai nobrauktu %.2f km, būs nepieciešami %.2f litri degvielas.\n", distance, fuelNeeded);
@@ -947,12 +948,23 @@ public class CarService {
                         double distancePossible = (fuelAmount * 100) / selectedCar.getFuelConsumption();
                         System.out.printf(user.getColor() + "Ar %.2f litriem degvielas var nobraukt aptuveni %.2f kilometrus.\n", fuelAmount, distancePossible);
                     } else {
-                        System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.");
+                        System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.\n");
+                        displayCarDetailsAsTable(selectedCar, user);
+                        continue; // Atgriežas pie detalizētās informācijas
                     }
                 }
             } else if (selection != 0) {
                 System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.");
-                return;
+                // Parāda izvēlētās markas modeļus tabulas veidā
+                System.out.println(user.getColor() + "\n" + brand + " modeļi:");
+                System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
+                    "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+                System.out.println("-".repeat(124));
+                int index2 = 1;
+                for (Car car : brandCars) {
+                    System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n", 
+                        index2++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
+                }
             }
         } while (selection != 0);
     }
