@@ -138,6 +138,14 @@ public class ContactService {
         } catch (IOException e) {
             System.out.println("Kļūda, saglabājot atjauninātos saziņas datus: " + e.getMessage());
         }
+
+        // Pievienojam pauzi, lai lietotājs var apskatīt tabulu
+        System.out.println("\nNospiediet Enter, lai atgrieztos uz administratora izvēlni...");
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            System.out.println("Kļūda, gaidot ievadi: " + e.getMessage());
+        }
     }
 
     /**

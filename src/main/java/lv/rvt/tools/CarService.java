@@ -257,7 +257,7 @@ public class CarService {
     // Administratora metode jaunas mašīnas (markas/modela) pievienošanai
     protected static void addNewCar(Scanner scanner, Person user) {
         user.getColor();
-        System.out.println("\nPievienot jaunu mašīnu");
+        System.out.println(user.getColor()+"\nPievienot jaunu mašīnu");
         System.out.print("Ievadiet marku: ");
         String brand = scanner.nextLine().trim();
         System.out.print("Ievadiet modeli: ");
@@ -289,7 +289,8 @@ public class CarService {
         // Pievieno jauno automašīnu sarakstam
         Car.cars.add(newCar);
         saveCars(); // Saglabā izmaiņas CSV failā
-        System.out.println("Jauna mašīna veiksmīgi pievienota!");
+        Loading.LoadingScreen();
+        System.out.println(user.getColor()+"Jauna mašīna veiksmīgi pievienota!");
     
         // Atjauno kolekcijas skatu
         displayCarCollection(scanner, user);
@@ -314,7 +315,7 @@ public class CarService {
         }
     
         // Parāda marku izvēlni
-        System.out.println("\nPieejamās markas:");
+        System.out.println(user1.getColor()+"\nPieejamās markas:");
         for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
             System.out.println(entry.getKey() + " - " + entry.getValue());
         }
@@ -322,15 +323,17 @@ public class CarService {
         System.out.print("Ievadiet markas numuru, lai turpinātu: ");
         int brandChoice = scanner.nextInt();
         scanner.nextLine();
+        ClearConsole.clearConsole();
     
         if (brandChoice == index) {
-            System.out.println("Atgriežamies uz administratora izvēlni...");
             return;
         }
     
         String selectedBrand = brandMap.get(brandChoice);
         if (selectedBrand == null) {
-            System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+            ClearConsole.clearConsole();
+            System.out.println(user1.getColor()+"Nepareiza izvēle, mēģiniet vēlreiz.");
+            deleteCar(scanner, user1);
             return;
         }
     
@@ -354,8 +357,10 @@ public class CarService {
         scanner.nextLine();
     
         if (modelChoice == brandCars.size() + 1) {
-            System.out.println("Atgriežamies uz marku izvēlni...");
             return;
+        } else {
+            ClearConsole.clearConsole();
+            System.out.println(user1.getColor()+"Nepareiza izvēle, mēģiniet vēlreiz.");
         }
     
         if (modelChoice > 0 && modelChoice <= brandCars.size()) {
@@ -371,10 +376,11 @@ public class CarService {
     
             saveCars(); // Saglabā izmaiņas automašīnu sarakstā
             UserService.saveUsers(); // Saglabā izmaiņas lietotāju datos
+            ClearConsole.clearConsole();
             System.out.println("Automobilis " + carToDelete.getBrand() + " " + carToDelete.getModel() + " veiksmīgi dzēsts.");
     
             // Atjauno kolekcijas skatu
-            displayCarCollection(scanner, user1);
+            deleteCar(scanner, user1);
         } else {
             System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
         }
@@ -385,7 +391,7 @@ public class CarService {
         user.getColor();
         if (Car.cars.isEmpty()) {
             Empty.EmptyScreen();
-            System.out.println("Nav pieejamu automašīnu, ko rediģēt.");
+            System.out.println(user.getColor()+"Nav pieejamu automašīnu, ko rediģēt.");
             return;
         }
     
@@ -398,7 +404,7 @@ public class CarService {
             }
         }
     
-        System.out.println("\nPieejamās markas:");
+        System.out.println(user.getColor()+"\nPieejamās markas:");
         brandMap.forEach((key, value) -> System.out.println(key + " - " + value));
         System.out.println(index + " - Atgriezties");
         System.out.print("Izvēlieties marku: ");
@@ -409,15 +415,18 @@ public class CarService {
     
         String selectedBrand = brandMap.get(brandChoice);
         if (selectedBrand == null) {
-            System.out.println("Nepareiza izvēle!");
+            ClearConsole.clearConsole();
+            System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+            editCar(scanner, user);
             return;
         }
     
         List<Car> brandCars = Car.cars.stream()
             .filter(c -> c.getBrand().equalsIgnoreCase(selectedBrand))
             .collect(Collectors.toList());
-    
-        System.out.println("\n" + selectedBrand + " modeļi:");
+        
+        Loading.LoadingScreen();
+        System.out.println(user.getColor()+"\n" + selectedBrand + " modeļi:");
         for (int i = 0; i < brandCars.size(); i++) {
             Car car = brandCars.get(i);
             System.out.println((i + 1) + " - " + car.getModel() + " (" + car.getYear() + ")");
@@ -428,7 +437,9 @@ public class CarService {
         scanner.nextLine();
     
         if (modelChoice < 1 || modelChoice > brandCars.size()) {
-            System.out.println("Nepareiza izvēle!");
+            ClearConsole.clearConsole();
+            System.out.println(user.getColor()+"Nepareiza izvēle, mēģiniet vēlreiz.");
+            editCar(scanner, user);
             return;
         }
     
@@ -439,7 +450,8 @@ public class CarService {
     
         int editChoice;
         do {
-            System.out.println("\nRediģējat automašīnas informāciju:");
+            Loading.LoadingScreen();
+            System.out.println(user.getColor()+"\nRediģējat automašīnas informāciju:");
             System.out.println("1 - Marka (" + updatedCar.getBrand() + ")");
             System.out.println("2 - Modelis (" + updatedCar.getModel() + ")");
             System.out.println("3 - Izlaides gads (" + updatedCar.getYear() + ")");
@@ -531,7 +543,6 @@ public class CarService {
                             scanner.nextLine().trim());
                     break;
                 case 11:
-                    System.out.println("Saglabājam izmaiņas...");
                     break;
                 default:
                     System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
@@ -736,7 +747,7 @@ public class CarService {
                 } while (carChoice != 0);
             } else {
                 ClearConsole.clearConsole();
-                System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+                System.out.println(user.getColor()+"Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (true);
     }
@@ -815,7 +826,7 @@ public class CarService {
                     return; // Atgriežas uz lietotāja izvēlni
                 default:
                     ClearConsole.clearConsole();
-                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+                    System.out.println(user.getColor()+"Nepareiza ievade, mēģiniet vēlreiz.");
             }
         } while (true);
     }
@@ -835,8 +846,6 @@ public class CarService {
             }
     
             // Parāda dinamisko kolekcijas izvēlni
-            ClearConsole.clearConsole();
-            
             System.out.println(user.getColor()+"\nKolekcija:");
             for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
                 System.out.println(entry.getKey() + " - " + entry.getValue());
@@ -862,7 +871,7 @@ public class CarService {
                     displayCarsByBrand(selectedBrand, scanner, user);
                 } else {
                     ClearConsole.clearConsole();
-                    System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+                    System.out.println(user.getColor()+"Nepareiza ievade, mēģiniet vēlreiz.");
                 }
             }
         } while (true);

@@ -109,7 +109,7 @@ public class Menu {
                     UserService.deleteUser(scanner, user);
                     break;
                 case 2:
-                    UserService.listUsers();
+                    UserService.listUsers(scanner);
                     break;
                 case 3:
                     CarService.addNewCar(scanner, user);
@@ -131,18 +131,7 @@ public class Menu {
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
             }
     
-            if (adminChoice != 0) {
-                int choice;
-                do {
-                    System.out.println("\n1 - Atgriezties atpakaļ");
-                    System.out.print("Ievadiet izvēli: ");
-                    choice = scanner.nextInt();
-                    scanner.nextLine();
-                    if (choice != 1) {
-                        System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
-                    }
-                } while (choice != 1);
-            }
+            
         } while (adminChoice != 0);
         
     }

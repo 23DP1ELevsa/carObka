@@ -106,7 +106,7 @@ public class Main {
                     System.out.println("Laipni lūgti, administrators " + username + "!");
                     Menu.adminMenu(scanner, foundUser);
                 } else {
-                    System.out.println("Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
+                    System.out.println(user.getColor()+"Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
                 }
             } else if (choice == 3) {
                 System.out.println("\nPievienot jaunu profilu:");
@@ -124,12 +124,12 @@ public class Main {
                     UserService.users.add(new Person(newUsername, newPassword, isAdmin));
                     UserService.saveUsers();
                     if (isAdmin) {
-                        System.out.println("Pirmais profils izveidots kā administrators!");
+                        System.out.println(user.getColor()+"Pirmais profils izveidots kā administrators!");
                     } else {
-                        System.out.println("Profils " + newUsername + " veiksmīgi izveidots.");
+                        System.out.println(user.getColor()+"Profils " + newUsername + " veiksmīgi izveidots.");
                     }
                 } else {
-                    System.out.println("Lietotājs ar šādu lietotājvārdu jau pastāv.");
+                    System.out.println(user.getColor()+"Lietotājs ar šādu lietotājvārdu jau pastāv.");
                 }
             } else if (choice == 4) {
                 System.out.println("Atgriežamies galvenajā izvēlnē...");

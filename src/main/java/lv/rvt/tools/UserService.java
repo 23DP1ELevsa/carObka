@@ -15,35 +15,64 @@ public class UserService {
     
     // Lietotāja dzēšanas metode
     public static void deleteUser(Scanner scanner, Person user) {
-        // Izvadīt lietotāju sarakstu
-        listUsers();
-        user.getColor();
-        System.out.print("Ievadiet lietotāja vārdu, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
-        String usernameToDelete = scanner.nextLine();
-        if (usernameToDelete.equals("0")) {
-            System.out.println("Atcelts.");
-            return;
-        }
-        Person userToDelete = findUser(usernameToDelete);
-        if (userToDelete != null) {
-            if (userToDelete.isAdmin()) {
-                System.out.println("Administrators nevar tikt dzēsts.");
+        while (true) {
+            // Izvadīt lietotāju sarakstu tabulas veidā ar kārtas numuru
+            System.out.println(user.getColor() + "\nLietotāju saraksts:\n");
+            System.out.printf("%-5s %-20s %-10s %-15s%n", "Nr.", "Lietotājvārds", "Admins", "Iemīļotās mašīnas");
+            System.out.println("---------------------------------------------------------------");
+            int index = 1;
+            for (Person u : users) {
+                System.out.printf("%-5d %-20s %-10s %-15d%n", index++, u.getUsername(), u.isAdmin() ? "Jā" : "Nē", u.getFavorites().size());
+            }
+    
+            System.out.print("\nIevadiet lietotāja kārtas numuru, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
+            String input = scanner.nextLine();
+            if (input.equals("0")) {
                 return;
             }
-            users.remove(userToDelete);
-            saveUsers();
-            System.out.println("Profils " + usernameToDelete + " veiksmīgi dzēsts.");
-        } else {
-            System.out.println("Lietotājs ar šādu lietotājvārdu nav atrasts.");
+    
+            try {
+                int userIndex = Integer.parseInt(input) - 1;
+                if (userIndex >= 0 && userIndex < users.size()) {
+                    Person userToDelete = users.get(userIndex);
+                    if (userToDelete.isAdmin()) {
+                        ClearConsole.clearConsole();
+                        System.out.println("Administrators nevar tikt dzēsts.");
+                        continue;
+                    }
+                    users.remove(userToDelete);
+                    saveUsers();
+                    System.out.println("Profils " + userToDelete.getUsername() + " veiksmīgi dzēsts.");
+                    return;
+                } else {
+                    ClearConsole.clearConsole();
+                    System.out.println("Nepareizs kārtas numurs. Mēģiniet vēlreiz.");
+                }
+            } catch (NumberFormatException e) {
+                ClearConsole.clearConsole();
+                System.out.println("Lūdzu ievadiet derīgu skaitli.");
+            }
         }
     }
 
     // Lietotāju saraksta metode
-    public static void listUsers() {
-        System.out.println("\nLietotāju saraksts:");
+    public static void listUsers(Scanner scanner) {
+        System.out.println(ConsoleColors.RED+"\nLietotāju saraksts:\n");
+        System.out.printf("%-5s %-20s %-10s %-15s%n", "Nr.", "Lietotājvārds", "Admins", "Iemīļotās mašīnas");
+        System.out.println("---------------------------------------------------------------");
+        int index = 1;
         for (Person user : users) {
-            System.out.println("Lietotājs: " + user.getUsername() + " (Administrators: " + user.isAdmin() + ")");
+            System.out.printf("%-5d %-20s %-10s %-15d%n", index++, user.getUsername(), user.isAdmin() ? "Jā" : "Nē", user.getFavorites().size());
         }
+        System.out.print("\nIevadiet '0', lai atgrieztos: ");
+            String input = scanner.nextLine();
+            if (input.equals("0")) {
+                return;
+            } else {
+                ClearConsole.clearConsole();
+                System.out.println("Nepareiza ievade. Mēģiniet vēlreiz.");
+                listUsers(scanner);
+            }
     }
 
     // Meklē lietotāju pēc lietotājvārda
