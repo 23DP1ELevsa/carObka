@@ -12,17 +12,23 @@ public class Main {
         UserService.loadUsers();
         // Ielādē automašīnu datus no CSV
         CarService.loadCars();
-        
-        if(UserService.users.isEmpty()){
+
+        if (UserService.users.isEmpty()) {
             System.out.println("Lietotāju nav. Izveidojiet pirmo lietotāju (administratoru).");
         }
 
-        int choice;
+        int choice = -1;
         do {
             Menu.StartMenu();
             System.out.print("Ievadiet izvēli: ");
-            
-            choice = scanner.nextInt();
+
+            try {
+                choice = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Kļūda: Lūdzu ievadiet skaitli!");
+                choice = -1; // Nepareiza izvēle
+            }
+
             scanner.nextLine(); // Atstarpe ievades lasīšanai
             Person user = new Person();
 
@@ -37,7 +43,7 @@ public class Main {
                     break;
                 case 3:
                     Loading.LoadingScreen(); // Ielādēšanas ekrāns
-                    System.out.println(user.getColor()+"Brīdinājums: Sazināties ar mums var tikai pēc profila ienākšanas. Lūdzu, ieejiet savā profilā.");
+                    System.out.println(user.getColor() + "Brīdinājums: Sazināties ar mums var tikai pēc profila ienākšanas. Lūdzu, ieejiet savā profilā.");
                     loginOrRegister(scanner, user);
                     break;
                 case 0:
@@ -49,20 +55,28 @@ public class Main {
             }
         } while (choice != 0);
     }
+
     // Profila ieejas vai reģistrācijas metode
     public static void loginOrRegister(Scanner scanner, Person user) {
-        int choice;
+        int choice = -1;
         do {
-            System.out.println(ConsoleColors.GREEN+"\nIeiet profilā:");
+            System.out.println(ConsoleColors.GREEN + "\nIeiet profilā:");
             System.out.println("1 - Ieiet kā lietotājs");
             System.out.println("2 - Ieiet kā administrators");
             System.out.println("3 - Pievienot jaunu profilu");
             System.out.println("4 - Atgriezties galvenajā izvēlnē");
             System.out.print("Ievadiet izvēli: ");
-            choice = scanner.nextInt();
+
+            try {
+                choice = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Kļūda: Lūdzu ievadiet skaitli!");
+                choice = -1; // Nepareiza izvēle
+            }
+
             ClearConsole.clearConsole();
-            scanner.nextLine();
-    
+            scanner.nextLine(); // Atstarpe ievades lasīšanai
+
             if (choice == 1) {
                 System.out.println("\nIeiet kā lietotājs:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
@@ -80,10 +94,10 @@ public class Main {
                 Person foundUser = UserService.findUser(username);
                 Loading.LoadingScreen();
                 if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
-                    System.out.println(ConsoleColors.CYAN+"Laipni lūgti, " + username + "!");
+                    System.out.println(ConsoleColors.CYAN + "Laipni lūgti, " + username + "!");
                     Menu.userMenu(scanner, foundUser);
                 } else {
-                    System.out.println(user.getColor()+"Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
+                    System.out.println(user.getColor() + "Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
                 }
             } else if (choice == 2) {
                 System.out.println("\nIeiet kā administrators:");
@@ -93,7 +107,6 @@ public class Main {
                     ClearConsole.clearConsole();
                     continue;
                 }
-    
                 System.out.print("Parole (vai '0' lai atgriezties): ");
                 String password = scanner.nextLine();
                 if (password.equals("0")) {
@@ -106,30 +119,34 @@ public class Main {
                     System.out.println("Laipni lūgti, administrators " + username + "!");
                     Menu.adminMenu(scanner, foundUser);
                 } else {
-                    System.out.println(user.getColor()+"Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
+                    System.out.println(user.getColor() + "Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
                 }
             } else if (choice == 3) {
                 System.out.println("\nPievienot jaunu profilu:");
                 System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
                 String newUsername = scanner.nextLine();
-                if (newUsername.equals("0")) continue;
-    
+                if (newUsername.equals("0")) {
+                    ClearConsole.clearConsole();
+                    continue;
+                }
                 System.out.print("Parole (vai '0' lai atgriezties): ");
                 String newPassword = scanner.nextLine();
-                if (newPassword.equals("0")) continue;
-    
+                if (newPassword.equals("0")) {
+                    ClearConsole.clearConsole();
+                    continue;
+                }
                 Loading.LoadingScreen();
                 if (UserService.findUser(newUsername) == null) {
                     boolean isAdmin = UserService.users.isEmpty();
                     UserService.users.add(new Person(newUsername, newPassword, isAdmin));
                     UserService.saveUsers();
                     if (isAdmin) {
-                        System.out.println(user.getColor()+"Pirmais profils izveidots kā administrators!");
+                        System.out.println(user.getColor() + "Pirmais profils izveidots kā administrators!");
                     } else {
-                        System.out.println(user.getColor()+"Profils " + newUsername + " veiksmīgi izveidots.");
+                        System.out.println(user.getColor() + "Profils " + newUsername + " veiksmīgi izveidots.");
                     }
                 } else {
-                    System.out.println(user.getColor()+"Lietotājs ar šādu lietotājvārdu jau pastāv.");
+                    System.out.println(user.getColor() + "Lietotājs ar šādu lietotājvārdu jau pastāv.");
                 }
             } else if (choice == 4) {
                 System.out.println("Atgriežamies galvenajā izvēlnē...");

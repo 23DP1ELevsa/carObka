@@ -51,7 +51,7 @@ public class ContactService {
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            System.out.println(user.getColor()+"\nSaziņas dati:");
+            System.out.println(user.getColor()+"\nSaziņas dati:\n");
             System.out.format("%-15s %-15s %-50s %-10s %-25s %-25s %-25s\n",
                 "Lietotājs", "Veids", "Ziņojums", "Statuss", "Nosūtīts", "Izlasīts", "Dzēšanas datums");
             System.out.println("-".repeat(170));
