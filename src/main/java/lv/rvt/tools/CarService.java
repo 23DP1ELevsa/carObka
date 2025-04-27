@@ -39,7 +39,8 @@ public class CarService {
             scanner.nextLine();
     
             if (choice == 0) {
-                return; // Atgriežas uz kolekciju
+                ClearConsole.clearConsole();
+                return;
             }
     
             if (choice < 0 || choice > 7) {
@@ -124,7 +125,8 @@ public class CarService {
             scanner.nextLine();
 
             if (choice == 0) {
-                return; // Atgriežas uz kolekciju
+                ClearConsole.clearConsole();
+                return;
             }
 
             List<Car> filteredCars = new ArrayList<>();
@@ -573,15 +575,22 @@ public class CarService {
             }
         }
     }
+
     public static void displayCarList(List<Car> carList) {
-        System.out.format("%-15s %-15s %-10s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
-            "Marka", "Modelis", "Gads", "Zirgspēki", "Degviela", "Piedziņa", "Paaudze", "Patēriņš", "Cena");
-        System.out.println("-".repeat(135));
+        String format = "| %-15s | %-15s | %-10s | %-15s | %-15s | %-15s | %-15s | %-15s | %-15s |\n";
+        String separator = "+-----------------+-----------------+------------+-----------------+-----------------+-----------------+-----------------+-----------------+-----------------+";
+
+        System.out.println(separator);
+        System.out.format(format, "Marka", "Modelis", "Gads", "Zirgspēki", "Degviela", "Piedziņa", "Paaudze", "Patēriņš", "Cena");
+        System.out.println(separator);
+
         for (Car car : carList) {
-            System.out.format("%-15s %-15s %-10d %-15d %-15s %-15s %-15s %-15.1f %-15d\n", 
+            System.out.format(format, 
                 car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), 
                 car.getFuelType(), car.getDrive(), car.getGeneration(), car.getFuelConsumption(), car.getPrice());
         }
+
+        System.out.println(separator);
     }
 
     // Ielādē automašīnu datus no CSV faila
@@ -646,16 +655,23 @@ public class CarService {
             return;
         }
         
-        System.out.println(user.getColor()+"\nIemīļotās mašīnas:");
-        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
-        "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
-        System.out.println("-".repeat(124));
+        String separator = "+-----+-----------------+-----------------+------------+-----------------+-----------------+-----------------+-----------------+-----------------+";
+        String format = "| %-3s | %-15s | %-15s | %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n";
+
+        System.out.println(user.getColor() + "\nIemīļotās mašīnas:");
+        System.out.println(separator);
+        System.out.format(format, "Nr.", "Marka", "Modelis", "Gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+        System.out.println(separator);
+
         int index = 1;
         for (Car car : favorites) {
-            System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n", 
-                index++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
+            System.out.format(format, 
+                index++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), 
+                car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
         }
-    
+
+        System.out.println(separator);
+
         // Izvēlne, lai atgrieztos
         int choice;
         do {
@@ -706,20 +722,26 @@ public class CarService {
             if (selectedBrand != null) {
                 List<Car> brandCars = new ArrayList<>();
                 int carIndex = 1;
-                System.out.println(user.getColor()+"\n" + selectedBrand + " modeļi:");
-                System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
-                        "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+                String separator = "+-----+-----------------+-----------------+------------+-----------------+-----------------+-----------------+-----------------+-----------------+";
+                String format = "| %-3s | %-15s | %-15s | %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n";
+
+                System.out.println(user.getColor() + "\n" + selectedBrand + " modeļi:");
+                System.out.println(separator);
+                System.out.format(format, "Nr.", "Marka", "Modelis", "Gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+                System.out.println(separator);
+
                 for (Car car : Car.cars) {
                     if (car.getBrand().equalsIgnoreCase(selectedBrand)) {
-                        System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n",
+                        System.out.format(format,
                                 carIndex++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(),
                                 car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
                         brandCars.add(car);
                     }
                 }
-    
+
+                System.out.println(separator);
+
                 if (brandCars.isEmpty()) {
-    
                     Empty.EmptyScreen();
                     continue;
                 }
@@ -763,15 +785,22 @@ public class CarService {
         int carIndex;
         do {
             // Parāda iemīļoto mašīnu sarakstu
+            String separator = "+-----+-----------------+-----------------+------------+-----------------+-----------------+-----------------+-----------------+-----------------+";
+            String format = "| %-3s | %-15s | %-15s | %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n";
+
             System.out.println(user.getColor() + "\nIemīļotās mašīnas:");
-            System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n",
-                    "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+            System.out.println(separator);
+            System.out.format(format, "Nr.", "Marka", "Modelis", "Gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+            System.out.println(separator);
+
             int index = 1;
             for (Car car : favorites) {
-                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n",
-                        index++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(),
-                        car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
+            System.out.format(format,
+                index++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(),
+                car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
             }
+
+            System.out.println(separator);
     
             // Lietotājs izvēlas, kuru mašīnu dzēst
             System.out.print("\nIevadiet mašīnas numuru, lai dzēstu no iemīļotajām (vai 0, lai atgrieztos): ");
@@ -835,7 +864,6 @@ public class CarService {
         
         int brandChoice;
         do {
-            
             // Dinamiski ģenerē unikālu marku sarakstu no automašīnu datiem
             Map<Integer, String> brandMap = new LinkedHashMap<>();
             int index = 1;
@@ -879,46 +907,57 @@ public class CarService {
 
     public static void displayCarDetailsAsTable(Car car, Person user) {
         int colWidth = 60;
-    
-        System.out.format(user.getColor()+" %-20s  %-"+colWidth+"s \n", "Atribūts", "Vērtība");
-        System.out.println("-".repeat(23) + "-".repeat(colWidth + 1));
-    
-        System.out.format(" %-20s  %-"+colWidth+"s \n", "Marka", car.getBrand());
-        System.out.format(" %-20s  %-"+colWidth+"s \n", "Modelis", car.getModel());
-        System.out.format(" %-20s  %-"+colWidth+"d \n", "Izlaides gads", car.getYear());
-        System.out.format(" %-20s  %-"+colWidth+"d \n", "Zirgspēki", car.getHorsepower());
-        System.out.format(" %-20s  %-"+colWidth+"s \n", "Degviela", car.getFuelType());
-        System.out.format(" %-20s  %-"+colWidth+"s \n", "Piedziņa", car.getDrive());
-        System.out.format(" %-20s  %-"+colWidth+"s \n", "Paaudze", car.getGeneration());
-        System.out.format(" %-20s  %-"+colWidth+".1f \n", "Patēriņš", car.getFuelConsumption());
-        System.out.format(" %-20s  %-"+colWidth+"d \n", "Cena", car.getPrice());
-    
+        String separator = "+" + "-".repeat(22) + "+" + "-".repeat(colWidth + 2) + "+";
+
+        System.out.println(user.getColor() + separator);
+        System.out.format("| %-20s | %-"+colWidth+"s |\n", "Atribūts", "Vērtība");
+        System.out.println(separator);
+
+        System.out.format("| %-20s | %-"+colWidth+"s |\n", "Marka", car.getBrand());
+        System.out.format("| %-20s | %-"+colWidth+"s |\n", "Modelis", car.getModel());
+        System.out.format("| %-20s | %-"+colWidth+"d |\n", "Izlaides gads", car.getYear());
+        System.out.format("| %-20s | %-"+colWidth+"d |\n", "Zirgspēki", car.getHorsepower());
+        System.out.format("| %-20s | %-"+colWidth+"s |\n", "Degviela", car.getFuelType());
+        System.out.format("| %-20s | %-"+colWidth+"s |\n", "Piedziņa", car.getDrive());
+        System.out.format("| %-20s | %-"+colWidth+"s |\n", "Paaudze", car.getGeneration());
+        System.out.format("| %-20s | %-"+colWidth+".1f |\n", "Patēriņš", car.getFuelConsumption());
+        System.out.format("| %-20s | %-"+colWidth+"d |\n", "Cena", car.getPrice());
+
         // Apraksta apstrāde pa rindām
         String description = car.getDescription();
         String[] descLines = description.split("(?<=\\G.{" + colWidth + "})"); // sadala ik pēc colWidth
-        System.out.format(" %-20s  %-"+colWidth+"s \n", "Apraksts", descLines[0]);
+        System.out.format("| %-20s | %-"+colWidth+"s |\n", "Apraksts", descLines[0]);
         for (int i = 1; i < descLines.length; i++) {
-            System.out.format(" %-20s  %-"+colWidth+"s \n", "", descLines[i]);
+            System.out.format("| %-20s | %-"+colWidth+"s |\n", "", descLines[i]);
         }
+
+        System.out.println(separator);
     }
 
     // Parāda tabulu ar mašīnu pamatdatiem pēc izvēlētās markas un ļauj apskatīt detalizētu informāciju
     public static void displayCarsByBrand(String brand, Scanner scanner, Person user) {
         List<Car> brandCars = new ArrayList<>();
         int index = 1;
+        String separator = "+-----+-----------------+-----------------+------------+-----------------+-----------------+-----------------+-----------------+-----------------+";
+        String format = "| %-3s | %-15s | %-15s | %-10s | %-15s | %-15s | %-15s | %-15s | %-15s |\n";
+
         System.out.println(user.getColor() + "\n" + brand + " modeļi:");
-        System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
-            "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
-        System.out.println("-".repeat(124));
+        System.out.println(separator);
+        System.out.format(format, "Nr.", "Marka", "Modelis", "Gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
+        System.out.println(separator);
+
         for (Car car : Car.cars) {
             if (car.getBrand().equalsIgnoreCase(brand)) {
-                System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n", 
-                    index, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
-                brandCars.add(car);
-                index++;
+            System.out.format(format, 
+                index, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), 
+                car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
+            brandCars.add(car);
+            index++;
             }
         }
-    
+
+        System.out.println(separator);
+
         if (brandCars.isEmpty()) {
             Empty.EmptyScreen();
             return;
@@ -964,16 +1003,7 @@ public class CarService {
                 }
             } else if (selection != 0) {
                 System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.");
-                // Parāda izvēlētās markas modeļus tabulas veidā
-                System.out.println(user.getColor() + "\n" + brand + " modeļi:");
-                System.out.format("%-5s %-15s %-15s %-15s %-15s %-15s %-15s %-15s %-15s\n", 
-                    "Nr.", "Marka", "Modelis", "Izlaides gads", "Zirgspēki", "Degviela", "Piedziņa", "Patēriņš", "Cena");
-                System.out.println("-".repeat(124));
-                int index2 = 1;
-                for (Car car : brandCars) {
-                    System.out.format("%-5d %-15s %-15s %-15d %-15d %-15s %-15s %-15.1f %-15d\n", 
-                        index2++, car.getBrand(), car.getModel(), car.getYear(), car.getHorsepower(), car.getFuelType(), car.getDrive(), car.getFuelConsumption(), car.getPrice());
-                }
+                displayCarsByBrand(brand, scanner, user);
             }
         } while (selection != 0);
     }

@@ -35,102 +35,75 @@ public class ContactService {
             System.out.println("Nav pieejamu saziņas datu.");
             return;
         }
-
+    
         List<String> updatedLines = new ArrayList<>();
-        // Formatēšanas formāts izvadē (Rīgas laiks)
         DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-        // Parsēšanai: viens formāts ISO ar "T" starp datumu un laiku…
         DateTimeFormatter isoFormatterT = new DateTimeFormatterBuilder()
             .append(DateTimeFormatter.ISO_LOCAL_DATE)
             .appendLiteral('T')
             .append(DateTimeFormatter.ISO_LOCAL_TIME)
             .toFormatter();
-        // …un otrs, ja starpā ir atstarpe.
         DateTimeFormatter spaceFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+    
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            System.out.println(user.getColor()+"\nSaziņas dati:\n");
-            System.out.format("%-15s %-15s %-50s %-10s %-25s %-25s %-25s\n",
+            System.out.println(user.getColor() + "\nSaziņas dati:");
+            System.out.println("+---------------+---------------+----------------------------------------------------+----------+-------------------------+-------------------------+-------------------------+");
+            System.out.printf("| %-13s | %-13s | %-50s | %-8s | %-23s | %-23s | %-23s |\n",
                 "Lietotājs", "Veids", "Ziņojums", "Statuss", "Nosūtīts", "Izlasīts", "Dzēšanas datums");
-            System.out.println("-".repeat(170));
-
+            System.out.println("+---------------+---------------+----------------------------------------------------+----------+-------------------------+-------------------------+-------------------------+");
+    
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(",", 7);
                 if (parts.length >= 5) {
-                    String username    = parts[0];
+                    String username = parts[0];
                     String contactType = parts[1];
-                    String message     = parts[2];
-                    String status      = parts[3];
-                    String sentTime    = parts[4];
-                    String readTime    = parts.length > 5 ? parts[5] : "";
-                    String deleteTime  = parts.length > 6 ? parts[6] : "";
-
-                    // Ja ziņojums ir "unread", ģenerējam "read" laiku un dzēšanas laiku kā UTC (tālāk konvertēsim uz Rīgas laiku)
+                    String message = parts[2];
+                    String status = parts[3];
+                    String sentTime = parts[4];
+                    String readTime = parts.length > 5 ? parts[5] : "";
+                    String deleteTime = parts.length > 6 ? parts[6] : "";
+    
                     if ("unread".equalsIgnoreCase(status.trim())) {
                         LocalDateTime nowUTC = LocalDateTime.now(ZoneId.of("UTC"));
-                        // Saglabājam jaunus laikus ISO formātā ar "T"
-                        readTime   = nowUTC.format(isoFormatterT);
+                        readTime = nowUTC.format(isoFormatterT);
                         deleteTime = nowUTC.plusHours(24).format(isoFormatterT);
-                        status     = "read";
+                        status = "read";
                     }
-
-                    // Pārbaudām, vai deleteTime ir pagājis, un, ja jā, izlaid šo ziņojumu (dzēšam to)
+    
                     if (!deleteTime.isEmpty()) {
                         try {
                             LocalDateTime deleteDateTime = LocalDateTime.parse(deleteTime, isoFormatterT);
                             if (deleteDateTime.isBefore(LocalDateTime.now(ZoneId.of("UTC")))) {
-                                continue; // Izlaižam šo ziņojumu, jo deleteTime ir pagājis
+                                continue;
                             }
                         } catch (Exception e) {
                             System.out.println("Kļūda, parsējot deleteTime: " + e.getMessage());
                         }
                     }
-
-                    // Konvertējam visus laiku laukus no UTC uz Rīgas laiku izvadē.
-                    String displayedSentTime   = convertToRigaTime(sentTime, isoFormatterT, spaceFormatter, targetFormatter);
-                    String displayedReadTime   = readTime.isEmpty() ? "" : convertToRigaTime(readTime, isoFormatterT, spaceFormatter, targetFormatter);
+    
+                    String displayedSentTime = convertToRigaTime(sentTime, isoFormatterT, spaceFormatter, targetFormatter);
+                    String displayedReadTime = readTime.isEmpty() ? "" : convertToRigaTime(readTime, isoFormatterT, spaceFormatter, targetFormatter);
                     String displayedDeleteTime = deleteTime.isEmpty() ? "" : convertToRigaTime(deleteTime, isoFormatterT, spaceFormatter, targetFormatter);
-
-                    // Formatējam ziņojumu, lai tas tiktu sadalīts vairākās rindās
+    
                     List<String> formattedMessage = formatMessage(message, 50, user);
-
-                    // Izvadām pirmo rindu ar lietotāju un veidu
-                    System.out.format(
-                        "%-15s %-15s %-50s %-10s %-25s %-25s %-25s\n",
-                        username,
-                        contactType,
-                        formattedMessage.get(0),
-                        status,
-                        displayedSentTime,
-                        displayedReadTime,
-                        displayedDeleteTime
-                    );
-
-                    // Izvadām pārējās rindas tikai ar ziņojumu
+    
+                    System.out.printf("| %-13s | %-13s | %-50s | %-8s | %-23s | %-23s | %-23s |\n",
+                        username, contactType, formattedMessage.get(0), status, displayedSentTime, displayedReadTime, displayedDeleteTime);
+    
                     for (int i = 1; i < formattedMessage.size(); i++) {
-                        System.out.format("%-15s %-15s %-50s\n", "", "", formattedMessage.get(i));
+                        System.out.printf("| %-13s | %-13s | %-50s |\n", "", "", formattedMessage.get(i));
                     }
-
-                    // Atjauninām ierakstu failā (laiki tiek saglabāti nemainīti – UTC formātā)
-                    updatedLines.add(
-                        username + "," +
-                        contactType + "," +
-                        message.replace(",", " ") + "," +
-                        status + "," +
-                        sentTime + "," +
-                        readTime + "," +
-                        deleteTime
-                    );
+    
+                    updatedLines.add(String.join(",", username, contactType, message.replace(",", " "), status, sentTime, readTime, deleteTime));
                 }
             }
+            System.out.println("+---------------+---------------+----------------------------------------------------+----------+-------------------------+-------------------------+-------------------------+");
         } catch (IOException e) {
             System.out.println("Kļūda, lasot saziņas datus: " + e.getMessage());
             return;
         }
-
-        // Pārrakstām failu ar atjauninātajiem datiem
+    
         try (PrintWriter pw = new PrintWriter(new FileWriter(file))) {
             for (String updatedLine : updatedLines) {
                 pw.println(updatedLine);
@@ -138,8 +111,7 @@ public class ContactService {
         } catch (IOException e) {
             System.out.println("Kļūda, saglabājot atjauninātos saziņas datus: " + e.getMessage());
         }
-
-        // Pievienojam pauzi, lai lietotājs var apskatīt tabulu
+    
         System.out.println("\nNospiediet Enter, lai atgrieztos uz administratora izvēlni...");
         try {
             System.in.read();

@@ -16,14 +16,16 @@ public class UserService {
     // Lietotāja dzēšanas metode
     public static void deleteUser(Scanner scanner, Person user) {
         while (true) {
-            // Izvadīt lietotāju sarakstu tabulas veidā ar kārtas numuru
-            System.out.println(user.getColor() + "\nLietotāju saraksts:\n");
-            System.out.printf("%-5s %-20s %-10s %-15s%n", "Nr.", "Lietotājvārds", "Admins", "Iemīļotās mašīnas");
-            System.out.println("---------------------------------------------------------------");
+            // Izvadīt lietotāju sarakstu tabulas veidā ar rāmjiem
+            System.out.println(user.getColor() + "\nLietotāju saraksts:");
+            System.out.println("+-----+----------------------+----------+-------------------+");
+            System.out.printf("| %-3s | %-20s | %-8s | %-17s |\n", "Nr.", "Lietotājvārds", "Admins", "Iemīļotās mašīnas");
+            System.out.println("+-----+----------------------+----------+-------------------+");
             int index = 1;
             for (Person u : users) {
-                System.out.printf("%-5d %-20s %-10s %-15d%n", index++, u.getUsername(), u.isAdmin() ? "Jā" : "Nē", u.getFavorites().size());
+                System.out.printf("| %-3d | %-20s | %-8s | %-17d |\n", index++, u.getUsername(), u.isAdmin() ? "Jā" : "Nē", u.getFavorites().size());
             }
+            System.out.println("+-----+----------------------+----------+-------------------+");
     
             System.out.print("\nIevadiet lietotāja kārtas numuru, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
             String input = scanner.nextLine();
@@ -57,22 +59,25 @@ public class UserService {
 
     // Lietotāju saraksta metode
     public static void listUsers(Scanner scanner) {
-        System.out.println(ConsoleColors.RED+"\nLietotāju saraksts:\n");
-        System.out.printf("%-5s %-20s %-10s %-15s%n", "Nr.", "Lietotājvārds", "Admins", "Iemīļotās mašīnas");
-        System.out.println("---------------------------------------------------------------");
+        System.out.println(ConsoleColors.RED + "\nLietotāju saraksts:");
+        System.out.println("+-----+----------------------+----------+-------------------+");
+        System.out.printf("| %-3s | %-20s | %-8s | %-17s |\n", "Nr.", "Lietotājvārds", "Admins", "Iemīļotās mašīnas");
+        System.out.println("+-----+----------------------+----------+-------------------+");
         int index = 1;
         for (Person user : users) {
-            System.out.printf("%-5d %-20s %-10s %-15d%n", index++, user.getUsername(), user.isAdmin() ? "Jā" : "Nē", user.getFavorites().size());
+            System.out.printf("| %-3d | %-20s | %-8s | %-17d |\n", index++, user.getUsername(), user.isAdmin() ? "Jā" : "Nē", user.getFavorites().size());
         }
+        System.out.println("+-----+----------------------+----------+-------------------+");
+    
         System.out.print("\nIevadiet '0', lai atgrieztos: ");
-            String input = scanner.nextLine();
-            if (input.equals("0")) {
-                return;
-            } else {
-                ClearConsole.clearConsole();
-                System.out.println("Nepareiza ievade. Mēģiniet vēlreiz.");
-                listUsers(scanner);
-            }
+        String input = scanner.nextLine();
+        if (input.equals("0")) {
+            return;
+        } else {
+            ClearConsole.clearConsole();
+            System.out.println("Nepareiza ievade. Mēģiniet vēlreiz.");
+            listUsers(scanner);
+        }
     }
 
     // Meklē lietotāju pēc lietotājvārda
