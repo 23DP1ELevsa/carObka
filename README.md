@@ -1,6 +1,6 @@
 # CarObka 🚗
 
-![Java](https://img.shields.io/badge/Java-17-blue?logo=java)
+[![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white)](#)
 ![Console](https://img.shields.io/badge/Platform-Console-lightgrey)
 
 ```
@@ -75,12 +75,19 @@ CarObka ir konsoles lietotne automašīnu pārvaldībai ar trīm lietotāju lom�
 # CarObka 🚗 [ENG]
 
 ```
-           .      ..
-   __..---/______//-----.
- .".--.```|    - /.--.  =:
-(.: {} :__L______: {} :__;
-   *--*           *--*   
-```
+        __---------__
+      / _-----------_ \
+     / /             \ \
+     | |             | |
+     |_|_____________|_|
+ /-\|                   |/-\
+| _ |\        0        /| _ |
+|(_)| \       !       / |(_)|
+|___|__\______!______/__|___|
+[_________|CarObka|_________] 
+ ||||     ~~~~~~~~~     ||||
+ `--'                   `--' 
+ ```
 
 ## 👥  Authors
 
