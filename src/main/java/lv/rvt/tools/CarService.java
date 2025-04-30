@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.InputMismatchException;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -861,46 +862,51 @@ public class CarService {
     }
     // Kolekcijas apskate – pēc markas izvēles parādās tikai pamatdati un pēc tam iespēja redzēt papildinformāciju
     public static void displayCarCollection(Scanner scanner, Person user) {
-        
-        int brandChoice;
+        int brandChoice = -1;
         do {
-            // Dinamiski ģenerē unikālu marku sarakstu no automašīnu datiem
-            Map<Integer, String> brandMap = new LinkedHashMap<>();
-            int index = 1;
-            for (Car car : Car.cars) {
-                if (!brandMap.containsValue(car.getBrand())) {
-                    brandMap.put(index++, car.getBrand());
+            try {
+                // Dinamiski ģenerē unikālu marku sarakstu no automašīnu datiem
+                Map<Integer, String> brandMap = new LinkedHashMap<>();
+                int index = 1;
+                for (Car car : Car.cars) {
+                    if (!brandMap.containsValue(car.getBrand())) {
+                        brandMap.put(index++, car.getBrand());
+                    }
                 }
-            }
-    
-            // Parāda dinamisko kolekcijas izvēlni
-            System.out.println(user.getColor()+"\nKolekcija:");
-            for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
-                System.out.println(entry.getKey() + " - " + entry.getValue());
-            }
-            System.out.println(index + " - Kārtot automašīnas");
-            System.out.println((index + 1) + " - Filtrēt automašīnas");
-            System.out.println("0 - Atgriezties uz sākumu");
-            System.out.print("Ievadiet izvēli: ");
-            brandChoice = scanner.nextInt();
-            scanner.nextLine();
-            Loading.LoadingScreen(); // Ielādēšanas ekrāns
-    
-            if (brandChoice == 0) {
-                return; // Atgriežas uz sākumu
-            } else if (brandChoice == index) {
-                CarService.sortCars(scanner, user); // Izsauc kārtošanas izvēlni
-            } else if (brandChoice == index + 1) {
-                CarService.filterCars(scanner, user); // Izsauc filtrēšanas izvēlni
-            } else {
-                // Apstrādā izvēlēto marku
-                String selectedBrand = brandMap.get(brandChoice);
-                if (selectedBrand != null) {
-                    displayCarsByBrand(selectedBrand, scanner, user);
+
+                // Parāda dinamisko kolekcijas izvēlni
+                System.out.println(user.getColor() + "\nKolekcija:");
+                for (Map.Entry<Integer, String> entry : brandMap.entrySet()) {
+                    System.out.println(entry.getKey() + " - " + entry.getValue());
+                }
+                System.out.println(index + " - Kārtot automašīnas");
+                System.out.println((index + 1) + " - Filtrēt automašīnas");
+                System.out.println("0 - Atgriezties uz sākumu");
+                System.out.print("Ievadiet izvēli: ");
+                brandChoice = scanner.nextInt();
+                scanner.nextLine();
+                Loading.LoadingScreen(); // Ielādēšanas ekrāns
+
+                if (brandChoice == 0) {
+                    return; // Atgriežas uz sākumu
+                } else if (brandChoice == index) {
+                    CarService.sortCars(scanner, user); // Izsauc kārtošanas izvēlni
+                } else if (brandChoice == index + 1) {
+                    CarService.filterCars(scanner, user); // Izsauc filtrēšanas izvēlni
                 } else {
-                    ClearConsole.clearConsole();
-                    System.out.println(user.getColor()+"Nepareiza ievade, mēģiniet vēlreiz.");
+                    // Apstrādā izvēlēto marku
+                    String selectedBrand = brandMap.get(brandChoice);
+                    if (selectedBrand != null) {
+                        displayCarsByBrand(selectedBrand, scanner, user);
+                    } else {
+                        ClearConsole.clearConsole();
+                        System.out.println(user.getColor() + "Nepareiza ievade, mēģiniet vēlreiz.");
+                    }
                 }
+            } catch (InputMismatchException e) {
+                ClearConsole.clearConsole();
+                System.out.println(user.getColor() + "Kļūda: ievadiet derīgu skaitli!");
+                scanner.nextLine(); // Notīra nederīgo ievadi
             }
         } while (true);
     }
