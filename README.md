@@ -1,6 +1,6 @@
 # CarObka 🚗
 
-[![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white)](#)
+[![Java](https://img.shields.io/badge/Java-%23ED8B00.svg?logo=openjdk&logoColor=white)](#) <br>
 ![Console](https://img.shields.io/badge/Platform-Console-lightgrey)
 
 ```
@@ -20,8 +20,8 @@
 
 ## 👥  Autori
 
-- **Eduards Levša** ([GitHub](https://github.com/23DP1ELevsa))
-- **Deniss Bukovskis** ([GitHub](https://github.com/23DP1DBuko)) 
+- **Eduards Levša** <br> [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/23DP1ELevsa)
+- **Deniss Bukovskis** <br> [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/23DP1DBuko)
 
 ## 📝 Apraksts
 
@@ -65,12 +65,12 @@ CarObka ir konsoles lietotne automašīnu pārvaldībai ar trīm lietotāju lom�
     
 ## 📩  Kontakti
 
-- e-pasts: carobka52@gmail.com
-- saite: [CarObka](https://github.com/23DP1DBuko/carObka-website)
+- E-pasts: carobka52@gmail.com <br><br>
+[![CarObka Website](https://img.shields.io/badge/CarObka-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://23dp1dbuko.github.io/carObka-website/) <br><br><br>
+
 
 ---
----
----
+<br><br>
 
 # CarObka 🚗 [ENG]
 
@@ -91,8 +91,8 @@ CarObka ir konsoles lietotne automašīnu pārvaldībai ar trīm lietotāju lom�
 
 ## 👥  Authors
 
-- **Eduards Levša** ([GitHub](https://github.com/23DP1ELevsa))
-- **Deniss Bukovskis** ([GitHub](https://github.com/23DP1DBuko)) 
+- **Eduards Levša** <br> [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/23DP1ELevsa)
+- **Deniss Bukovskis** <br> [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/23DP1DBuko)
 
 ## 📝 Description
 
@@ -136,5 +136,6 @@ CarObka is a console-based car management application with three user roles:
 
 ## 📩  Contacts
 
-- e-mail: carobka52@gmail.com
-- website: [CarObka](https://github.com/23DP1DBuko/carObka-website)
+- E-mail: carobka52@gmail.com <br><br>
+[![CarObka Website](https://img.shields.io/badge/CarObka-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://23dp1dbuko.github.io/carObka-website/)
+
