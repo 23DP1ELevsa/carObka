@@ -25,6 +25,7 @@ public class Menu {
         System.out.println("2 - Ieiet profilā vai reģistrēties");
         System.out.println("3 - Sazināties ar mums");
         System.out.println("0 - Iziet no programmas");
+        System.out.print("Ievadiet izvēli: ");
     }
 
     public static void userMenu(Scanner scanner, Person user) {

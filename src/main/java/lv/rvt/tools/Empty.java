@@ -19,6 +19,6 @@ public class Empty {
         System.out.println(ConsoleColors.YELLOW + "⠀        ⠀⠛⢿⣿⣿⣿⣿⣿⣿⡿⠟");
         System.out.println(ConsoleColors.YELLOW + "⠀⠀        ⠀⠀⠀⠉⠉⠉");
         System.out.println(ConsoleColors.RESET);
-        System.out.println("Hmm, izskatas, ka šī sadaļa ir tukša!");
+        System.out.println(ConsoleColors.YELLOW + "Hmm, izskatas, ka šī sadaļa ir tukša!");
     }
 }

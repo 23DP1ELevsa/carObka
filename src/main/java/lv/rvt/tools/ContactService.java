@@ -29,7 +29,7 @@ public class ContactService {
     }
 
     // Metode, lai apskatītu kontaktinformāciju
-    public static void viewContacts(Person user) {
+    protected static void viewContacts(Person user) {
         File file = new File(CONTACT_FILE);
         if (!file.exists() || file.length() == 0) {
             System.out.println("Nav pieejamu saziņas datu.");
@@ -124,7 +124,7 @@ public class ContactService {
      * Konvertē laika virkni, kas saglabāta UTC, uz Rīgas laiku izvadē.
      * Ja laika virknē ir "T", tiek izmantots isoFormatterT, citādi – spaceFormatter.
      */
-    public static String convertToRigaTime(String timeStr,
+    protected static String convertToRigaTime(String timeStr,
                                             DateTimeFormatter isoFormatterT,
                                             DateTimeFormatter spaceFormatter,
                                             DateTimeFormatter targetFormatter) {
@@ -149,7 +149,7 @@ public class ContactService {
     }
 
     // Palīgmetode, lai sadalītu ziņojumu vairākās rindās
-    public static List<String> formatMessage(String message, int maxLineLength, Person user) {
+    protected static List<String> formatMessage(String message, int maxLineLength, Person user) {
         List<String> lines = new ArrayList<>();
         StringBuilder currentLine = new StringBuilder();
         System.out.println(user.getColor()+"");
