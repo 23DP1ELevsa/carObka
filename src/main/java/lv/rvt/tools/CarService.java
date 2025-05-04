@@ -9,12 +9,12 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.InputMismatchException;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -74,30 +74,17 @@ public class CarService {
             List<Car> sortedCars = new ArrayList<>(Car.cars);
     
             switch (choice) {
-                case 1:
-                    sortedCars.sort(order == 1 ? Comparator.comparing(Car::getBrand) : Comparator.comparing(Car::getBrand).reversed());
-                    break;
-                case 2:
-                    sortedCars.sort(order == 1 ? Comparator.comparing(Car::getModel) : Comparator.comparing(Car::getModel).reversed());
-                    break;
-                case 3:
-                    sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getYear) : Comparator.comparingInt(Car::getYear).reversed());
-                    break;
-                case 4:
-                    sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getHorsepower) : Comparator.comparingInt(Car::getHorsepower).reversed());
-                    break;
-                case 5:
-                    sortedCars.sort(order == 1 ? Comparator.comparing(Car::getGeneration) : Comparator.comparing(Car::getGeneration).reversed());
-                    break;
-                case 6:
-                    sortedCars.sort(order == 1 ? Comparator.comparingDouble(Car::getFuelConsumption) : Comparator.comparingDouble(Car::getFuelConsumption).reversed());
-                    break;
-                case 7:
-                    sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getPrice) : Comparator.comparingInt(Car::getPrice).reversed());
-                    break;
-                default:
+                case 1 -> sortedCars.sort(order == 1 ? Comparator.comparing(Car::getBrand) : Comparator.comparing(Car::getBrand).reversed());
+                case 2 -> sortedCars.sort(order == 1 ? Comparator.comparing(Car::getModel) : Comparator.comparing(Car::getModel).reversed());
+                case 3 -> sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getYear) : Comparator.comparingInt(Car::getYear).reversed());
+                case 4 -> sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getHorsepower) : Comparator.comparingInt(Car::getHorsepower).reversed());
+                case 5 -> sortedCars.sort(order == 1 ? Comparator.comparing(Car::getGeneration) : Comparator.comparing(Car::getGeneration).reversed());
+                case 6 -> sortedCars.sort(order == 1 ? Comparator.comparingDouble(Car::getFuelConsumption) : Comparator.comparingDouble(Car::getFuelConsumption).reversed());
+                case 7 -> sortedCars.sort(order == 1 ? Comparator.comparingInt(Car::getPrice) : Comparator.comparingInt(Car::getPrice).reversed());
+                default -> {
                     System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.");
                     continue;
+                }
             }
     
             System.out.println(user.getColor() + "\nAutomobiļi sakārtoti:\n");
@@ -130,82 +117,77 @@ public class CarService {
                 return;
             }
 
-            List<Car> filteredCars = new ArrayList<>();
+            List<Car> filteredCars;
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     System.out.print("Ievadiet marku: ");
                     String brand = scanner.nextLine().trim();
                     filteredCars = Car.cars.stream()
-                        .filter(car -> car.getBrand().equalsIgnoreCase(brand))
-                        .collect(Collectors.toList());
-                        Loading.LoadingScreen();
-                    break;
-                case 2:
+                            .filter(car -> car.getBrand().equalsIgnoreCase(brand))
+                            .collect(Collectors.toList());
+                    Loading.LoadingScreen();
+                }
+                case 2 -> {
                     System.out.print("Ievadiet modeli: ");
                     String model = scanner.nextLine().trim();
                     filteredCars = Car.cars.stream()
-                        .filter(car -> car.getModel().equalsIgnoreCase(model))
-                        .collect(Collectors.toList());
-                        Loading.LoadingScreen();
-                    break;
-                case 3:
+                            .filter(car -> car.getModel().equalsIgnoreCase(model))
+                            .collect(Collectors.toList());
+                    Loading.LoadingScreen();
+                }
+                case 3 -> {
                     System.out.print("Ievadiet sākuma gadu: ");
                     int startYear = scanner.nextInt();
                     System.out.print("Ievadiet beigu gadu: ");
                     int endYear = scanner.nextInt();
                     scanner.nextLine();
                     filteredCars = Car.cars.stream()
-                        .filter(car -> car.getYear() >= startYear && car.getYear() <= endYear)
-                        .collect(Collectors.toList());
-                        Loading.LoadingScreen();
-                    break;
-                case 4:
+                            .filter(car -> car.getYear() >= startYear && car.getYear() <= endYear)
+                            .collect(Collectors.toList());
+                    Loading.LoadingScreen();
+                }
+                case 4 -> {
                     System.out.print("Ievadiet minimālo zirgspēku skaitu: ");
                     int minHorsepower = scanner.nextInt();
                     System.out.print("Ievadiet maksimālo zirgspēku skaitu: ");
                     int maxHorsepower = scanner.nextInt();
                     scanner.nextLine();
                     filteredCars = Car.cars.stream()
-                        .filter(car -> car.getHorsepower() >= minHorsepower && car.getHorsepower() <= maxHorsepower)
-                        .collect(Collectors.toList());
-                        Loading.LoadingScreen();
-                    break;
-                case 5:
-                    filteredCars = filterByDynamicOption(user, scanner, "degvielas tipu", Car::getFuelType);
-                    break;
-                case 6:
-                    filteredCars = filterByDynamicOption(user, scanner, "piedziņu", Car::getDrive);
-                    break;
-                case 7:
-                    filteredCars = filterByDynamicOption(user, scanner, "paaudzi", Car::getGeneration);
-                    break;
-                case 8:
+                            .filter(car -> car.getHorsepower() >= minHorsepower && car.getHorsepower() <= maxHorsepower)
+                            .collect(Collectors.toList());
+                    Loading.LoadingScreen();
+                }
+                case 5 -> filteredCars = filterByDynamicOption(user, scanner, "degvielas tipu", Car::getFuelType);
+                case 6 -> filteredCars = filterByDynamicOption(user, scanner, "piedziņu", Car::getDrive);
+                case 7 -> filteredCars = filterByDynamicOption(user, scanner, "paaudzi", Car::getGeneration);
+                case 8 -> {
                     System.out.print("Ievadiet minimālo patēriņu: ");
                     double minConsumption = scanner.nextDouble();
                     System.out.print("Ievadiet maksimālo patēriņu: ");
                     double maxConsumption = scanner.nextDouble();
                     scanner.nextLine();
                     filteredCars = Car.cars.stream()
-                        .filter(car -> car.getFuelConsumption() >= minConsumption && car.getFuelConsumption() <= maxConsumption)
-                        .collect(Collectors.toList());
-                        Loading.LoadingScreen();
-                    break;
-                case 9:
+                            .filter(car -> car.getFuelConsumption() >= minConsumption && car.getFuelConsumption() <= maxConsumption)
+                            .collect(Collectors.toList());
+                    Loading.LoadingScreen();
+                }
+                case 9 -> {
                     System.out.print("Ievadiet minimālo cenu: ");
                     int minPrice = scanner.nextInt();
                     System.out.print("Ievadiet maksimālo cenu: ");
                     int maxPrice = scanner.nextInt();
                     scanner.nextLine();
                     filteredCars = Car.cars.stream()
-                        .filter(car -> car.getPrice() >= minPrice && car.getPrice() <= maxPrice)
-                        .collect(Collectors.toList());
-                        Loading.LoadingScreen();
-                    break;
-                default:
+                            .filter(car -> car.getPrice() >= minPrice && car.getPrice() <= maxPrice)
+                            .collect(Collectors.toList());
+                    Loading.LoadingScreen();
+                }
+                default -> {
                     ClearConsole.clearConsole();
                     System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
                     continue;
+                }
             }
 
             ClearConsole.clearConsole();
@@ -471,84 +453,83 @@ public class CarService {
             scanner.nextLine();
     
             switch (editChoice) {
-                case 1:
+                case 1 -> {
                     System.out.print("Ievadiet jauno marku: ");
                     updatedCar = new Car(scanner.nextLine().trim(), updatedCar.getModel(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             updatedCar.getDescription());
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     System.out.print("Ievadiet jauno modeli: ");
                     updatedCar = new Car(updatedCar.getBrand(), scanner.nextLine().trim(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             updatedCar.getDescription());
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     System.out.print("Ievadiet jauno izlaides gadu: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), scanner.nextInt(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             updatedCar.getDescription());
                     scanner.nextLine();
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     System.out.print("Ievadiet jaunos zirgspēkus: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), updatedCar.getYear(),
                             scanner.nextInt(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             updatedCar.getDescription());
                     scanner.nextLine();
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     System.out.print("Ievadiet jauno degvielas tipu: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), scanner.nextLine().trim(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             updatedCar.getDescription());
-                    break;
-                case 6:
+                }
+                case 6 -> {
                     System.out.print("Ievadiet jauno piedziņu: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), scanner.nextLine().trim(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             updatedCar.getDescription());
-                    break;
-                case 7:
+                }
+                case 7 -> {
                     System.out.print("Ievadiet jauno paaudzi: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             scanner.nextLine().trim(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             updatedCar.getDescription());
-                    break;
-                case 8:
+                }
+                case 8 -> {
                     System.out.print("Ievadiet jauno vidējo degvielas patēriņu: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), scanner.nextDouble(), updatedCar.getPrice(),
                             updatedCar.getDescription());
                     scanner.nextLine();
-                    break;
-                case 9:
+                }
+                case 9 -> {
                     System.out.print("Ievadiet jauno cenu: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), scanner.nextInt(),
                             updatedCar.getDescription());
                     scanner.nextLine();
-                    break;
-                case 10:
+                }
+                case 10 -> {
                     System.out.print("Ievadiet jauno aprakstu: ");
                     updatedCar = new Car(updatedCar.getBrand(), updatedCar.getModel(), updatedCar.getYear(),
                             updatedCar.getHorsepower(), updatedCar.getFuelType(), updatedCar.getDrive(),
                             updatedCar.getGeneration(), updatedCar.getFuelConsumption(), updatedCar.getPrice(),
                             scanner.nextLine().trim());
-                    break;
-                case 11:
-                    break;
-                default:
-                    System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
+                }
+                case 11 -> {
+                }
+                default -> System.out.println("Nepareiza izvēle, mēģiniet vēlreiz.");
             }
         } while (editChoice != 11);
     
@@ -839,30 +820,32 @@ public class CarService {
             scanner.nextLine();
     
             switch (choice) {
-                case 1:
+                case 1 -> {
                     Loading.LoadingScreen();
                     displayFavorites(user, scanner);
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     Loading.LoadingScreen();
                     addFavoriteCar(scanner, user);
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     Loading.LoadingScreen();
                     removeFavoriteCar(scanner, user);
-                    break;
-                case 0:
+                }
+                case 0 -> {
                     ClearConsole.clearConsole();
                     return; // Atgriežas uz lietotāja izvēlni
-                default:
+                }
+                default -> {
                     ClearConsole.clearConsole();
                     System.out.println(user.getColor()+"Nepareiza ievade, mēģiniet vēlreiz.");
+                }
             }
         } while (true);
     }
     // Kolekcijas apskate – pēc markas izvēles parādās tikai pamatdati un pēc tam iespēja redzēt papildinformāciju
     public static void displayCarCollection(Scanner scanner, Person user) {
-        int brandChoice = -1;
+        int brandChoice;
         do {
             try {
                 // Dinamiski ģenerē unikālu marku sarakstu no automašīnu datiem
@@ -990,21 +973,26 @@ public class CarService {
                     scanner.nextLine();
                     Loading.LoadingScreen();
     
-                    if (nextChoice == 1) {
-                        displayCarsByBrand(brand, scanner, user);
-                        return;
-                    } else if (nextChoice == 2) {
-                        double distance = readDoubleInput(scanner, user.getColor() + "Ievadiet attālumu kilometros: ");
-                        double fuelNeeded = (selectedCar.getFuelConsumption() * distance) / 100;
-                        System.out.printf(user.getColor() + "Lai nobrauktu %.2f km, būs nepieciešami %.2f litri degvielas.\n", distance, fuelNeeded);
-                    } else if (nextChoice == 3) {
-                        double fuelAmount = readDoubleInput(scanner, user.getColor() + "Ievadiet degvielas daudzumu litros: ");
-                        double distancePossible = (fuelAmount * 100) / selectedCar.getFuelConsumption();
-                        System.out.printf(user.getColor() + "Ar %.2f litriem degvielas var nobraukt aptuveni %.2f kilometrus.\n", fuelAmount, distancePossible);
-                    } else {
-                        System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.\n");
-                        displayCarDetailsAsTable(selectedCar, user);
-                        continue; // Atgriežas pie detalizētās informācijas
+                    switch (nextChoice) {
+                        case 1 -> {
+                            displayCarsByBrand(brand, scanner, user);
+                            return;
+                        }
+                        case 2 -> {
+                            double distance = readDoubleInput(scanner, user.getColor() + "Ievadiet attālumu kilometros: ");
+                            double fuelNeeded = (selectedCar.getFuelConsumption() * distance) / 100;
+                            System.out.printf(user.getColor() + "Lai nobrauktu %.2f km, būs nepieciešami %.2f litri degvielas.\n", distance, fuelNeeded);
+                        }
+                        case 3 -> {
+                            double fuelAmount = readDoubleInput(scanner, user.getColor() + "Ievadiet degvielas daudzumu litros: ");
+                            double distancePossible = (fuelAmount * 100) / selectedCar.getFuelConsumption();
+                            System.out.printf(user.getColor() + "Ar %.2f litriem degvielas var nobraukt aptuveni %.2f kilometrus.\n", fuelAmount, distancePossible);
+                        }
+                        default -> {
+                            System.out.println(user.getColor() + "Nepareiza izvēle, mēģiniet vēlreiz.\n");
+                            displayCarDetailsAsTable(selectedCar, user);
+                            // Atgriežas pie detalizētās informācijas
+                        }
                     }
                 }
             } else if (selection != 0) {

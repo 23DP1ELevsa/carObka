@@ -41,21 +41,14 @@ public class Menu {
                 scanner.nextLine();
                 Loading.LoadingScreen();
                 switch (choice) {
-                    case 1:
-                        CarService.displayCarCollection(scanner, user);
-                        break;
-                    case 2:
-                        CarService.manageFavorites(scanner, user);
-                        break;
-                    case 3:
-                        contactUs(scanner, user);
-                        break;
-                    case 4:
-                        System.out.println(ConsoleColors.GREEN+"Iziet no profila...");
-                        break;
-                    default:
+                    case 1 -> CarService.displayCarCollection(scanner, user);
+                    case 2 -> CarService.manageFavorites(scanner, user);
+                    case 3 -> contactUs(scanner, user);
+                    case 4 -> System.out.println(ConsoleColors.GREEN+"Iziet no profila...");
+                    default -> {
                         ClearConsole.clearConsole();
                         System.out.println(user.getColor()+"Nepareiza ievade, mēģiniet vēlreiz.");
+                    }
                 }
             } catch (InputMismatchException e) {
                 scanner.nextLine(); // Notīra kļūdaino ievadi
@@ -99,30 +92,17 @@ public class Menu {
                 scanner.nextLine();
                 Loading.LoadingScreen();
                 switch (adminChoice) {
-                    case 1:
-                        UserService.deleteUser(scanner, user);
-                        break;
-                    case 2:
-                        UserService.listUsers(scanner);
-                        break;
-                    case 3:
-                        CarService.addNewCar(scanner, user);
-                        break;
-                    case 4:
-                        CarService.deleteCar(scanner, user);
-                        break;
-                    case 5:
-                        CarService.editCar(scanner, user);
-                        break;
-                    case 6:
-                        ContactService.viewContacts(user);
-                        break;
-                    case 0:
-                        System.out.println(ConsoleColors.GREEN+"Izeja no administratora izvēlnes...");
-                        break;
-                    default:
+                    case 1 -> UserService.deleteUser(scanner, user);
+                    case 2 -> UserService.listUsers(scanner);
+                    case 3 -> CarService.addNewCar(scanner, user);
+                    case 4 -> CarService.deleteCar(scanner, user);
+                    case 5 -> CarService.editCar(scanner, user);
+                    case 6 -> ContactService.viewContacts(user);
+                    case 0 -> System.out.println(ConsoleColors.GREEN+"Izeja no administratora izvēlnes...");
+                    default -> {
                         ClearConsole.clearConsole();
                         System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+                    }
                 }
             } catch (InputMismatchException e) {
                 scanner.nextLine();

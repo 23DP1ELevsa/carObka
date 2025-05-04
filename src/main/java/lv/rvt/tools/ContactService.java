@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ContactService {
     // Metode, lai saglabātu kontaktinformāciju CSV failā
-    private static final String CONTACT_FILE = "/workspaces/carObka/data/contact.csv";
+    private static final String CONTACT_FILE = "data/contact.csv";
 
     public static void saveContact(String username, String contactType, String message) {
         File file = new File(CONTACT_FILE);

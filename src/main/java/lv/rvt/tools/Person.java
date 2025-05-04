@@ -3,7 +3,7 @@ package lv.rvt.tools;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Person {
+public final class Person {
     private String username;
     private String password;
     private boolean admin;

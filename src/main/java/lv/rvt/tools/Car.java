@@ -5,19 +5,19 @@ import java.util.Objects;
 
 public class Car {
     static ArrayList<Car> cars = new ArrayList<>();
-    public static final String CARS_FILE = "/workspaces/carObka/data/cars.csv";
+    public static final String CARS_FILE = "data/cars.csv";
     
     // Car klase ar papildu lauku degvielas tipam
-    private String brand;
-    private String model;
-    private int year;
-    private int horsepower;
-    private String fuelType;
-    private String drive;
-    private String generation;
-    private double fuelConsumption; // Jauns lauks: vidējais degvielas patēriņš
-    private int price; // Jauns lauks: cena
-    private String description;
+    private final String brand;
+    private final String model;
+    private final int year;
+    private final int horsepower;
+    private final String fuelType;
+    private final String drive;
+    private final String generation;
+    private final double fuelConsumption; // Jauns lauks: vidējais degvielas patēriņš
+    private final int price; // Jauns lauks: cena
+    private final String description;
 
     public Car(String brand, String model, int year, int horsepower, String fuelType, String drive, String generation, double fuelConsumption, int price, String description) {
         this.brand = brand;

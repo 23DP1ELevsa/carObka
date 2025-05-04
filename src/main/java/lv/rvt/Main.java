@@ -1,7 +1,14 @@
 package lv.rvt;
 
-import lv.rvt.tools.*;
-import java.util.*;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+import lv.rvt.tools.CarService;
+import lv.rvt.tools.ClearConsole;
+import lv.rvt.tools.Loading;
+import lv.rvt.tools.Menu;
+import lv.rvt.tools.Person;
+import lv.rvt.tools.UserService;
 
 public class Main {
 
@@ -17,7 +24,7 @@ public class Main {
             System.out.println("Lietotāju nav. Izveidojiet pirmo lietotāju (administratoru).");
         }
 
-        int choice = -1;
+        int choice;
         do {
             Menu.StartMenu();
             System.out.print("Ievadiet izvēli: ");
@@ -33,25 +40,24 @@ public class Main {
             Person user = new Person();
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     Loading.LoadingScreen(); // Ielādēšanas ekrāns
                     CarService.displayCarCollection(scanner, user);
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     Loading.LoadingScreen(); // Ielādēšanas ekrāns
                     UserService.loginOrRegister(scanner, user);
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     Loading.LoadingScreen(); // Ielādēšanas ekrāns
                     System.out.println(user.getColor() + "Brīdinājums: Sazināties ar mums var tikai pēc profila ienākšanas. Lūdzu, ieejiet savā profilā.");
                     UserService.loginOrRegister(scanner, user);
-                    break;
-                case 0:
-                    System.out.println("Paldies, ka izmantojāt CarObka!");
-                    break;
-                default:
+                }
+                case 0 -> System.out.println("Paldies, ka izmantojāt CarObka!");
+                default -> {
                     ClearConsole.clearConsole();
                     System.out.println("Nepareiza ievade, mēģiniet vēlreiz.");
+                }
             }
         } while (choice != 0);
     }
