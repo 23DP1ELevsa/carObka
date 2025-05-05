@@ -241,7 +241,7 @@ public class UserService {
             System.out.print("\nIevadiet lietotāja kārtas numuru, kuru vēlaties dzēst (vai '0', lai atgrieztos): ");
             String input = scanner.nextLine();
             if (input.equals("0")) {
-                continue;
+                return;
             }
     
             try {
@@ -255,14 +255,17 @@ public class UserService {
                     }
                     users.remove(userToDelete);
                     saveUsers();
+                    ClearConsole.clearConsole();
                     System.out.println("Profils " + userToDelete.getUsername() + " veiksmīgi dzēsts.");
                 } else {
                     ClearConsole.clearConsole();
                     System.out.println("Nepareizs kārtas numurs. Mēģiniet vēlreiz.");
+                    continue;
                 }
             } catch (NumberFormatException e) {
                 ClearConsole.clearConsole();
                 System.out.println("Lūdzu ievadiet derīgu skaitli.");
+                continue;
             }
         }
     }
