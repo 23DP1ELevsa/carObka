@@ -32,8 +32,7 @@ public class ContactService {
     protected static void viewContacts(Person user) {
         File file = new File(CONTACT_FILE);
         if (!file.exists() || file.length() == 0) {
-            System.out.println("Nav pieejamu saziņas datu.");
-            return;
+            Empty.EmptyScreen();
         }
     
         List<String> updatedLines = new ArrayList<>();
