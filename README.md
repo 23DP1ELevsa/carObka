@@ -45,10 +45,12 @@ Navigācija notiek, ievadot ciparu atbilstošajai izvēlei un nospiežot Enter.
 
 ## ⚙️ Sistēmas prasības
 
-- [JDK 21+](https://adoptium.net/)
-- [Maven](https://maven.apache.org/)
-- Windows terminālis ar UTF-8 atbalstu *(CMD, PowerShell vai Windows Terminal)*
-- vai [Visual Studio Code](https://code.visualstudio.com/)
+**Minimālās sistēmas prasības lietotnes palaišanai:**
+- Operētājsistēma: Windows 10 / 11, Linux vai macOS
+- Java versija: JDK 14 vai jaunāka (ieteicams JDK 14)
+- Atmiņa (RAM): vismaz 512 MB (ieteicams 1 GB)
+- Brīvā vieta diskā: vismaz 250 MB
+- Displejs: UTF-8 atbalstošs terminālis ar iespēju attēlot Braila simbolus (piemēram, VS Code terminālis, Windows Terminal u.c.)
 
 ## 🛠  Instalācija
 
@@ -123,10 +125,12 @@ Navigation is performed by entering the number of the desired option.
 
 ## ⚙️ System Requirements
 
-- [JDK 21+](https://adoptium.net/)
-- [Maven](https://maven.apache.org/)
-- Windows terminal with UTF-8 support *(CMD, PowerShell or Windows Terminal)*
-- or [Visual Studio Code](https://code.visualstudio.com/)
+**Minimum system requirements to run the application:**
+- Operating System: Windows 10 / 11, Linux, or macOS
+- Java Version: JDK 14 or newer (JDK 14 is recommended)
+- Memory (RAM): At least 512 MB (1 GB recommended)
+- Free Disk Space: At least 250 MB
+- Terminal: UTF-8 compatible terminal with support for Braille characters (e.g., VS Code Terminal, Windows Terminal, etc.)
 
 ## 🛠️ Installation
 
