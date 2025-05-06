@@ -70,7 +70,7 @@ public class UserService {
                         }       Person foundUser = UserService.findUser(username);
                         Loading.LoadingScreen();
                         if (foundUser != null && foundUser.validatePassword(password) && foundUser.isAdmin()) {
-                            System.out.println("Laipni lūgti, administrators " + username + "!");
+                            System.out.println(ConsoleColors.RED+"Laipni lūgti, administrators " + username + "!");
                             Menu.adminMenu(scanner, foundUser);
                         } else {
                             System.out.println(user.getColor() + "Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
