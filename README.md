@@ -66,7 +66,7 @@ Navigācija notiek, ievadot ciparu atbilstošajai izvēlei un nospiežot Enter.
     ```
 4. Kompilē un palaid lietotni:
    ```bash
-   mvn compile exec:java
+   java -jar target/carobka.jar
    ```
     
 ## 📩  Kontakti
@@ -144,7 +144,7 @@ Navigation is performed by entering the number of the desired option.
     ```
 4. Compile and run the app:
    ```bash
-   mvn compile exec:java
+   java -jar target/carobka.jar
    ```
 
 ## 📩  Contacts
