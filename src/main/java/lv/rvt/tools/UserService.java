@@ -35,26 +35,41 @@ public class UserService {
             ClearConsole.clearConsole();
             scanner.nextLine(); // Atstarpe ievades lasīšanai
             switch (choice) {
-                case 1 ->                     {
-                        System.out.println("\nIeiet kā lietotājs:");
+                case 1 -> {
+                    System.out.println("\nIeiet kā lietotājs:");
+                    String username;
+                    do {
                         System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
-                        String username = scanner.nextLine();
-                        if (username.equals("0")) {
-                            ClearConsole.clearConsole();
-                            continue;
-                        }       System.out.print("Parole (vai '0' lai atgriezties): ");
-                        String password = scanner.nextLine();
-                        if (password.equals("0")) {
-                            ClearConsole.clearConsole();
-                            continue;
-                        }       Person foundUser = UserService.findUser(username);
-                        Loading.LoadingScreen();
-                        if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
-                            System.out.println(ConsoleColors.CYAN + "Laipni lūgti, " + username + "!");
-                            Menu.userMenu(scanner, foundUser);
-                        } else {
-                            System.out.println(user.getColor() + "Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
-                        }                          }
+                        username = scanner.nextLine().trim();
+                        if (username.isEmpty()) {
+                            System.out.println("Lietotājvārds nevar būt tukšs. Lūdzu, mēģiniet vēlreiz.");
+                        }
+                    } while (username.isEmpty());
+                    if (username.equals("0")) {
+                        ClearConsole.clearConsole();
+                        continue;
+                    }
+                    String password;
+                    do {
+                        System.out.print("Parole (vai '0' lai atgriezties): ");
+                        password = scanner.nextLine().trim();
+                        if (password.isEmpty()) {
+                            System.out.println("Parole nevar būt tukša. Lūdzu, mēģiniet vēlreiz.");
+                        }
+                    } while (password.isEmpty());
+                    if (password.equals("0")) {
+                        ClearConsole.clearConsole();
+                        continue;
+                    }
+                    Person foundUser = UserService.findUser(username);
+                    Loading.LoadingScreen();
+                    if (foundUser != null && foundUser.validatePassword(password) && !foundUser.isAdmin()) {
+                        System.out.println(ConsoleColors.CYAN + "Laipni lūgti, " + username + "!");
+                        Menu.userMenu(scanner, foundUser);
+                    } else {
+                        System.out.println(user.getColor() + "Nederīgs lietotāja vārds vai parole, vai arī profils nav lietotāja profils.");
+                    }
+                }
                 case 2 ->                     {
                         System.out.println("\nIeiet kā administrators:");
                         System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
@@ -74,20 +89,39 @@ public class UserService {
                             Menu.adminMenu(scanner, foundUser);
                         } else {
                             System.out.println(user.getColor() + "Nederīgs lietotāja vārds vai parole, vai arī profils nav administratora profils.");
-                        }                          }
+                        }
+                    }
                 case 3 -> {
                     System.out.println("\nPievienot jaunu profilu:");
-                    System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
-                    String newUsername = scanner.nextLine();
+                    String newUsername;
+                    do {
+                        System.out.print("Lietotāja vārds (vai '0' lai atgriezties): ");
+                        newUsername = scanner.nextLine().trim();
+                        if (newUsername.isEmpty() || newUsername.isBlank()) {
+                            ClearConsole.clearConsole();
+                            System.out.println("Lietotājvārds nevar būt tukšs vai sastāvēt tikai no atstarpēm. Lūdzu, mēģiniet vēlreiz.");
+                        }
+                    } while (newUsername.isEmpty() || newUsername.isBlank());
                     if (newUsername.equals("0")) {
                         ClearConsole.clearConsole();
                         continue;
-                    }   System.out.print("Parole (vai '0' lai atgriezties): ");
-                    String newPassword = scanner.nextLine();
+                    }
+
+                    String newPassword;
+                    do {
+                        System.out.print("Parole (vai '0' lai atgriezties): ");
+                        newPassword = scanner.nextLine().trim();
+                        if (newPassword.isEmpty() || newPassword.isBlank()) {
+                            ClearConsole.clearConsole();
+                            System.out.println("Parole nevar būt tukša vai sastāvēt tikai no atstarpēm. Lūdzu, mēģiniet vēlreiz.");
+                        }
+                    } while (newPassword.isEmpty() || newPassword.isBlank());
                     if (newPassword.equals("0")) {
                         ClearConsole.clearConsole();
                         continue;
-                    }   Loading.LoadingScreen();
+                    }
+
+                    Loading.LoadingScreen();
                     if (UserService.findUser(newUsername) == null) {
                         boolean isAdmin = UserService.users.isEmpty();
                         UserService.users.add(new Person(newUsername, newPassword, isAdmin));
